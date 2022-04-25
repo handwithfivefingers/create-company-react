@@ -1,70 +1,57 @@
-import React, { useState, useEffect } from "react";
-import { UserRouter } from "../../../contants/Route";
-import { Layout, Menu, Button } from "antd";
-import {
-  DesktopOutlined,
-  PieChartOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
-  CaretLeftOutlined,
-  CaretRightOutlined,
-} from "@ant-design/icons";
-import { signOut } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { CaretLeftOutlined, CaretRightOutlined, DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
+import { Layout, Menu } from "antd";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import { LAYOUT_ROUTER, UserRouter } from "../../../contants/Route";
 import styles from "./styles.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { AuthAction } from "src/store/actions";
 
 const { Sider } = Layout;
 
-const UserSidebar = () => {
+const UserSidebar = (props) => {
   const [collapse, setCollapse] = useState(false);
   const [current, setCurrent] = useState();
-  const router = useRouter();
+  const authReducer = useSelector((state) => state.authReducer);
+  let location = useLocation();
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
   const onCollapse = (collapsed) => {
     setCollapse(collapsed);
   };
 
   useEffect(() => {
-    if (router.pathname.includes("/user/order")) setCurrent("/user/order");
-    else setCurrent(router.pathname);
-  }, [router]);
+    if (location.pathname.includes("/user/order")) setCurrent("/user/order");
+    else setCurrent(location.pathname);
+  }, [location]);
 
-  const renderSidebar = (route) => {
+  const renderSidebar = useCallback((route) => {
+    console.log("1");
     let xhtml = null;
-    xhtml = route.map((item, i) => {
-      if (item.submenu) {
-        return (
-          <Menu.SubMenu
-            key={item.path}
-            title={
-              <Link href={item.path}>
-                <a
-                  style={{
-                    display: "flex",
-                    flex: 1,
-                    width: "100%",
-                    color: "#fff",
-                  }}
-                >
-                  {item.name}
-                </a>
-              </Link>
-            }
-          >
-            {renderSidebar(item.submenu)}
-          </Menu.SubMenu>
-        );
+    let routeByRole = route.filter((item) => item.path === "/user");
+    xhtml = routeByRole.map((item, i) => {
+      if (item.children) {
+        return item.children.map((child) => {
+          console.log(child);
+          return (
+            <Menu.Item key={`${item.path}/${child.path}`} icon={child?.icon || <PieChartOutlined />}>
+              <Link to={child.path}>{child.title}</Link>
+            </Menu.Item>
+          );
+        });
       }
       return (
         <Menu.Item key={item.path} icon={item?.icon || <PieChartOutlined />}>
-          <Link href={item.path}>
-            <a>{item.name}</a>
-          </Link>
+          <Link to={item.path}>{item.title}</Link>
         </Menu.Item>
       );
     });
     return xhtml;
+  }, []);
+
+  const signOut = async () => {
+    await dispatch(AuthAction.AuthLogout());
+    navigate("/");
   };
 
   return (
@@ -80,15 +67,13 @@ const UserSidebar = () => {
       >
         <div className="logo" style={{ height: 64 }} />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={[current]} selectedKeys={[current]}>
-          <Menu.Item key={"1"} icon={<PieChartOutlined />}>
-            <Link href={"/"}>
-              <a>Trang chủ</a>
-            </Link>
+          <Menu.Item key={"/"} icon={<PieChartOutlined />}>
+            <Link to={"/"}>Trang chủ</Link>
           </Menu.Item>
-          {renderSidebar(UserRouter)}
+          {renderSidebar(LAYOUT_ROUTER(authReducer))}
           {/* <Menu.Item>Đổi mật khẩu</Menu.Item> */}
           <Menu.Item onClick={() => signOut()} icon={<DesktopOutlined />}>
-            <a>Đăng xuất</a>
+            Đăng xuất
           </Menu.Item>
         </Menu>
       </Sider>
@@ -96,4 +81,4 @@ const UserSidebar = () => {
   );
 };
 
-export default UserSidebar;
+export default React.memo(UserSidebar);

@@ -1,10 +1,9 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Tag, Button, Modal } from "antd";
 import axios from "../../../config/axios";
-import Link from "next/link";
 import Tracking from "../../../components/Tracking";
 import { RiLoader4Line } from "react-icons/ri";
-import { number_format } from "helper/Common";
+import { number_format } from "src/helper/Common";
 
 const UserOrder = () => {
   const [state, setState] = useState({
@@ -43,6 +42,9 @@ const UserOrder = () => {
       visible: true,
       component: <Tracking />,
     });
+  };
+  const handlePurchase = (record) => {
+    console.log("purchase");
   };
   const closeModal = () => {
     setModal({

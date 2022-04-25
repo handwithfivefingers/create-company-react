@@ -1,33 +1,65 @@
 // import User from "./../model/user";
 const { User } = require("./../model");
 const bcrypt = require("bcryptjs");
-const { loginFailed } = require("../response");
+const { loginFailed, createdHandler, errHandler, existHandler } = require("../response");
 const jwt = require("jsonwebtoken");
 
-exports.signUp = async (req, res) => {
-  User.findOne({ username: req.body.username }).exec(async (err, data) => {
-    if (data) return res.status(400);
+exports.registerUser = async (req, res) => {
+  // User.findOne({ username: req.body.username }).exec(async (err, data) => {
+  //   if (data) return res.status(400);
 
-    const hash_password = await bcrypt.hash(req.body.password, 10);
+  //   const hash_password = await bcrypt.hash(req.body.password, 10);
 
-    let _user = new User({
+  //   let _user = new User({
+  //     hash_password,
+  //     username: req.body.username,
+  //   });
+
+  //   _user.save((error, data) => {
+  //     if (error) return res.status(400).json({ error });
+  //     if (data) {
+  //       const token = jwt.sign({ _id: data._id, role: data.role }, process.env.SECRET, {
+  //         expiresIn: process.env.EXPIRE_TIME,
+  //       });
+  //       return res.status(200).json({ data, token });
+  //     }
+  //   });
+  // });
+  try {
+    let _user = await User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] });
+    let message = _user?.phone === req.body.phone ? "Phone" : "Email"; // if have user -> check mail or phone
+    if (_user) return existHandler(res, message);
+    const { phone, name, email, url } = req.body;
+
+    var password = Math.random().toString(36).slice(-8);
+
+    const hash_password = await bcrypt.hash(password, 10);
+
+    const _obj = new User({
+      phone,
+      name,
+      email,
       hash_password,
-      username: req.body.username,
     });
-
-    _user.save((error, data) => {
-      if (error) return res.status(400).json({ error });
-      if (data) {
-        const token = jwt.sign({ _id: data._id, role: data.role }, process.env.SECRET, {
-          expiresIn: process.env.EXPIRE_TIME,
-        });
-        return res.status(200).json({ data, token });
-      }
-    });
-  });
+    const _save = await _obj.save();
+    try {
+      const { _id, name, email } = _save;
+      const user = {
+        phone,
+        password,
+        email,
+      };
+      // await handleMailer(user);  Handling sendmail
+      return createdHandler(user, res);
+    } catch (error) {
+      return errHandler(error, res);
+    }
+  } catch (err) {
+    return errHandler(err, res);
+  }
 };
 
-exports.signIn = async (req, res) => {
+exports.LoginUser = async (req, res) => {
   try {
     const resp = await User.findOne({ phone: req.body.phone });
 
@@ -60,6 +92,15 @@ exports.signIn = async (req, res) => {
   } catch (err) {
     loginFailed(res);
   }
+};
+
+exports.Logout = async (req, res) => {
+  console.log("running api logout");
+  res.clearCookie("create-company-token");
+  console.log(req.cookies["create-company-token"]);
+  res.status(200).json({
+    authenticate: false,
+  });
 };
 
 exports.authenticate = async (req, res) => {

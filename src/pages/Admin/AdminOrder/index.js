@@ -17,6 +17,7 @@ const AdminOrder = () => {
     width: 0,
   });
   const formRef = useRef();
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -238,10 +239,8 @@ const AdminOrder = () => {
               return (
                 <Space>
                   <Button>
-                    <Link href={`/admin/order/${record?._id}`}>
-                      <a>
-                        <FormOutlined />
-                      </a>
+                    <Link to={`/admin/order/${record?._id}`}>
+                      <FormOutlined />
                     </Link>
                   </Button>
                   <Button onClick={() => onHandleDelete(record)} icon={<DeleteOutlined />} />

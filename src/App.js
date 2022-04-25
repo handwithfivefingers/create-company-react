@@ -1,38 +1,40 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, useRoutes } from "react-router-dom";
-import { LAYOUT_ROUTER } from "./contants/Route";
 import { ConfigProvider, Layout } from "antd";
-import { useAuth } from "./helper/Hook/useAuth";
-import Footer from "./components/Footer";
-import "./assets/css/styles.scss";
-import "aos/dist/aos.css";
+import React from "react";
+import { useSelector } from "react-redux";
+import { BrowserRouter, useRoutes } from "react-router-dom";
 import CustomHeader from "src/components/CustomHeader";
+import LoadingScreen from "src/components/LoadingScreen";
+import Footer from "./components/Footer";
+import { LAYOUT_ROUTER } from "./contants/Route";
+import { useAuth } from "./helper/Hook/useAuth";
+
+import "aos/dist/aos.css";
+import "./assets/css/styles.scss";
+
 ConfigProvider.config({
   theme: {
     primaryColor: "#cd2027",
   },
 });
+
 const { Content } = Layout;
 const RouterComponent = (props) => {
   const Route = useRoutes(LAYOUT_ROUTER(props.auth));
   return Route;
 };
 
-function App(props) {
+function App() {
   const auth = useAuth();
+  const authReducer = useSelector((state) => state.authReducer);
+
   return (
     <div className="App">
-      <Layout style={{ background: "#fff", minHeight: "100vh" }}>
-        <ConfigProvider>
-          <BrowserRouter>
-            <CustomHeader auth={auth} />
-            <Content className="site-layout">
-              <RouterComponent auth={auth} />
-            </Content>
-          </BrowserRouter>
-        </ConfigProvider>
-        <Footer />
-      </Layout>
+      <ConfigProvider>
+        {authReducer.authenticating && <LoadingScreen />}
+        <BrowserRouter>
+          <RouterComponent auth={auth} />
+        </BrowserRouter>
+      </ConfigProvider>
     </div>
   );
 }

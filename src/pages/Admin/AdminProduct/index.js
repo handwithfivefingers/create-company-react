@@ -1,7 +1,5 @@
 import CareerForm from "src/components/Form/CarrerForm";
-import {
-  FormOutlined, MinusSquareOutlined, PlusSquareOutlined
-} from "@ant-design/icons";
+import { FormOutlined, MinusSquareOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { Button, Card, Drawer, message, Modal, Space, Table, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import CategoryForm from "src/components/Form/CategoryForm";
@@ -33,8 +31,7 @@ const AdminProduct = (props) => {
   }, []);
 
   const getCareer = async () => {
-    const { data } = await axios.get(`/api/nganhnghe`);
-    // console.log(data);
+    const { data } = await axios.get(`/nganhnghe`);
     if (data.status === 200) {
       setCareer(data.data);
     } else message.error(data.message || data.error);

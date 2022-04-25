@@ -1,8 +1,9 @@
 // import User from "./../model/user";
 
-const { Product, Category } = require("./../model");
+const { Product, Category, Career } = require("./../model");
 const { updatedHandler, errHandler, successHandler } = require("../response");
 const lodash = require("lodash");
+const slugify = require("slugify");
 exports.createProduct = async (req, res) => {
   const obj = {
     name: req.body.name.toString(),
@@ -49,7 +50,7 @@ exports.editProduct = async (req, res) => {
       _id: id,
     },
     obj,
-    { new: true }
+    { new: true },
   );
 
   return updatedHandler(product, res);
@@ -73,6 +74,8 @@ exports.deleteProduct = async (req, res) => {
   });
   return res.status(200).json({ message: "Xóa sản phẩm thành công", status: 200 });
 };
+
+
 
 const filterData = (data = null) => {
   if (data) {

@@ -1,25 +1,19 @@
-import React, { useReducer, useEffect } from "react";
-import { Menu, Layout, Dropdown, Button, PageHeader } from "antd";
-import Link from "next/link";
+import { PageHeader } from "antd";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
-import { UserOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
-import { RiArrowLeftCircleLine } from "react-icons/ri";
-import { initState, reducer } from "pages/_app";
 
 const UserHeader = (props) => {
-  const [head, dispatch] = useReducer(reducer, initState);
-  const router = useRouter();
+  const navigate = useNavigate();
   useEffect(() => {
-    // console.log("render header", title);
-    console.log("header", head, props);
+    // console.log("header", head, props);
   }, []);
   return (
     <div className={styles.headerMenu}>
       <PageHeader
         className={styles.siteHeader}
-        onBack={() => router.back()}
-        title={props.headSub.title}
+        onBack={() => navigate(-1)}
+        title={props?.headSub?.title}
         subTitle="This is a subtitle"
       />
     </div>

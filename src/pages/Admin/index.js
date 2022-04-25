@@ -2,7 +2,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Input, InputNumber, message, Row, Space, Upload } from "antd";
 import WithAuth from "src/components/HOC/WithAuth";
 import React, { useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import axios from "src/config/axios";
 
 const Admin = (props) => {
@@ -100,81 +100,7 @@ const Admin = (props) => {
 
   // https://api.cloudinary.com/v1_1/${cloudName}/upload
 
-  return (
-    <>
-      {/* <Form onFinish={onFinish} ref={formRef} layout="vertical" labelCol={{ span: 6 }}>
-        <Row gutter={[16, 12]}>
-          <Col span={24}>
-            <h2>Cloudinary Uploader</h2>
-            <Form.Item name="file">
-              <Upload>
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload>
-            </Form.Item>
-            <Form.Item>
-              <Button onClick={uploadFiles}> UP to cloud</Button>
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Card style={{ margin: 10 }} title="Chức năng thanh toán">
-              <Form.Item name="amount">
-                <InputNumber placeholder="Vui lòng nhập giá tiền" min={1} style={{ width: "100%" }} />
-              </Form.Item>
-
-              <Form.Item name="orderDescription">
-                <Input placeholder="Nội dung thanh toán" style={{ width: "100%" }} />
-              </Form.Item>
-
-              <Space style={{ display: "flex", justifyContent: "center" }}>
-                <Form.Item>
-                  <Button htmlType="submit" loading={loading}>
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Space>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card style={{ margin: 10 }} title="Chức năng gửi mail đính kèm">
-              <Form.Item name="email" rules={[{ type: "email" }]}>
-                <Input placeholder="Nhập email cần gửi" style={{ width: "100%" }} />
-              </Form.Item>
-              <Form.Item name="attachments">
-                <Upload>
-                  <Button icon={<UploadOutlined />}>Upload</Button>
-                </Upload>
-              </Form.Item>
-              <Space style={{ display: "flex", justifyContent: "center" }}>
-                <Form.Item>
-                  <Button loading={loading} onClick={handleSendMailWithAttach}>
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Space>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card style={{ margin: 10 }} title="Chức năng khác ...">
-              <Form.Item name="amount" label="">
-                <InputNumber style={{ width: "100%" }} />
-              </Form.Item>
-              <Form.Item name="orderDescription" label="Nội dung thanh toán">
-                <Input style={{ width: "100%" }} />
-              </Form.Item>
-              <Space style={{ display: "flex", justifyContent: "center" }}>
-                <Form.Item>
-                  <Button disabled loading={loading}>
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Space>
-            </Card>
-          </Col>
-        </Row>
-      </Form> */}
-      <Outlet context={props.auth} />
-    </>
-  );
+  return <Outlet />;
 };
 
-export default WithAuth(Admin);
+export default WithAuth(Admin, "admin");

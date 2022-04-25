@@ -1,33 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
 import {
-  Card,
-  Space,
-  Steps,
-  Button,
-  PageHeader,
-  Image,
-  Menu,
-  Dropdown,
-  Tag,
-  Typography,
-  Row,
-  Col,
-  Divider,
-  Skeleton,
-  message,
+  message, Skeleton, Typography
 } from "antd";
-import ProductForm from "../../../components/Form/ProductForm";
-import ContactForm from "../../../components/Form/Contact";
-import CreateCompany from "../../../components/Form/CreateCompany";
-import ProductCard from "../../../components/Products";
-import ProductService from "../../../service/ProductService";
-import CCPageHeader from "../../../components/CCPageHeader";
-import CategoryService from "../../../service/UserService/CategoriesService";
+import React, { useEffect, useState } from "react";
 import CardCategory from "../../../components/CardCategory";
+import CategoryService from "../../../service/UserService/CategoriesService";
 import styles from "./styles.module.scss";
 const { Paragraph } = Typography;
 
-const ProductPage = () => {
+const UserProductPage = () => {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState([]);
 
@@ -61,4 +41,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default UserProductPage;

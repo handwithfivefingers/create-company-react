@@ -21,7 +21,7 @@ import {
   RiArrowGoForwardFill,
   RiAlignVertically,
   RiLink,
-  RiLinkUnlink
+  RiLinkUnlink,
 } from "react-icons/ri";
 import { setLink } from "src/helper/Common";
 import clsx from "clsx";

@@ -8,19 +8,28 @@ import {
 } from "react-icons/ri";
 import { BiHomeAlt } from "react-icons/bi";
 import React from "react";
+import { Layout } from "antd";
+import CustomHeader from "src/components/CustomHeader";
+import Footer from "src/components/Footer";
 
-import { Navigate, Outlet } from "react-router";
-import HomePage from "../pages/HomePage";
-import Admin from "../pages/Admin";
-import AdminMail from "../pages/Admin/AdminMail";
-import AdminOrder from "../pages/Admin/AdminOrder";
-import AdminOrderItem from "../pages/Admin/AdminOrder/OrderItem";
+import { Navigate, Outlet } from "react-router-dom";
+import HomePage from "src/pages/HomePage";
+import Admin from "src/pages/Admin";
+import AdminDashboard from "src/pages/Admin/Dashboard";
 
-import AdminProduct from "../pages/Admin/AdminProduct";
-import AdminSetting from "../pages/Admin/AdminSetting";
-import AdminUser from "../pages/Admin/AdminUser";
-import WithAuth from "src/components/HOC/WithAuth";
+import AdminMail from "src/pages/Admin/AdminMail";
+import AdminOrder from "src/pages/Admin/AdminOrder";
+import ClassComponentText from "src/pages/Admin/AdminOrder/OrderItem";
+import AdminProduct from "src/pages/Admin/AdminProduct";
+import AdminSetting from "src/pages/Admin/AdminSetting";
+import AdminUser from "src/pages/Admin/AdminUser";
 
+import UserDashboard from "src/pages/User";
+import UserProductPage from "src/pages/User/Product";
+import UserProductItem from "src/pages/User/Product/ProductItem";
+import UserOrder from "src/pages/User/Order";
+import Error from "src/pages/_error";
+const { Content } = Layout;
 export const AdminRouter = [
   {
     path: "/admin",
@@ -82,7 +91,17 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
     title: "Đăng nhập",
     path: "/",
     icon: <BiHomeAlt />,
-    element: status ? <Navigate to={`/${role}`} /> : <HomePage />,
+    element: status ? (
+      <Navigate to={`/${role}`} />
+    ) : (
+      <Layout style={{ background: "#fff", minHeight: "100vh" }}>
+        <CustomHeader auth={{ status, role }} />
+        <Content className="site-layout">
+          <HomePage />
+        </Content>
+        <Footer />
+      </Layout>
+    ),
   },
   {
     title: "Admin",
@@ -91,6 +110,11 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
     children:
       status && role === "admin" ? (
         [
+          {
+            index: true,
+            icon: <RiBarChartFill />,
+            element: <AdminDashboard />,
+          },
           {
             path: "product",
             title: "Quản lý sản phẩm",
@@ -108,7 +132,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
               },
               {
                 path: ":slug",
-                element: <AdminOrderItem />,
+                element: <ClassComponentText />,
               },
             ],
           },
@@ -134,5 +158,48 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
       ) : (
         <Navigate to="/" />
       ),
+  },
+  {
+    title: "User",
+    path: "/user",
+    element: <UserDashboard status={status} />,
+    children:
+      status && role === "user" ? (
+        [
+          {
+            path: "product",
+            title: "Sản phẩm",
+            icon: <RiBarChartFill />,
+            children: [
+              {
+                index: true,
+                element: <UserProductPage />,
+              },
+              {
+                path: ":slug",
+                element: <UserProductItem />,
+              },
+            ],
+          },
+          {
+            path: "order",
+            title: "Orders",
+            icon: <RiChatPollLine />,
+            element: <UserOrder />,
+          },
+          // {
+          //   path: "setting",
+          //   title: "Đổi mật khẩu",
+          //   icon: <RiAdminFill />,
+          //   element: <AdminSetting />,
+          // },
+        ]
+      ) : (
+        <Navigate to="/" />
+      ),
+  },
+  {
+    path: "*",
+    element: <Error />,
   },
 ];

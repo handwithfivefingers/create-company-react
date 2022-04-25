@@ -1,11 +1,12 @@
-import React, { useEffect, useReducer } from "react";
+import React from "react";
 import { DatePicker } from "antd";
-const UserDashboard = (props) => {
+import WithAuth from "src/components/HOC/WithAuth";
+const UserDashboard = () => {
   return (
     <div>
-      {/* <Datepicker /> */} ??? <DatePicker />
+      <DatePicker />
     </div>
   );
 };
 
-export default UserDashboard;
+export default WithAuth(UserDashboard, "user");

@@ -3,40 +3,10 @@ import { Button, Card, Drawer, Form, Input, message, Modal, Space } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import { RiPlayList2Fill } from "react-icons/ri";
+import { useParams } from "react-router";
+import AdminOrderService from "src/service/AdminService/AdminOrderService";
 import axios from "src/config/axios";
-// import ReactDOMServer from 'react-dom/server';
-// const doc = new jsPDF();
 
-// let PizZipUtils = null;
-
-// if (typeof window !== "undefined") {
-//   import("pizzip/utils/index.js").then(function (r) {
-//     PizZipUtils = r;
-//   });
-// }
-
-// function loadFile(url, callback) {
-//   PizZipUtils.getBinaryContent(url, callback);
-// }
-
-// const generateDocument = (json) => {
-//   loadFile("/files/dieulecanhan.docx", function (error, content) {
-//     if (error) {
-//       throw error;
-//     }
-//     const zip = new PizZip(content);
-//     const doc = new Docxtemplater().loadZip(zip);
-//     doc.render({
-//       ...json,
-//     });
-//     const out = doc.getZip().generate({
-//       type: "blob",
-//       mimeType:
-//         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-//     });
-//     saveAs(out, "output.docx");
-//   });
-// };
 const allFiles = {
   // {
   //   name: "File_1A_DieuLeCaNhan",
@@ -108,16 +78,18 @@ const allFiles = {
 };
 
 export default function ClassComponentText(props) {
-  const refViewer = useRef();
+  const refViewer = useRef(null);
   const [visible, setVisible] = useState(false);
   const [data, setData] = useState();
-  const [initialDoc, setInitialDoc] = useState("/files/blank.docx");
+  const [initialDoc, setInitialDoc] = useState("/files/dieulecanhan.docx");
   const [jsonData, setJsonData] = useState([]);
-
+  const [instance, setInstance] = useState();
+  const slug = useParams();
   const insRef = useRef();
 
   useEffect(() => {
-    getScreenData();
+    getScreenData(slug);
+    console.log(slug);
   }, []);
 
   useEffect(() => {
@@ -132,9 +104,8 @@ export default function ClassComponentText(props) {
     setVisible(false);
   };
 
-  const getScreenData = () => {
-    axios
-      .get(`/api/admin/orders/${props.slug}`)
+  const getScreenData = (slug) => {
+    AdminOrderService.getOrderBySlug(slug)
       .then((res) => {
         if (res.data.status === 200) {
           console.log(res);
@@ -182,13 +153,6 @@ export default function ClassComponentText(props) {
       Feature,
       Theme,
     } = instance.UI;
-    const findFirstDividerIndex = (items) => {
-      for (let i = 0; i < items.length; ++i) {
-        if (items[i].type === "divider") {
-          return i;
-        }
-      }
-    };
 
     if (NodeList && !NodeList.prototype.forEach) {
       NodeList.prototype.forEach = Array.prototype.forEach;
@@ -218,26 +182,39 @@ export default function ClassComponentText(props) {
     insRef?.current.UI.print();
   };
 
-  const renderPDF = (ref, initialDoc = null) => {
+  const renderPDF = async (ref, initialDoc = null) => {
     if (!ref?.current.hasChildNodes()) {
       let params = {
         path: "/lib",
         initialDoc,
       };
-      PDFWebViewer(params, ref.current).then(async (instance) => {
+      PDFWebViewer(params, ref.current).then((instance) => {
+        const {
+          setHeaderItems,
+          enableElements,
+          disableElements,
+          enableFeatures,
+          disableFeatures,
+          setTheme,
+          Feature,
+          Theme,
+        } = instance.UI;
+
+        instance.UI?.disableElements(["ribbons"]); //
+        instance.UI?.disableElements(["viewControlsButton"]); //
+        // instance.UI?.disableElements(["searchButton"]);
+        instance.UI?.disableElements(["panToolButton"]); //
+        instance.UI?.disableElements(["pageNavOverlay"]); //
+
+        instance.UI?.disableFeatures(Feature.Download); //
+        instance.UI?.disableFeatures(Feature.TextSelection); //
+        // instance.UI?.disableFeatures(Feature.Annotations);
+        instance.UI?.disableFeatures(Feature.NotesPanel); //
+        instance.UI?.disableFeatures(Feature.FilePicker); //
+        // instance.UI?.disableFeatures([Feature.Print]);
+
+        setInstance(instance);
         insRef.current = instance; // Set ins to handle when re-render
-
-        // Add new button in dropdown
-        // instance.UI.settingsMenuOverlay.add(
-        //   {
-        //     type: "actionButton",
-        //     className: "row",
-        //     dataElement: "languageButton",
-        //     label: "Language",
-        //   },
-        //   "Hello wolrd",
-        // );
-
         //Add new Button
         const { documentViewer, annotationManager } = instance.Core;
 
@@ -266,8 +243,6 @@ export default function ClassComponentText(props) {
           header.update([...currentHeader, ...newButton]);
         });
 
-        // Change Btn Icon
-
         const iframeDoc = instance.UI.iframeWindow.document;
         const btn = iframeDoc.querySelector(".list-btn");
         btn.innerHTML = ReactDOMServer.renderToString(<RiPlayList2Fill style={{ fontSize: "16px" }} />);
@@ -276,9 +251,10 @@ export default function ClassComponentText(props) {
       });
     } else {
       insRef?.current.UI.loadDocument(initialDoc);
+      // instance.UI.loadDocument(initialDoc);
     }
   };
-
+  console.log(instance);
   return (
     <>
       <Button
@@ -294,7 +270,7 @@ export default function ClassComponentText(props) {
         Edit
       </Button>
 
-      <div ref={refViewer} style={{ height: "calc(100vh - 100px)" }} />
+      <div className="webviewer" ref={refViewer} style={{ height: "calc(100vh - 100px)" }} />
       {data && <UserEditDrawer onClose={onClose} visible={visible} data={data} filledJson={(val) => filledJson(val)} />}
     </>
   );
@@ -367,13 +343,4 @@ const UserEditDrawer = ({ onClose, visible, data, filledJson }) => {
       }
     </Drawer>
   );
-};
-
-export const getServerSideProps = async (ctx) => {
-  let slug = ctx.params.slug;
-  return {
-    props: {
-      slug: slug.join(""),
-    },
-  };
 };

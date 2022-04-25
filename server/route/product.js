@@ -1,6 +1,13 @@
 const express = require("express");
 const { upload, requireSignin } = require("../middleware/index");
-const { getProductById, createProduct, editProduct, fetchProduct, deleteProduct } = require("../controller/product");
+const {
+  getProductById,
+  createProduct,
+  editProduct,
+  fetchProduct,
+  deleteProduct,
+  fetchCareer,
+} = require("../controller/product");
 
 const router = express.Router();
 
@@ -12,6 +19,7 @@ router.post("/product/edit/:id", requireSignin, upload.none(), editProduct);
 
 //Get
 router.get("/product", requireSignin, upload.none(), fetchProduct);
+
 
 // Delete
 router.delete("/product/:id", requireSignin, upload.none(), deleteProduct);

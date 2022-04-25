@@ -3,11 +3,11 @@ import { Skeleton, Typography, Tag } from "antd";
 import styles from "./styles.module.scss";
 import clsx from "clsx";
 import { number_format } from "../../helper/Common";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 const CardCategory = (props) => {
   console.log(props);
   return (
-    <Link href={`/user/san-pham/${props?.data?.slug}`} passHref>
+    <Link to={`/user/san-pham/${props?.data?.slug}`}>
       <div className={clsx([styles.card])}>
         <div className={styles.cardIcon}>
           <Skeleton.Avatar size="large" active />

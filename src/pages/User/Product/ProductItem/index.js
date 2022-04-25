@@ -1,27 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Button, Card, Modal, Row, Col, message, Tabs } from "antd";
-import CCPageHeader from "../../../../components/CCPageHeader";
-import CreateCompany from "../../../../components/Form/CreateCompany";
-
-import { getSession, signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import axios from "../../../../config/axios";
+import { Button, Card, message, Modal, Tabs } from "antd";
 // import ProductForm from "./../../../components/Form/ProductForm";
 import Aos from "aos";
-import Head from "next/head";
+
+import React, { useEffect, useRef, useState } from "react";
 import CCSteps from "../../../../components/CCHeaderSteps";
-import PreviewData from "../../../../components/Form/PreviewData";
-import { stepType1, stepType2 } from "../../../../contants/Step";
 import ChangeInforForm from "../../../../components/Form/ChangeInforForm";
-import LoginForm from "../../../../components/Form/Login";
-import ContactForm from "../../../../components/Form/Contact";
-import AuthService from "../../../../service/AuthService";
+import CreateCompany from "../../../../components/Form/CreateCompany";
+import PreviewData from "../../../../components/Form/PreviewData";
+import axios from "../../../../config/axios";
+import { stepType1 } from "../../../../contants/Step";
 
 // import { NextResponse } from 'next/server';
 const { TabPane } = Tabs;
-const Sanpham = (props) => {
-  const { data: session, status } = useSession();
-
+const UserProductItem = (props) => {
   const productRef = useRef();
   const registerRef = useRef();
   const formRef = useRef();
@@ -29,7 +20,6 @@ const Sanpham = (props) => {
   const inforRef = useRef();
   const [form, setForm] = useState({});
   const [current, setCurrent] = useState(0);
-  const router = useRouter();
   const [changeInforStep, setChangeInforStep] = useState([
     {
       title: "Bước 1",
@@ -255,14 +245,10 @@ const Sanpham = (props) => {
 
   return (
     <>
-      <Head>
-        <title>Sản phẩm - Thành lập doanh nghiệp</title>
-      </Head>
-
       <div className="" style={{ paddingBottom: 50 }}>
         {renderHeaderStep(props.type)}
 
-        {status === "authenticated" && renderFormByType(props.type)}
+        {renderFormByType(props.type)}
 
         <Modal
           visible={childModal.visible}
@@ -280,7 +266,7 @@ const Sanpham = (props) => {
   );
 };
 
-export default Sanpham;
+export default UserProductItem;
 
 export const getServerSideProps = async (context) => {
   let slug = context.params.slug;
