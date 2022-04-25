@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, useRoutes } from "react-router-dom";
+import { LAYOUT_ROUTER } from "./contants/Route";
+import { ConfigProvider, Layout } from "antd";
+import { useAuth } from "./helper/Hook/useAuth";
+import Footer from "./components/Footer";
+import "./assets/css/styles.scss";
+import "aos/dist/aos.css";
+import CustomHeader from "src/components/CustomHeader";
+ConfigProvider.config({
+  theme: {
+    primaryColor: "#cd2027",
+  },
+});
+const { Content } = Layout;
+const RouterComponent = (props) => {
+  const Route = useRoutes(LAYOUT_ROUTER(props.auth));
+  return Route;
+};
 
-function App() {
+function App(props) {
+  const auth = useAuth();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Layout style={{ background: "#fff", minHeight: "100vh" }}>
+        <ConfigProvider>
+          <BrowserRouter>
+            <CustomHeader auth={auth} />
+            <Content className="site-layout">
+              <RouterComponent auth={auth} />
+            </Content>
+          </BrowserRouter>
+        </ConfigProvider>
+        <Footer />
+      </Layout>
     </div>
   );
 }

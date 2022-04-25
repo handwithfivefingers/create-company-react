@@ -1,0 +1,15 @@
+.hide {
+	display: none;
+	opacity: 0;
+	visibility: hidden;
+	transition: 0.1s;
+	height: 0;
+	margin: 0;
+}
+.visible {
+	opacity: 1;
+	visibility: visible;
+	display: flex;
+	height: auto;
+	animation-delay: 0.2s;
+}

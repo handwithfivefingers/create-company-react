@@ -1,0 +1,47 @@
+.mail {
+  display: grid;
+  grid-template-rows: 50px 50px 1fr;
+  height: 100vh;
+  padding: 12px;
+  gap: 12px;
+  .header {
+    background: #fff;
+    padding: 12px 8px;
+    text-align: left;
+    align-self: center;
+
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    .title {
+      font-size: 24px;
+      font-weight: 400;
+    }
+    .action {
+      justify-self: end;
+    }
+  }
+  //   & > div:nth-child(2) {
+  //     padding: 12px 0;
+  //     margin: 0;
+  //     align-items: center;
+  //   }
+}
+
+.tableContent {
+  // font-weight: 200;
+  overflow: hidden;
+  white-space: normal;
+  letter-spacing: 0.5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  color: #000;
+  text-shadow: none;
+  text-transform: capitalize;
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}
