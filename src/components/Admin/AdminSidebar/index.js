@@ -32,7 +32,7 @@ const AdminSidebar = () => {
       if (item.submenu) {
         return (
           <Menu.SubMenu
-            href={item.path}
+            key={item.path}
             title={
               <Link
                 to={item.path}
@@ -79,7 +79,7 @@ const AdminSidebar = () => {
             <Link to={"/"}>Trang chủ</Link>
           </Menu.Item>
           {renderSidebar(AdminRouter)}
-          <Menu.Item onClick={() => signOut()} icon={<RiLogoutCircleLine />}>
+          <Menu.Item key="/logout" onClick={() => signOut()} icon={<RiLogoutCircleLine />}>
             Đăng xuất
           </Menu.Item>
         </Menu>

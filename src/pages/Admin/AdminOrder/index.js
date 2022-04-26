@@ -166,6 +166,7 @@ const AdminOrder = () => {
             },
             showSizeChanger: false,
           }}
+          rowKey={(record) => record._id}
           scroll={{ x: 768 }}
         >
           <Table.Column

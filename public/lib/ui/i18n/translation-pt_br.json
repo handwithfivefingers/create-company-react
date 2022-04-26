@@ -81,11 +81,16 @@
     "select": "Selecione",
     "moveToTop": "Mover para o topo",
     "moveToBottom": "Mover para o fundo",
+    "redactPages": "Redigir páginas",
     "playAudio": "Reproduzir áudio",
-    "pauseAudio": "pausa de áudio"
+    "pauseAudio": "pausa de áudio",
+    "viewFile": "Visualizar arquivo",
+    "switchLanguage": "Linguagem"
   },
   "annotation": {
     "areaMeasurement": "Medição de área",
+    "arc": "Arco",
+    "arcMeasurement": "Medição de arco",
     "arrow": "Seta",
     "callout": "Texto explicativo",
     "crop": "Cortar página",
@@ -180,7 +185,9 @@
     "createStampButton": "Criar novo carimbo",
     "filter": "Filtro",
     "pageReplaceModalTitle": "Substituir página",
-    "files": "Arquivos"
+    "files": "Arquivos",
+    "editText": "Editar texto",
+    "redactionPanel": "Painel de redação"
   },
   "message": {
     "toolsOverlayNoPresets": "Sem predefinições",
@@ -404,10 +411,12 @@
       "area": "Área",
       "distanceMeasurement": "Medição de distância",
       "perimeterMeasurement": "Medição de perímetro",
+      "arcMeasurement": "Medição de arco",
       "areaMeasurement": "Medição de área",
       "countMeasurement": "Medição de contagem",
       "radius": "Raio",
-      "count": "Contagem"
+      "count": "Contagem",
+      "length": "Comprimento"
     },
     "measurementOption": {
       "scale": "Escala"
@@ -480,6 +489,15 @@
       "Username": "Nome do usuário",
       "Date": "Data",
       "Time": "Hora"
+    },
+    "pageRedactModal": {
+      "addMark": "Adicionar marca",
+      "pageSelection": "Seleção de página",
+      "current": "Pagina atual",
+      "specify": "Especificar páginas",
+      "odd": "Somente páginas ímpares",
+      "even": "Apenas páginas pares",
+      "header": "Marcar Redação de Páginas"
     }
   },
   "warning": {
@@ -568,7 +586,8 @@
     "enterUrlOrChooseFile": "Insira um URL ou escolha um arquivo para carregar no WebViewer",
     "enterUrl": "Digite o URL do arquivo",
     "extension": "Extensão de arquivo",
-    "existingFile": "O arquivo já está aberto"
+    "existingFile": "O arquivo já está aberto",
+    "addTab": "Adicionar guia"
   },
   "datePicker": {
     "previousMonth": "Mês anterior",
@@ -618,7 +637,9 @@
       "4": "Qui",
       "5": "Sex",
       "6": "Sáb"
-    }
+    },
+    "today": "Hoje",
+    "invalidDateTime": "Data/hora inválida: a entrada deve corresponder ao formato"
   },
   "formField": {
     "formFieldPopup": {
@@ -756,5 +777,21 @@
       "certificateDownloadError": "Erro encontrado ao tentar baixar um certificado confiável",
       "localCertificateError": "Existem alguns problemas com a leitura de um certificado local"
     }
+  },
+  "redactionPanel": {
+    "noMarkedRedactions": "Comece a redigir marcando texto, regiões, páginas ou fazendo uma pesquisa.",
+    "redactionSearchPlaceholder": "Adicionar por pesquisa de palavras-chave ou padrões",
+    "redactionCounter": "Marcado para redação",
+    "clearMarked": "Claro",
+    "redactAllMarked": "Redigir tudo",
+    "redactionItem": {
+      "regionRedaction": "Redação da região",
+      "fullPageRedaction": "Redação de página inteira"
+    },
+    "expand": "Expandir",
+    "collapse": "Colapso"
+  },
+  "languageModal": {
+    "selectLanguage": "Selecione o idioma"
   }
 }

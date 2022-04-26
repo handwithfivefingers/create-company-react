@@ -14,6 +14,9 @@ const ProductRoute = require("./server/route/product");
 const CategoryRoute = require("./server/route/category");
 const CareerRoute = require("./server/route/career");
 const OrderRoute = require("./server/route/order");
+const ServiceRoute = require("./server/route/service");
+const UserRoute = require("./server/route/user");
+const MailRoute = require("./server/route/template");
 // DB
 mongoose
   .connect(
@@ -50,17 +53,25 @@ app.use("/api", ProductRoute);
 app.use("/api", CategoryRoute);
 app.use("/api", CareerRoute);
 app.use("/api", OrderRoute);
+app.use("/api", ServiceRoute);
+app.use("/api", UserRoute);
+app.use("/api", MailRoute);
+// Handling 500
+app.use((err, req, res, next) => {
+  res.status(500).send({
+    error: err.stack,
+    message: "Internal Server Error",
+  });
+});
 
 app.use((req, res, next) => {
   // res.header("Access-Control-Allow-Origin", "*");
   // res.header("Access-Control-Request-Headers", "POST");
+  // console.log(req, res);
+  res.header("Content-Encoding", "gzip, deflate, br");
   next();
 });
-// App run
-// app.listen(process.env.PORT, () => {
-//   console.log(`Server is running on port ${process.env.PORT}`);
-// });
+
 app.listen(3001, () => {
   console.log("Server is runnign in port 3001");
 });
-// const auth = router.get('/',)

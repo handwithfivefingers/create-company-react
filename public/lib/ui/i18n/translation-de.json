@@ -81,11 +81,16 @@
     "select": "Auswählen",
     "moveToTop": "Nach oben verschieben",
     "moveToBottom": "Nach unten gehen",
+    "redactPages": "Seiten schwärzen",
     "playAudio": "Audio abspielen",
-    "pauseAudio": "Audiopause"
+    "pauseAudio": "Audiopause",
+    "viewFile": "Datei ansehen",
+    "switchLanguage": "Sprache"
   },
   "annotation": {
     "areaMeasurement": "Flächenmessung",
+    "arc": "Bogen",
+    "arcMeasurement": "Lichtbogenmessung",
     "arrow": "Pfeil",
     "callout": "Callout",
     "crop": "Seite zuschneiden",
@@ -180,7 +185,9 @@
     "createStampButton": "Neuen Stempel erstellen",
     "filter": "Filter",
     "pageReplaceModalTitle": "Seite Ersetzen",
-    "files": "Dateien"
+    "files": "Dateien",
+    "editText": "Text bearbeiten",
+    "redactionPanel": "Redaktionsbereich"
   },
   "message": {
     "toolsOverlayNoPresets": "Keine Voreinstellungen",
@@ -404,10 +411,12 @@
       "area": "Fläche",
       "distanceMeasurement": "Abstandsmessung",
       "perimeterMeasurement": "Umfangsmessung",
+      "arcMeasurement": "Lichtbogenmessung",
       "areaMeasurement": "Flächenmessung",
       "countMeasurement": "Zählen",
       "radius": "Radius",
-      "count": "Anzahl"
+      "count": "Anzahl",
+      "length": "Länge"
     },
     "measurementOption": {
       "scale": "Maßstab"
@@ -480,6 +489,15 @@
       "Username": "Nutzername",
       "Date": "Datum",
       "Time": "Zeit"
+    },
+    "pageRedactModal": {
+      "addMark": "Markus hinzufügen",
+      "pageSelection": "Seitenauswahl",
+      "current": "Aktuelle Seite",
+      "specify": "Seiten angeben",
+      "odd": "Nur ungerade Seiten",
+      "even": "Nur gerade Seiten",
+      "header": "Schwärzung von Seiten markieren"
     }
   },
   "warning": {
@@ -568,7 +586,8 @@
     "enterUrlOrChooseFile": "Geben Sie eine URL ein oder wählen Sie eine Datei aus, die in WebViewer geladen werden soll",
     "enterUrl": "Datei-URL eingeben",
     "extension": "Dateierweiterung",
-    "existingFile": "Datei ist bereits geöffnet"
+    "existingFile": "Datei ist bereits geöffnet",
+    "addTab": "Registerkarte hinzufügen"
   },
   "datePicker": {
     "previousMonth": "Vorheriger Monat",
@@ -618,7 +637,9 @@
       "4": "Do.",
       "5": "Fr.",
       "6": "Sa."
-    }
+    },
+    "today": "Heute",
+    "invalidDateTime": "Ungültiges Datum/Uhrzeit: Die Eingabe muss dem Format entsprechen"
   },
   "formField": {
     "formFieldPopup": {
@@ -756,5 +777,21 @@
       "certificateDownloadError": "Beim Versuch, ein vertrauenswürdiges Zertifikat herunterzuladen, ist ein Fehler aufgetreten",
       "localCertificateError": "Es gibt einige Probleme beim Lesen eines lokalen Zertifikats"
     }
+  },
+  "redactionPanel": {
+    "noMarkedRedactions": "Beginnen Sie mit dem Schwärzen, indem Sie Text, Regionen, Seiten markieren oder eine Suche durchführen.",
+    "redactionSearchPlaceholder": "Hinzufügen nach Schlüsselwortsuche oder Mustern",
+    "redactionCounter": "Zur Schwärzung markiert",
+    "clearMarked": "Klar",
+    "redactAllMarked": "Alle schwärzen",
+    "redactionItem": {
+      "regionRedaction": "Regionsredaktion",
+      "fullPageRedaction": "Ganzseitige Redaktion"
+    },
+    "expand": "Erweitern",
+    "collapse": "Zusammenbruch"
+  },
+  "languageModal": {
+    "selectLanguage": "Sprache auswählen"
   }
 }

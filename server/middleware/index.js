@@ -21,7 +21,7 @@ const signuploadform = () => {
       eager: "c_pad,h_300,w_400|c_crop,h_200,w_260",
       folder: "song_files",
     },
-    apiKey
+    apiKey,
   );
   return { timestamp, signature };
 };
@@ -43,9 +43,11 @@ const storage = multer.diskStorage({
     cb(null, path.join(path.dirname(__dirname), "uploads"));
   },
   filename: function (req, file, cb) {
+    
     cb(null, shortid.generate() + "-" + file.originalname);
   },
 });
+
 exports.upload = multer({ storage });
 
 exports.requireSignin = async (req, res, next) => {

@@ -21,7 +21,7 @@ function ListTemplateMail(props) {
     setLoading(true);
     let params = { page: page };
     axios
-      .get("/api/admin/template", { params })
+      .get("/admin/template", { params })
       .then((res) => {
         if (res.data.status === 200) {
           setData(res.data.data);
@@ -116,13 +116,24 @@ function ListTemplateMail(props) {
           showSizeChanger: false,
         }}
       >
-        <Table.Column title="Mẫu Email" dataIndex="name" render={(val, record, i) => record.name} />
-
+        <Table.Column
+          title="Mẫu Email"
+          dataIndex="name"
+          render={(val, record, i) => (
+            <Tooltip title={record.name} color={"#108ee9"} key={"#108ee9"}>
+              {record.name}
+            </Tooltip>
+          )}
+        />
+        <Table.Column title="Subject" dataIndex="subject" render={(val, record, i) => record.subject} />
         <Table.Column
           title="Nội dung Email"
+          width="300px"
           render={(val, record, i) => (
             <div className={styles.tableContent}>
-              <Tooltip title={parser(record?.content || "")}>{parser(record?.content || "")} </Tooltip>
+              <Tooltip title={parser(record?.content || "")} color={"#108ee9"} key={"#108ee9"}>
+                {parser(record?.content || "")}{" "}
+              </Tooltip>
             </div>
           )}
         />

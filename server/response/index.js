@@ -1,15 +1,4 @@
-exports.authenticated =
-  (fn, condition = null) =>
-  async (req, res) => {
-    const token = await getToken({ req, secret });
-    if (token) {
-      req.user = token.id;
-      req.role = token.role;
-      condition && token.role.toLowerCase() !== condition ? permisHandler(res) : await fn(req, res);
-    } else {
-      return authFailedHandler(res);
-    }
-  };
+const fs = require("fs");
 
 exports.loginFailed = (res) => {
   return res.status(200).json({

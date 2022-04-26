@@ -10,7 +10,6 @@ import AdminProductService from "src/service/AdminService/AdminProductService";
 
 const { TabPane } = Tabs;
 const AdminProduct = (props) => {
-  console.log(props);
   const [data, setData] = useState([]);
   const [cateData, setCateData] = useState([]);
   const [loading, setLoading] = useState(false);

@@ -81,21 +81,3 @@ exports.getOrderBySlug = async (req, res) => {
   }
   return permisHandler(res);
 };
-
-// const getOrders = async (req, res) => {
-//   const { id } = req.query;
-//   if (req.role === "admin") {
-//     const _order = await Order.findById(id)
-//       .populate("products", "name type")
-//       .populate("data.create_company.main_career", ["name", "code"])
-//       .populate("data.create_company.opt_career", ["name", "code"]);
-//     // console.log(_order);
-//     try {
-//       return successHandler(_order, res);
-//     } catch (err) {
-//       return errHandler(err, res);
-//     }
-//   }
-
-//   return permisHandler(res);
-// };

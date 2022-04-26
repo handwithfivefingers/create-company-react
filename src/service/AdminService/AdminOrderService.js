@@ -1,7 +1,7 @@
 import axios from "src/config/axios";
 
 const api_path = {
-  getOrder: "/order",
+  getOrder: "/admin/order",
 };
 
 const AdminOrderService = {

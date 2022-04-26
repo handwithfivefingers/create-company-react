@@ -1,12 +1,12 @@
-import PDFWebViewer from "@pdftron/webviewer";
+// import WebViewer from "@pdftron/webviewer";
 import { Button, Card, Drawer, Form, Input, message, Modal, Space } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Component } from "react";
 import ReactDOMServer from "react-dom/server";
 import { RiPlayList2Fill } from "react-icons/ri";
 import { useParams } from "react-router";
 import AdminOrderService from "src/service/AdminService/AdminOrderService";
 import axios from "src/config/axios";
-
+import WebViewer from "@pdftron/webviewer";
 const allFiles = {
   // {
   //   name: "File_1A_DieuLeCaNhan",
@@ -78,12 +78,12 @@ const allFiles = {
 };
 
 export default function ClassComponentText(props) {
-  const refViewer = useRef(null);
+  const refViewer = useRef();
   const [visible, setVisible] = useState(false);
   const [data, setData] = useState();
   const [initialDoc, setInitialDoc] = useState("/files/dieulecanhan.docx");
-  const [jsonData, setJsonData] = useState([]);
-  const [instance, setInstance] = useState();
+  // const [jsonData, setJsonData] = useState([]);
+  // const [instance, setInstance] = useState();
   const slug = useParams();
   const insRef = useRef();
 
@@ -108,7 +108,7 @@ export default function ClassComponentText(props) {
     AdminOrderService.getOrderBySlug(slug)
       .then((res) => {
         if (res.data.status === 200) {
-          console.log(res);
+          // console.log(res);
           let { create_company } = res.data.data.data;
           setData(create_company);
         }
@@ -188,32 +188,7 @@ export default function ClassComponentText(props) {
         path: "/lib",
         initialDoc,
       };
-      PDFWebViewer(params, ref.current).then((instance) => {
-        const {
-          setHeaderItems,
-          enableElements,
-          disableElements,
-          enableFeatures,
-          disableFeatures,
-          setTheme,
-          Feature,
-          Theme,
-        } = instance.UI;
-
-        instance.UI?.disableElements(["ribbons"]); //
-        instance.UI?.disableElements(["viewControlsButton"]); //
-        // instance.UI?.disableElements(["searchButton"]);
-        instance.UI?.disableElements(["panToolButton"]); //
-        instance.UI?.disableElements(["pageNavOverlay"]); //
-
-        instance.UI?.disableFeatures(Feature.Download); //
-        instance.UI?.disableFeatures(Feature.TextSelection); //
-        // instance.UI?.disableFeatures(Feature.Annotations);
-        instance.UI?.disableFeatures(Feature.NotesPanel); //
-        instance.UI?.disableFeatures(Feature.FilePicker); //
-        // instance.UI?.disableFeatures([Feature.Print]);
-
-        setInstance(instance);
+      WebViewer(params, ref.current).then((instance) => {
         insRef.current = instance; // Set ins to handle when re-render
         //Add new Button
         const { documentViewer, annotationManager } = instance.Core;
@@ -251,10 +226,9 @@ export default function ClassComponentText(props) {
       });
     } else {
       insRef?.current.UI.loadDocument(initialDoc);
-      // instance.UI.loadDocument(initialDoc);
     }
   };
-  console.log(instance);
+
   return (
     <>
       <Button
@@ -271,7 +245,7 @@ export default function ClassComponentText(props) {
       </Button>
 
       <div className="webviewer" ref={refViewer} style={{ height: "calc(100vh - 100px)" }} />
-      {data && <UserEditDrawer onClose={onClose} visible={visible} data={data} filledJson={(val) => filledJson(val)} />}
+      {/* {data && <UserEditDrawer onClose={onClose} visible={visible} data={data} filledJson={(val) => filledJson(val)} />} */}
     </>
   );
 }
