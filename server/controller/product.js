@@ -50,7 +50,7 @@ exports.editProduct = async (req, res) => {
       _id: id,
     },
     obj,
-    { new: true },
+    { new: true }
   );
 
   return updatedHandler(product, res);
@@ -75,7 +75,26 @@ exports.deleteProduct = async (req, res) => {
   return res.status(200).json({ message: "Xóa sản phẩm thành công", status: 200 });
 };
 
+exports.getProductBySlug = async (req, res) => {
+  try {
+    let _cate = await Category.findOne({ slug: req.params.slug });
 
+    let _product = await Product.find({
+      categories: {
+        $in: [_cate._id],
+      },
+    }).populate("categories");
+
+    let newData = filterData(_product);
+
+    let lastData = filterCaregories(newData);
+
+    return successHandler(lastData, res, _cate);
+  } catch (err) {
+    return errHandler(err, res);
+  }
+
+};
 
 const filterData = (data = null) => {
   if (data) {

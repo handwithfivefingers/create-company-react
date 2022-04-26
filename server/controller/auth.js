@@ -5,26 +5,6 @@ const { loginFailed, createdHandler, errHandler, existHandler } = require("../re
 const jwt = require("jsonwebtoken");
 
 exports.registerUser = async (req, res) => {
-  // User.findOne({ username: req.body.username }).exec(async (err, data) => {
-  //   if (data) return res.status(400);
-
-  //   const hash_password = await bcrypt.hash(req.body.password, 10);
-
-  //   let _user = new User({
-  //     hash_password,
-  //     username: req.body.username,
-  //   });
-
-  //   _user.save((error, data) => {
-  //     if (error) return res.status(400).json({ error });
-  //     if (data) {
-  //       const token = jwt.sign({ _id: data._id, role: data.role }, process.env.SECRET, {
-  //         expiresIn: process.env.EXPIRE_TIME,
-  //       });
-  //       return res.status(200).json({ data, token });
-  //     }
-  //   });
-  // });
   try {
     let _user = await User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] });
     let message = _user?.phone === req.body.phone ? "Phone" : "Email"; // if have user -> check mail or phone

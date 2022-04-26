@@ -1,7 +1,7 @@
 const express = require("express");
 const { upload, requireSignin } = require("../middleware/index");
 const {
-  getProductById,
+  getProductBySlug,
   createProduct,
   editProduct,
   fetchProduct,
@@ -24,7 +24,7 @@ router.get("/product", requireSignin, upload.none(), fetchProduct);
 // Delete
 router.delete("/product/:id", requireSignin, upload.none(), deleteProduct);
 
-// get by ID
-// router.get("/product/:id", requireSignin, upload.none(), getProductById);
+// get by slug
+router.get("/product/:slug", requireSignin, upload.none(), getProductBySlug);
 
 module.exports = router;

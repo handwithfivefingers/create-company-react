@@ -1,15 +1,13 @@
 import { Button, Card, message, Modal, Tabs } from "antd";
-// import ProductForm from "./../../../components/Form/ProductForm";
 import Aos from "aos";
-
 import React, { useEffect, useRef, useState } from "react";
-import CCSteps from "../../../../components/CCHeaderSteps";
-import ChangeInforForm from "../../../../components/Form/ChangeInforForm";
-import CreateCompany from "../../../../components/Form/CreateCompany";
-import PreviewData from "../../../../components/Form/PreviewData";
-import axios from "../../../../config/axios";
-import { stepType1 } from "../../../../contants/Step";
-
+import CCSteps from "src/components/CCHeaderSteps";
+import ChangeInforForm from "src/components/Form/ChangeInforForm";
+import CreateCompany from "src/components/Form/CreateCompany";
+import PreviewData from "src/components/Form/PreviewData";
+import axios from "src/config/axios";
+import { stepType1 } from "src/contants/Step";
+import { useParams } from "react-router-dom";
 // import { NextResponse } from 'next/server';
 const { TabPane } = Tabs;
 const UserProductItem = (props) => {
@@ -20,6 +18,7 @@ const UserProductItem = (props) => {
   const inforRef = useRef();
   const [form, setForm] = useState({});
   const [current, setCurrent] = useState(0);
+  const [data, setData] = useState();
   const [changeInforStep, setChangeInforStep] = useState([
     {
       title: "Bước 1",
@@ -35,11 +34,18 @@ const UserProductItem = (props) => {
     width: 0,
     component: null,
   });
-
+  let params = useParams();
   useEffect(() => {
+    // console.log(slug);
+    getDataBySlug();
     Aos.init({ duration: 300 });
   }, []);
-
+  const getDataBySlug = () => {
+    axios.get(`/product/${params.slug}`).then((res) => {
+      console.log(res.data);
+      setData(res.data);
+    });
+  };
   // useEffect(() => {
   //   if (status === "authenticated") {
   //     setCurrent(0);
@@ -125,7 +131,7 @@ const UserProductItem = (props) => {
     // console.log(params);
     console.log(params);
     axios
-      .post("/api/orders/create", params)
+      .post("/order/create", params)
       .then((res) => {
         console.log(res);
         if (res.data.status === 200) {
@@ -170,7 +176,7 @@ const UserProductItem = (props) => {
           <>
             <Card className="card-boxShadow">
               <CreateCompany
-                data={props.data}
+                data={data.data}
                 ref={formRef}
                 onFinishScreen={(output) => setDataOutput(output)}
                 step={current}
@@ -200,7 +206,7 @@ const UserProductItem = (props) => {
         return (
           <Card className="card-boxShadow">
             <ChangeInforForm
-              data={props.data}
+              data={data.data}
               ref={formRef}
               current={current}
               onFinishScreen={(val) => handleChangeInforForm(val)}
@@ -246,9 +252,9 @@ const UserProductItem = (props) => {
   return (
     <>
       <div className="" style={{ paddingBottom: 50 }}>
-        {renderHeaderStep(props.type)}
+        {data && renderHeaderStep(data?.type)}
 
-        {renderFormByType(props.type)}
+        {data && renderFormByType(data?.type)}
 
         <Modal
           visible={childModal.visible}
@@ -268,12 +274,12 @@ const UserProductItem = (props) => {
 
 export default UserProductItem;
 
-export const getServerSideProps = async (context) => {
-  let slug = context.params.slug;
-  let res = await axios.get(`${process.env.NEXTAUTH_URL}/api/product/${slug}`);
-  return {
-    props: {
-      ...res.data,
-    },
-  };
-};
+// export const getServerSideProps = async (context) => {
+//   let slug = context.params.slug;
+//   let res = await axios.get(`${process.env.NEXTAUTH_URL}/api/product/${slug}`);
+//   return {
+//     props: {
+//       ...res.data,
+//     },
+//   };
+// };

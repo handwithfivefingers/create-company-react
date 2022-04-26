@@ -18,13 +18,14 @@ ConfigProvider.config({
 });
 
 const { Content } = Layout;
+
 const RouterComponent = (props) => {
-  const Route = useRoutes(LAYOUT_ROUTER(props.auth));
+  const Route = useRoutes(LAYOUT_ROUTER(props.auth)); // status, role
   return Route;
 };
 
 function App() {
-  const auth = useAuth();
+  const auth = useAuth(); // custom Hook
   const authReducer = useSelector((state) => state.authReducer);
 
   return (

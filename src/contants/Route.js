@@ -167,7 +167,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
       status && role === "user" ? (
         [
           {
-            path: "product",
+            path: "san-pham",
             title: "Sản phẩm",
             icon: <RiBarChartFill />,
             children: [

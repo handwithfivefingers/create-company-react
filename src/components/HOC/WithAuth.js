@@ -12,9 +12,15 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function WithAuth(Component, role) {
+
+
   return function Authenticated(props) {
+
     if (!props.status) return <Navigate to="/" />;
+
+
     if (role === "admin") {
+
       return (
         <Layout className={styles.adminLayout}>
           <AdminSidebar />
@@ -28,7 +34,9 @@ export default function WithAuth(Component, role) {
           </Layout>
         </Layout>
       );
+
     }
+    
     return (
       <Layout className={styles.mainLayout}>
         <UserSidebar />
