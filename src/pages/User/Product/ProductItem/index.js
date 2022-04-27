@@ -9,6 +9,7 @@ import { stepType1 } from "src/contants/Step";
 import { useParams } from "react-router-dom";
 import TamHoanForm from "src/components/Form/PendingForm";
 import styles from "./styles.module.scss";
+import ProductService from "src/service/UserService/ProductService";
 // import { NextResponse } from 'next/server';
 const { TabPane } = Tabs;
 const UserProductItem = (props) => {
@@ -16,6 +17,7 @@ const UserProductItem = (props) => {
   const [form, setForm] = useState({});
   const [current, setCurrent] = useState(0);
   const [data, setData] = useState();
+
   const [changeInforStep, setChangeInforStep] = useState([
     {
       title: "Bước 1",
@@ -26,6 +28,7 @@ const UserProductItem = (props) => {
       desc: "Preview",
     },
   ]);
+
   const [pendingStep, setPendingStep] = useState([
     {
       title: "Bước 1",
@@ -36,6 +39,7 @@ const UserProductItem = (props) => {
       desc: "Preview",
     },
   ]);
+
   const [childModal, setChildModal] = useState({
     visible: false,
     width: 0,
@@ -92,7 +96,41 @@ const UserProductItem = (props) => {
       visible: false,
     });
   };
+  const handlePurchaseCreateCompany = () => {
+    let val = formRef.current.getFieldsValue();
+    let body = {
+      ...val,
+      create_company: {
+        ...val.create_company,
+        company_opt_career: val.create_company.company_opt_career.map((item) => ({
+          value: item.value,
+          name: item.name,
+          code: item.code,
+        })),
+      },
+    };
 
+    let params = {
+      track: {
+        step: 1,
+        status: "progress",
+      },
+      payment: 0,
+      data: {
+        ...body,
+      },
+    };
+    ProductService.createCompanyWithPayment(params)
+      .then((res) => {
+        if (res.data.status === 200) {
+          // message.success(res.data.message);
+          return (window.location.href = res.data.url);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const handlePurchase = (type) => {
     let val = formRef.current.getFieldsValue();
     let params = {
@@ -191,11 +229,45 @@ const UserProductItem = (props) => {
       {
         title: `Bước 3`,
         desc: "Preview",
-      },
+      }
     );
     setPendingStep(data);
   };
 
+  const handleSave = () => {
+    let val = formRef.current.getFieldsValue();
+    let body = {
+      ...val,
+      create_company: {
+        ...val.create_company,
+        company_opt_career: val.create_company.company_opt_career.map((item) => ({
+          value: item.value,
+          name: item.name,
+          code: item.code,
+        })),
+      },
+    };
+
+    let params = {
+      track: {
+        step: 1,
+        status: "progress",
+      },
+      payment: 0,
+      data: {
+        ...body,
+      },
+    };
+    ProductService.createCompany(params)
+      .then((res) => {
+        if (res.data.status === 200) {
+          message.success(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const renderFormByType = (type) => {
     switch (type) {
       case 1:
@@ -218,8 +290,8 @@ const UserProductItem = (props) => {
 
                 {current === 8 ? (
                   <>
-                    {/* <Button onClick={handlePreview}>Kiểm tra</Button> */}
-                    <Button onClick={() => handlePurchase("register")}>Thanh toán</Button>
+                    <Button onClick={handleSave}>Lưu lại</Button>
+                    <Button onClick={handlePurchaseCreateCompany}>Thanh toán</Button>
                   </>
                 ) : (
                   ""
@@ -248,7 +320,7 @@ const UserProductItem = (props) => {
 
               {current === changeInforStep.length - 1 ? (
                 <>
-                  <Button onClick={() => handlePurchase("change")}>Thanh toán</Button>
+                  <Button onClick={() => handlePurchase()}>Thanh toán</Button>
                 </>
               ) : (
                 ""
@@ -268,14 +340,14 @@ const UserProductItem = (props) => {
               onFinishScreen={(val) => handlesetPendingStep(val)}
             />
 
-            {current === 3 ? renderPrewviewForm() : ""}
+            {current === 2 ? renderPrewviewForm(formRef) : ""}
 
             <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
               {current < 2 ? <Button onClick={Next}>Next</Button> : ""}
               {current === 2 ? (
                 <>
                   {/* <Button onClick={handlePreview}>Kiểm tra</Button> */}
-                  <Button onClick={() => handlePurchase("change")}>Thanh toán</Button>
+                  <Button onClick={() => handlePurchase()}>Thanh toán</Button>
                 </>
               ) : (
                 ""

@@ -28,6 +28,7 @@ import PreviewData from "../PreviewData";
 import { FormFieldText, BaseFieldText } from "../../../contants/Common";
 import { FORM_SELECT } from "../../../contants/FormConstant";
 import CCInput from "../../CCInput";
+
 const popData = {
   content: (
     <ul style={{ maxWidth: 600, listStyle: "none" }}>
@@ -66,8 +67,6 @@ const CreateCompany = forwardRef((props, formRef) => {
 
   const [loading, setLoading] = useState(false);
 
-  // const formRef = useRef();
-
   const [current, setCurrent] = useState(1);
 
   const [formData, setFormData] = useState({});
@@ -82,25 +81,22 @@ const CreateCompany = forwardRef((props, formRef) => {
     setCurrent(props.step);
   }, [props.step]);
 
-  useEffect(() => {
-    //   // let val = formRef.current.getFieldsValue();
-    //   let formData = window.localStorage.getItem("formData");
-    formRef.current.setFieldsValue({
-      origin_person: {
-        doc_type: null,
-      },
-    });
-    //   window?.localStorage?.setItem("formData", JSON.stringify({ ...formData, origin_person: {} }));
-  }, [formData.present_person]);
+  // useEffect(() => {
+  //   formRef.current.setFieldsValue({
+  //     origin_person: {
+  //       doc_type: null,
+  //     },
+  //   });
+  // }, [formData.present_person]);
 
-  useEffect(() => {
-    if (formRef.current) {
-      let formData = window.localStorage.getItem("formData");
-      if (formData) {
-        handleGetDataFormLocal(JSON.parse(formData));
-      }
-    }
-  }, [formRef]);
+  // useEffect(() => {
+  //   if (formRef.current) {
+  //     let formData = window.localStorage.getItem("formData");
+  //     if (formData) {
+  //       handleGetDataFormLocal(JSON.parse(formData));
+  //     }
+  //   }
+  // }, [formRef]);
 
   const onFetchCareer = () => {
     HomepageService.fetchCareer()
@@ -148,62 +144,62 @@ const CreateCompany = forwardRef((props, formRef) => {
     });
   };
 
-  const onFinish = (val) => {
-    let {
-      base_val,
-      company_main_career,
-      company_opt,
-      company_value,
-      legal_respon,
-      company_core,
-      origin_person,
-      per_main,
-      present_person,
-    } = val;
-    let params = {
-      base_val,
-      company_main_career,
-      company_opt,
-      company_value,
-      legal_respon,
-      company_core,
-      origin_person,
-      per_main,
-      present_person,
-      productId: props?.[0]?._id,
-    };
-    if (props?.onFinishScreen) {
-      props.onFinishScreen(params);
-    }
-    // axios
-    //   .post("/api/register-company", params)
-    //   .then((res) => {
-    //     // if (res.data.status === 201) {
-    //     //   // handle request payment
-    //     //   let paymentParams = {
-    //     //     amount: 999999,
-    //     //     orderDescription: 'Test payment by submit form'
-    //     //   }
-    //     //   handlePayment(paymentParams)
-    //     // }
-    //     // console.log(res);
-    //     message.success("Đăng kí thành lập công ty thành công");
-    //   })
-    //   .catch((err) => console.log("err", err))
-    //   .finally();
-  };
+  // const onFinish = (val) => {
+  //   let {
+  //     base_val,
+  //     company_main_career,
+  //     company_opt,
+  //     company_value,
+  //     legal_respon,
+  //     company_core,
+  //     origin_person,
+  //     per_main,
+  //     present_person,
+  //   } = val;
+  //   let params = {
+  //     base_val,
+  //     company_main_career,
+  //     company_opt,
+  //     company_value,
+  //     legal_respon,
+  //     company_core,
+  //     origin_person,
+  //     per_main,
+  //     present_person,
+  //     productId: props?.[0]?._id,
+  //   };
+  //   if (props?.onFinishScreen) {
+  //     props.onFinishScreen(params);
+  //   }
+  //   // axios
+  //   //   .post("/api/register-company", params)
+  //   //   .then((res) => {
+  //   //     // if (res.data.status === 201) {
+  //   //     //   // handle request payment
+  //   //     //   let paymentParams = {
+  //   //     //     amount: 999999,
+  //   //     //     orderDescription: 'Test payment by submit form'
+  //   //     //   }
+  //   //     //   handlePayment(paymentParams)
+  //   //     // }
+  //   //     // console.log(res);
+  //   //     message.success("Đăng kí thành lập công ty thành công");
+  //   //   })
+  //   //   .catch((err) => console.log("err", err))
+  //   //   .finally();
+  // };
 
-  const handlePayment = (params) => {
-    axios
-      .post(`/api/payment`, params)
-      .then((res) => {
-        if (res.status === 200) {
-          return (window.location.href = res.data.url);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
-  };
+  // const handlePayment = (params) => {
+  //   axios
+  //     .post(`/api/payment`, params)
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         return (window.location.href = res.data.url);
+  //       }
+  //     })
+  //     .catch((err) => console.log(err))
+  //     .finally(() => setLoading(false));
+  // };
 
   const handleAddmoreField = (lth, add) => {
     // lth : length
@@ -211,8 +207,8 @@ const CreateCompany = forwardRef((props, formRef) => {
     if (lth >= 1) {
       add();
     } else {
-      // add({ ...legal_data });
-      const { origin_person } = formRef.current.getFieldsValue();
+      const { create_company } = formRef.current.getFieldsValue();
+      let { origin_person } = create_company;
       let {
         name,
         gender,
@@ -242,7 +238,6 @@ const CreateCompany = forwardRef((props, formRef) => {
   };
 
   const getCompanyByName = (val) => {
-    // let url = "/api/hello";
     if (val.length > 0) {
       axios
         .post(`/api/hello`, { params: val })
@@ -262,8 +257,13 @@ const CreateCompany = forwardRef((props, formRef) => {
     window.localStorage.setItem("formData", JSON.stringify(val));
   };
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
+  const handleChange = (value, opt) => {
+    // let val = formRef.current.getFieldsValue();
+    formRef.current.setFieldsValue({
+      create_company: {
+        company_opt_career: opt,
+      },
+    });
   };
 
   const dropdownRender = () => {
@@ -282,7 +282,7 @@ const CreateCompany = forwardRef((props, formRef) => {
 
   return (
     <>
-      <Form layout="vertical" onFinish={onFinish} ref={formRef} onFieldsChange={handleFieldsChange}>
+      <Form layout="vertical" ref={formRef} onFieldsChange={handleFieldsChange}>
         <Row
           className={clsx([
             styles.hide,
@@ -292,7 +292,7 @@ const CreateCompany = forwardRef((props, formRef) => {
           ])}
         >
           <Col span={24}>
-            <Form.Item name="selectProduct" required label="Chọn loại hình doanh nghiệp">
+            <Form.Item name={["selectProduct"]} required label="Chọn loại hình doanh nghiệp">
               {dropdownRender()}
             </Form.Item>
           </Col>
@@ -308,40 +308,40 @@ const CreateCompany = forwardRef((props, formRef) => {
           ])}
         >
           <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name={["base_val", "num"]} label={FormFieldText["base_val"]["num"]}>
-              <InputNumber
-                // prefix={<>VND</>}
-                // formatter={(val) => `${number_format(val)}`}
-                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                style={{ width: "100%" }}
-                onChange={(e) => formRef?.current.setFieldsValue({ company_value: e })}
-              />
-            </Form.Item>
+            <CCInput
+              type="number"
+              name={["create_company", "base_val", "num"]}
+              label={FormFieldText["base_val"]["num"]}
+              formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              style={{ width: "100%" }}
+              onChange={(e) => formRef?.current.setFieldsValue({ company_value: e })}
+            />
           </Col>
+
           <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name={["base_val", "char"]} label={FormFieldText["base_val"]["char"]}>
-              <Input
-                onChange={(e) => {
-                  let pattern = /[1-9]/g;
-                  if (e.target.value.match(pattern)) {
-                    console.log("havee");
-                    formRef.current.setFields([
-                      {
-                        name: ["base_val", "char"],
-                        errors: ["Vui lòng không nhập kí tự khác ngoài chữ"],
-                      },
-                    ]);
-                  } else {
-                    formRef.current.setFields([
-                      {
-                        name: ["base_val", "char"],
-                        errors: [],
-                      },
-                    ]);
-                  }
-                }}
-              />
-            </Form.Item>
+            <CCInput
+              type="text"
+              name={["create_company", "base_val", "char"]}
+              label={FormFieldText["base_val"]["char"]}
+              onChange={(e) => {
+                let pattern = /[1-9]/g;
+                if (e.target.value.match(pattern)) {
+                  formRef.current.setFields([
+                    {
+                      name: ["create_company", "base_val", "char"],
+                      errors: ["Vui lòng không nhập kí tự khác ngoài chữ"],
+                    },
+                  ]);
+                } else {
+                  formRef.current.setFields([
+                    {
+                      name: ["create_company", "base_val", "char"],
+                      errors: [],
+                    },
+                  ]);
+                }
+              }}
+            />
           </Col>
         </Row>
 
@@ -356,12 +356,14 @@ const CreateCompany = forwardRef((props, formRef) => {
         >
           <Row gutter={[16, 12]}>
             <Col lg={12} md={12} sm={24} xs={24}>
-              <Form.Item name={["origin_person", "name"]} label={FormFieldText["origin_person"]}>
-                <Input />
-              </Form.Item>
+              <CCInput
+                type="text"
+                name={["create_company", "origin_person", "name"]}
+                label={FormFieldText["origin_person"]}
+              />
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
-              <Form.Item label="Người đại diện" name="present_person">
+              {/* <Form.Item label="Người đại diện" name="present_person">
                 <Select onSelect={(e) => setFormData({ ...formData, present_person: e })}>
                   <Select.Option
                     value={1}
@@ -373,39 +375,57 @@ const CreateCompany = forwardRef((props, formRef) => {
                     value={2}
                     // file: 1-B, 2 , 3
                   >
-                    {/* Người đại diện là tổ chức */}
+                 
                     Người đại diện là tổ chức
                   </Select.Option>
                 </Select>
-              </Form.Item>
+              </Form.Item> */}
+              <CCInput
+                type="select"
+                label="Người đại diện"
+                name={["create_company", "present_person"]}
+                onSelect={(e) => setFormData({ ...formData, present_person: e })}
+                options={[
+                  { value: 1, name: "Người đại diện là cá nhân" },
+                  { value: 2, name: "Người đại diện là tổ chức" },
+                ]}
+              />
             </Col>
             {formData?.present_person == 1 ? (
               <>
                 <Col lg={12} md={12} sm={24} xs={24}>
-                  <Form.Item name={["origin_person", "gender"]} label="Giới tính">
-                    <Select>
-                      <Select.Option value={0}>Nữ</Select.Option>
-                      <Select.Option value={1}>Nam</Select.Option>
-                    </Select>
-                  </Form.Item>
+                  <CCInput
+                    type="select"
+                    name={["create_company", "origin_person", "gender"]}
+                    label="Giới tính"
+                    options={[
+                      { value: "Nữ", name: "Nữ" },
+                      { value: "Nam", name: "Nam" },
+                    ]}
+                  />
                 </Col>
                 <Col lg={12} md={12} sm={24} xs={24}>
-                  <Form.Item name={["origin_person", "birth_day"]} label="Ngày sinh">
-                    <DatePicker style={{ width: "100%" }} />
-                  </Form.Item>
+                  <CCInput type="date" name={["create_company", "origin_person", "birth_day"]} label="Ngày sinh" />
                 </Col>
                 <Col lg={12} md={12} sm={24} xs={24}>
-                  <Form.Item name={["origin_person", "per_type"]} label="Dân tộc">
+                  <Form.Item name={["create_company", "origin_person", "per_type"]} label="Dân tộc">
                     <Input />
                   </Form.Item>
                 </Col>
                 <Col lg={12} md={12} sm={24} xs={24}>
-                  <Form.Item name={["origin_person", "reg_address"]} label="Nơi đăng kí hộ khẩu thường trú">
+                  <Form.Item
+                    name={["create_company", "origin_person", "reg_address"]}
+                    label="Nơi đăng kí hộ khẩu thường trú"
+                  >
                     <Input />
                   </Form.Item>
                 </Col>
                 <Col lg={12} md={12} sm={24} xs={24}>
-                  <CCInput type="text" name={["origin_person", "current_address"]} label="Chỗ ở hiện tại" />
+                  <CCInput
+                    type="text"
+                    name={["create_company", "origin_person", "current_address"]}
+                    label="Chỗ ở hiện tại"
+                  />
                 </Col>
               </>
             ) : (
@@ -416,13 +436,13 @@ const CreateCompany = forwardRef((props, formRef) => {
           <Form.Item label={<h3>Giấy tờ pháp lý</h3>}>
             <Row gutter={[16, 12]}>
               <Col lg={12} md={12} sm={24} xs={24}>
-                <Form.Item name={["origin_person", "doc_type"]} label="Loại giấy tờ">
+                {/* <Form.Item name={["create_company", "origin_person", "doc_type"]} label="Loại giấy tờ">
                   <Select>
                     {formData?.present_person === 1
                       ? FORM_SELECT.map((item) => {
                           if (item.value !== 4) {
                             return (
-                              <Select.Option key={item.name} value={item.value}>
+                              <Select.Option key={item.name} value={item.name}>
                                 {item.name}
                               </Select.Option>
                             );
@@ -431,32 +451,47 @@ const CreateCompany = forwardRef((props, formRef) => {
                       : FORM_SELECT.map((item) => {
                           if (item.value === 4) {
                             return (
-                              <Select.Option key={item.name} value={item.value}>
+                              <Select.Option key={item.name} value={item.name}>
                                 {item.name}
                               </Select.Option>
                             );
                           }
                         })}
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
+                <CCInput
+                  type="select"
+                  name={["create_company", "origin_person", "doc_type"]}
+                  label="Loại giấy tờ"
+                  options={
+                    formData?.present_person === 1
+                      ? FORM_SELECT.filter((item) => item.value !== "Mã doanh nghiệp")
+                      : FORM_SELECT.filter((item) => item.value === "Mã doanh nghiệp")
+                  }
+                />
               </Col>
               <Col lg={12} md={12} sm={24} xs={24}>
                 {formData?.present_person === 1 ? (
-                  <CCInput type="text" label={"Số CMND/ CCCD/ Hộ chiếu"} name={["origin_person", "doc_code"]} />
+                  <CCInput
+                    type="text"
+                    label={"Số CMND/ CCCD/ Hộ chiếu"}
+                    name={["create_company", "origin_person", "doc_code"]}
+                  />
                 ) : (
-                  <CCInput type="text" label={"Mã doanh nghiệp"} name={["origin_person", "doc_code"]} />
+                  <CCInput
+                    type="text"
+                    label={"Mã doanh nghiệp"}
+                    name={["create_company", "origin_person", "doc_code"]}
+                  />
                 )}
               </Col>
 
               <Col lg={12} md={12} sm={24} xs={24}>
-                {/* <Form.Item name={["origin_person", "doc_time_provide"]} label="Ngày cấp">
-                  <DatePicker style={{ width: "100%" }} />
-                </Form.Item> */}
-                <CCInput type="date" name={["origin_person", "doc_time_provide"]} label="Ngày cấp" />
+                <CCInput type="date" name={["create_company", "origin_person", "doc_time_provide"]} label="Ngày cấp" />
               </Col>
 
               <Col lg={12} md={12} sm={24} xs={24}>
-                <CCInput type="text" name={["origin_person", "doc_place_provide"]} label="Nơi cấp" />
+                <CCInput type="text" name={["create_company", "origin_person", "doc_place_provide"]} label="Nơi cấp" />
               </Col>
             </Row>
           </Form.Item>
@@ -465,7 +500,7 @@ const CreateCompany = forwardRef((props, formRef) => {
             type="number"
             formatter={(val) => `${number_format(val)}`}
             style={{ width: "100%" }}
-            name="company_value"
+            name={["create_company", "company_value"]}
             label="Giá trị góp vốn"
           />
         </Form.Item>
@@ -480,7 +515,7 @@ const CreateCompany = forwardRef((props, formRef) => {
           ])}
         >
           <Row gutter={[16, 12]}>
-            <Form.List name="legal_respon">
+            <Form.List name={["create_company", "legal_respon"]}>
               {(fields, { add, remove }) => (
                 <>
                   {fields?.map((field, i) => (
@@ -489,7 +524,7 @@ const CreateCompany = forwardRef((props, formRef) => {
                         <Form.Item {...field} name={[field.name, "name"]} label="Họ và tên">
                           <Input />
                         </Form.Item>
-                        <Form.Item {...field} name={[field.name, "title"]} label="Chức danh">
+                        {/* <Form.Item {...field} name={[field.name, "title"]} label="Chức danh">
                           <Select>
                             <Select.Option value={1}>Chủ tịch công ty</Select.Option>
 
@@ -497,13 +532,50 @@ const CreateCompany = forwardRef((props, formRef) => {
 
                             <Select.Option value={3}>Tổng giám đốc</Select.Option>
                           </Select>
-                        </Form.Item>
-                        <Form.Item {...field} name={[field.name, "gender"]} label="Giới tính">
+                        </Form.Item> */}
+                        <CCInput
+                          type="select"
+                          {...field}
+                          name={[field.name, "title"]}
+                          label="Chức danh"
+                          options={[
+                            {
+                              value: "Chủ tịch công ty",
+                              name: "Chủ tịch công ty",
+                            },
+                            {
+                              value: "Giám đốc",
+                              name: "Giám đốc",
+                            },
+                            {
+                              value: "Tổng giám đốc",
+                              name: "Tổng giám đốc",
+                            },
+                          ]}
+                        />
+                        {/* <Form.Item {...field} name={[field.name, "gender"]} label="Giới tính">
                           <Select>
                             <Select.Option value={0}>Nữ</Select.Option>
                             <Select.Option value={1}>Nam</Select.Option>
                           </Select>
-                        </Form.Item>
+                        </Form.Item> */}
+                        <CCInput
+                          type="select"
+                          {...field}
+                          name={[field.name, "gender"]}
+                          label="Giới tính"
+                          options={[
+                            {
+                              value: "Nữ",
+                              name: "Nữ",
+                            },
+                            {
+                              value: "Nam",
+                              name: "Nam",
+                            },
+                          ]}
+                        />
+
                         <Form.Item {...field} name={[field.name, "birth_day"]} label="Ngày sinh">
                           <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
                         </Form.Item>
@@ -516,21 +588,20 @@ const CreateCompany = forwardRef((props, formRef) => {
                         <Form.Item {...field} name={[field.name, "reg_address"]} label="Nơi đăng kí hộ khẩu thường trú">
                           <Input />
                         </Form.Item>
+
                         <Form.Item {...field} name={[field.name, "current_address"]} label="Nơi ở hiện tại">
                           <Input />
                         </Form.Item>
+
                         <Form.Item label={<h2>Loại giấy tờ pháp lý </h2>}>
                           <Row gutter={[16, 12]}>
                             <Col lg={24} md={24} sm={24} xs={24}>
-                              <Form.Item name={[field.name, "doc_type"]} label="Loại giấy tờ">
-                                <Select>
-                                  <Select.Option value={1}>CMND</Select.Option>
-
-                                  <Select.Option value={2}>CCCD</Select.Option>
-
-                                  <Select.Option value={3}>Hộ chiếu</Select.Option>
-                                </Select>
-                              </Form.Item>
+                              <CCInput
+                                type="select"
+                                name={[field.name, "doc_type"]}
+                                label="Loại giấy tờ"
+                                options={FORM_SELECT.filter((item) => item.value !== "Mã doanh nghiệp")}
+                              />
                             </Col>
                             <Col lg={24} md={24} sm={24} xs={24}>
                               <Form.Item name={[field.name, "doc_code"]} label="Số CMND/ CCCD/ Hộ chiếu">
@@ -614,35 +685,50 @@ const CreateCompany = forwardRef((props, formRef) => {
               </Button>
             </Col>
             <Col span={24}>
-              <Form.Item name={["per_main", "name"]} label="Họ và tên">
+              <Form.Item name={["create_company", "per_main", "name"]} label="Họ và tên">
                 <Input />
               </Form.Item>
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
-              <Form.Item name={["per_main", "gender"]} label="Giới tính">
+              {/* <Form.Item name={["create_company", "per_main", "gender"]} label="Giới tính">
                 <Select>
                   <Select.Option value={0}>Nữ</Select.Option>
                   <Select.Option value={1}>Nam</Select.Option>
                 </Select>
-              </Form.Item>
+              </Form.Item> */}
+              <CCInput
+                type="select"
+                name={["create_company", "per_main", "gender"]}
+                label="Giới tính"
+                options={[
+                  {
+                    value: "Nữ",
+                    name: "Nữ",
+                  },
+                  {
+                    value: "Nam",
+                    name: "Nam",
+                  },
+                ]}
+              />
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
-              <Form.Item name={["per_main", "birth_day"]} label="Ngày sinh">
+              <Form.Item name={["create_company", "per_main", "birth_day"]} label="Ngày sinh">
                 <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
               </Form.Item>
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
-              <Form.Item name={["per_main", "per_type"]} label="Dân tộc">
+              <Form.Item name={["create_company", "per_main", "per_type"]} label="Dân tộc">
                 <Input />
               </Form.Item>
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
-              <Form.Item name={["per_main", "reg_address"]} label="Nơi đăng kí hộ khẩu thường trú">
+              <Form.Item name={["create_company", "per_main", "reg_address"]} label="Nơi đăng kí hộ khẩu thường trú">
                 <Input />
               </Form.Item>
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
-              <Form.Item name={["per_main", "current_address"]} label="Chỗ ở hiện tại">
+              <Form.Item name={["create_company", "per_main", "current_address"]} label="Chỗ ở hiện tại">
                 <Input />
               </Form.Item>
             </Col>
@@ -673,7 +759,7 @@ const CreateCompany = forwardRef((props, formRef) => {
               </Collapse>
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
-              <Form.Item name={["company_core", "name"]} label="Tên công ty bằng Tiếng Việt">
+              <Form.Item name={["create_company", "company_core", "name"]} label="Tên công ty bằng Tiếng Việt">
                 <Input onChange={debounce((e) => getCompanyByName(e.target.value), 700)} />
               </Form.Item>
               <div style={{ padding: "0 0 10px 0" }}>
@@ -685,10 +771,13 @@ const CreateCompany = forwardRef((props, formRef) => {
                   </Card>
                 )}
               </div>
-              <Form.Item name={["company_core", "name_en"]} label="Tên công ty bằng Tiếng Anh (nếu có)">
+              <Form.Item
+                name={["create_company", "company_core", "name_en"]}
+                label="Tên công ty bằng Tiếng Anh (nếu có)"
+              >
                 <Input />
               </Form.Item>
-              <Form.Item name={["company_core", "name_vn"]} label="Tên công ty viết tắt (nếu có)">
+              <Form.Item name={["create_company", "company_core", "name_vn"]} label="Tên công ty viết tắt (nếu có)">
                 <Input />
               </Form.Item>
             </Col>
@@ -704,13 +793,16 @@ const CreateCompany = forwardRef((props, formRef) => {
             },
           ])}
         >
-          <Form.Item name={["company_core", "address"]} label="Địa chỉ trụ sở chính">
+          <Form.Item name={["create_company", "company_core", "address"]} label="Địa chỉ trụ sở chính">
             <Input />
           </Form.Item>
-          <Form.Item name={["company_core", "address_opt_1"]} label="Địa chỉ chi nhánh (nếu có)">
+          <Form.Item name={["create_company", "company_core", "address_opt_1"]} label="Địa chỉ chi nhánh (nếu có)">
             <Input />
           </Form.Item>
-          <Form.Item name={["company_core", "address_opt_2"]} label="Địa chỉ văn phòng đại diện (nếu có)">
+          <Form.Item
+            name={["create_company", "company_core", "address_opt_2"]}
+            label="Địa chỉ văn phòng đại diện (nếu có)"
+          >
             <Input />
           </Form.Item>
         </Form.Item>
@@ -727,7 +819,7 @@ const CreateCompany = forwardRef((props, formRef) => {
           <Form.Item label="Ngành nghề chính">
             <Row gutter={[16, 12]}>
               <Col span={24}>
-                <Form.Item name="company_main_career" placeholder="Gõ tên ngành hoặc mã ngành">
+                <Form.Item name={["create_company", "company_main_career"]} placeholder="Gõ tên ngành hoặc mã ngành">
                   <Select
                     showSearch
                     allowClear
@@ -752,7 +844,7 @@ const CreateCompany = forwardRef((props, formRef) => {
           </Form.Item>
           <Row gutter={[16, 12]}>
             <Col span={24}>
-              <Form.Item name="company_opt_career" label="Tên ngành">
+              <Form.Item name={["create_company", "company_opt_career"]} label="Tên ngành">
                 <Select
                   showSearch
                   mode="multiple"
@@ -766,7 +858,7 @@ const CreateCompany = forwardRef((props, formRef) => {
                   }
                 >
                   {careerData.map((item) => (
-                    <Select.Option key={item._id} value={item._id}>
+                    <Select.Option key={item._id} value={item._id} code={item.code} name={item.name}>
                       {item.code}-{item.name}
                     </Select.Option>
                   ))}

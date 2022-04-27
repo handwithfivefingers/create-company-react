@@ -17,7 +17,7 @@ exports.authFailedHandler = (res) => {
 };
 
 exports.errHandler = (err, res) => {
-  return res.status(200).json({
+  return res.status(400).json({
     error: err,
     message: "Đã có lỗi xảy ra, vui lòng thử lại sau!",
     status: 400,

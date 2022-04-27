@@ -9,6 +9,7 @@ import { LAYOUT_ROUTER } from "./contants/Route";
 import { useAuth, useDetectLocation } from "./helper/Hook";
 import { RouteAction } from "src/store/actions";
 import RouterContext, { RouterProvider } from "src/helper/Context";
+import moment from "moment";
 import "aos/dist/aos.css";
 import "./assets/css/styles.scss";
 
@@ -40,8 +41,11 @@ function App() {
   });
 
   const authReducer = useSelector((state) => state.authReducer);
- 
   
+  useEffect(() => {
+    moment.defaultFormat = "YYYY-MM-DD";
+  }, []);
+
   return (
     <div className="App">
       <RouterProvider value={{ route, setRoute: (val) => setRoute(val) }}>

@@ -32,7 +32,7 @@ const AdminOrder = () => {
     };
 
     setLoading(true);
-
+    console.log(params);
     AdminOrderService.getOrder(params)
       .then((res) => {
         let { data, status } = res.data;
@@ -136,7 +136,7 @@ const AdminOrder = () => {
   return (
     <>
       <Card
-    className="cc-card"
+        className="cc-card"
         title="Quản lý đơn hàng"
         extra={[
           <Form key="filter" layout="vertical" ref={formRef} onFinish={onFilter}>

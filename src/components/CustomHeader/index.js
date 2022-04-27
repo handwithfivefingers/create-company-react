@@ -98,7 +98,7 @@ const DesktopMenu = (props) => {
     <div className={clsx([styles.container, "container"])}>
       <ul className={styles.listItems}>
         <Link to={"/"}>
-          <Image width={58} src={Logo.src} alt="logo" preview={false} style={{ cursor: "pointer" }} />
+          <Image width={58} src={Logo} alt="logo" preview={false} style={{ cursor: "pointer" }} />
         </Link>
         <Link to={"/career"}>
           <a

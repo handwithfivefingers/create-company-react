@@ -4,10 +4,10 @@ const { Product, Category, Career, User, Order } = require("./../model");
 const PAGE_SIZE = 10;
 // admin
 exports.getOrders = async (req, res) => {
-  const { page, ...condition } = req.query;
+  const { page, ...condition } = req.body;
   let current_page = (parseInt(page) - 1) * PAGE_SIZE;
 
-  const email = new RegExp(condition.name, "i");
+  const email = new RegExp(condition?.name, "i");
 
   let _user = await User.find({
     $and: [
@@ -20,12 +20,13 @@ exports.getOrders = async (req, res) => {
 
   let newCondition = _user.map((item) => ({ orderOwner: item._id }));
 
+
   if (req.role === "admin") {
     let _order = await Order.find({
       $or: newCondition.length > 0 ? newCondition : [{}],
     })
       .populate("main_career", ["name", "code"])
-      .populate("opt_career", ["name", "code"])
+      // .populate("opt_career", ["name", "code"])
       .populate("products", "name")
       .populate({
         path: "orderOwner",
@@ -46,12 +47,12 @@ exports.getOrders = async (req, res) => {
     }
   }
   if (req.role === "user") {
-    return getOrders(req, res);
+    return getOrder(req, res);
   }
   return permisHandler(res);
 };
 
-const getOrders = async (req, res) => {
+const getOrder = async (req, res) => {
   let _order = await Order.find({ orderOwner: req.user })
     .populate("products", "name")
     .populate("main_career", "name")
@@ -67,11 +68,12 @@ const getOrders = async (req, res) => {
 
 exports.getOrderBySlug = async (req, res) => {
   const { id } = req.params;
+  console.log(id);
   if (req.role === "admin") {
     const _order = await Order.findById(id)
       .populate("products", "name type")
-      .populate("data.create_company.main_career", ["name", "code"])
-      .populate("data.create_company.opt_career", ["name", "code"]);
+      .populate("data.create_company.main_career", ["name", "code"]);
+    // .populate("data.create_company.opt_career", ["name", "code"]);
     // console.log(_order);
     try {
       return successHandler(_order, res);

@@ -3,7 +3,6 @@ import ProductCard from "../components/Products";
 import { BaseFieldText } from "./../contants/Common";
 import moment from "moment";
 
-
 export function number_format(number) {
   // console.log(number)
   return new Intl.NumberFormat().format(number);
@@ -64,6 +63,35 @@ export const renderField = (item, path, condition = null, index = null) => {
   }
 
   return xhtml;
+};
+
+export const flattenObject = (obj) => {
+  const _template = {};
+  Object.keys(obj).forEach((item) => {
+    if (typeof obj[item] !== "object") {
+      _template[item] = obj[item]; // create exist value for Number || String field
+    } else {
+      // Handle with Object field
+      // 2 case : Array || Object 
+
+      if (obj[item].length > 0) {
+        // Handle with Array
+        _template[item] = obj[item].map((elmt, i) => {
+          if (typeof elmt !== "string") {
+            return { ...elmt };
+          } else {
+            return elmt;
+          }
+        });
+      } else {
+        Object.keys(obj[item]).forEach((field) => {
+          let newField = [item, field].join("_");
+          _template[newField] = obj[item][field];
+        });
+      }
+    }
+  });
+  return _template;
 };
 
 export const getPageMargins = () => {

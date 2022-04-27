@@ -4,7 +4,7 @@
 	visibility: hidden;
 	transition: 0.1s;
 	height: 0;
-	margin: 0;
+	margin: 0 !important;
 }
 .visible {
 	opacity: 1;

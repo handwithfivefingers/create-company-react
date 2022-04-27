@@ -4,7 +4,7 @@ import clsx from "clsx";
 import styles from "../styles.module.scss";
 
 const TamNgungKinhDoanh = forwardRef((props, ref) => {
-  console.log(props.index, props.current);
+
   return (
     <Form.Item
       label="Đăng ký tạm ngưng kinh doanh"

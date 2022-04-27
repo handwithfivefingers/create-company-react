@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import LoginForm from "src/components/Form/Login";
 import RegisterForm from "src/components/Form/Register";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useNavigationType } from "react-router-dom";
 
 import { Tabs } from "antd";
 import AuthService from "src/service/AuthService";
@@ -18,6 +18,8 @@ export default function HomePage() {
   const { route } = useContext(RouterContext);
   const authReducer = useSelector((state) => state.authReducer);
   const navigate = useNavigate();
+  let location = useLocation();
+  let type = useNavigationType();
   useEffect(() => {
     if (route.to && authReducer.status) {
       navigate(route.to);
@@ -52,7 +54,13 @@ export default function HomePage() {
   //     Router.push("/");
   //   }
   if (authReducer.status) {
-    navigate(authReducer.role);
+    console.log(navigate, location, type);
+    // navigate(-1 || authReducer.role);
+    if (type !== "POP") {
+      navigate(-1);
+    } else {
+      navigate(authReducer.role);
+    }
   }
   return (
     <Tabs defaultActiveKey="1" centered>
