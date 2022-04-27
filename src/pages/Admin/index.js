@@ -100,7 +100,11 @@ const Admin = (props) => {
 
   // https://api.cloudinary.com/v1_1/${cloudName}/upload
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+    </>
+  );
 };
 
 export default WithAuth(Admin, "admin");

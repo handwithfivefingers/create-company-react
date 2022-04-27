@@ -46,6 +46,8 @@
         display: grid;
         grid-template-rows: repeat(2, auto);
         align-items: baseline;
+        white-space: nowrap;
+
         .title {
           grid-row: 1/2;
           font-size: 14px;
@@ -87,7 +89,19 @@
       background-color: var(--dark);
     }
   }
-  .title, .desc {
-    color:#fff !important;
+  .title,
+  .desc {
+    color: #fff !important;
   }
+}
+
+.cardHeader {
+  position: sticky !important;
+  z-index: 1;
+  top: 65px;
+  width: calc(100vw - 236px);
+}
+
+.collapsed {
+  width: calc(100vw - 86px);
 }

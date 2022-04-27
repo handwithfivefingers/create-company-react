@@ -58,8 +58,10 @@ exports.LoginUser = async (req, res) => {
           phone: resp.phone,
           role: resp.role,
         };
+        var hour = 3600000;
+
         res.cookie("create-company-token", token, {
-          maxAge: 900000,
+          maxAge: 2 * 24 * hour,
           httpOnly: true,
         });
         return res.status(200).json({

@@ -7,8 +7,6 @@ const {
   existHandler,
   deletedHandler,
 } = require("../response");
-const lodash = require("lodash");
-const slugify = require("slugify");
 
 exports.createCareer = async (req, res) => {
   const career = await Career.findOne({
@@ -33,18 +31,51 @@ exports.createCareer = async (req, res) => {
 };
 
 exports.fetchCareer = async (req, res) => {
+
   Career.find().exec((err, career) => {
+
     if (err) return errHandler(err, res);
+
     if (career) return successHandler(career, res);
+
   });
+
+};
+
+exports.editCareer = async (req, res) => {
+
+  let { id } = req.params;
+
+  const _update = {
+    name: req.body.name,
+    code: req.body.code,
+  };
+
+  try {
+
+    let _updated = await Career.findOneAndUpdate({ _id: id }, _update, { new: true });
+    return updatedHandler(_updated, res);
+
+  } catch (e) {
+
+    return errHandler(e, res);
+
+  }
 };
 
 exports.deleteCareer = async (req, res) => {
+  
   let { id } = req.params;
+
   await Career.findOneAndDelete({ _id: id });
+
   try {
+
     return deletedHandler("", res);
+
   } catch (e) {
+
     return errHandler(e, res);
+
   }
 };

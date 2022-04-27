@@ -89,6 +89,7 @@ function ListTemplateMail(props) {
   return (
     <Card
       style={{ marginTop: 10 }}
+      className="cc-card"
       title="Template Mail"
       extra={[
         <Button key="add-template" type="text" onClick={() => addTemplate()} icon={<PlusSquareOutlined />}>

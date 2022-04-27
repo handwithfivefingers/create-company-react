@@ -63,37 +63,35 @@ export const AdminRouter = [
   },
 ];
 
-// export const UserRouter = [
-//   {
-//     path: "/user",
-//     name: "Dashboard",
-//     icon: <RiBankLine />,
-//   },
-//   {
-//     path: "/user/san-pham",
-//     name: "Sản phẩm",
-//     icon: <RiBarChartFill />,
-//   },
-//   {
-//     path: "/user/order",
-//     name: "Đơn hàng",
-//     icon: <RiChatPollLine />,
-//   },
-//   {
-//     path: "/user/profile",
-//     name: "Tài khoản",
-//     icon: <RiAdminFill />,
-//   },
-// ];
+export const UserRouter = [
+  {
+    path: "/user",
+    title: "Dashboard",
+    icon: <RiBankLine />,
+  },
+  {
+    path: "/user/san-pham",
+    title: "Sản phẩm",
+    icon: <RiBarChartFill />,
+  },
+  {
+    path: "/user/order",
+    title: "Đơn hàng",
+    icon: <RiChatPollLine />,
+  },
+  {
+    path: "/user/profile",
+    title: "Tài khoản",
+    icon: <RiAdminFill />,
+  },
+];
 
 export const LAYOUT_ROUTER = ({ status, role }) => [
   {
     title: "Đăng nhập",
     path: "/",
     icon: <BiHomeAlt />,
-    element: status ? (
-      <Navigate to={`/${role}`} />
-    ) : (
+    element: (
       <Layout style={{ background: "#fff", minHeight: "100vh" }}>
         <CustomHeader auth={{ status, role }} />
         <Content className="site-layout">
@@ -154,6 +152,10 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
             icon: <RiAdminFill />,
             element: <AdminSetting />,
           },
+          {
+            path: "*",
+            element: <Error />,
+          },
         ]
       ) : (
         <Navigate to="/" />
@@ -193,6 +195,10 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
           //   icon: <RiAdminFill />,
           //   element: <AdminSetting />,
           // },
+          {
+            path: "*",
+            element: <Error />,
+          },
         ]
       ) : (
         <Navigate to="/" />
@@ -200,6 +206,6 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
   },
   {
     path: "*",
-    element: <Error />,
+    element: <Navigate to="/" />,
   },
 ];

@@ -229,6 +229,7 @@ const AdminProduct = (props) => {
   return (
     <>
       <Card
+        className="cc-card"
         title="Sản phẩm"
         extra={
           <Space>

@@ -19,8 +19,8 @@
 }
 
 .adminSiteLayout {
-  grid-template-rows: calc(100vh - 74px) 50px;
   display: grid;
+  grid-template-rows: calc(100vh - 74px) 50px;
   .adminMainContent {
     @include scroll(6px, 6px, transparent);
     overflow-x: hidden;
@@ -35,12 +35,21 @@
 }
 
 .siteLayout {
-  display: grid;
-  grid-template-rows: 100px calc(100vh - 174px) 50px;
+  width: calc(100vw - 236px);
+  // display: grid !important;
+  // grid-template-rows: 65px calc(100vh - 139px) 50px;
+  height: calc(100vh - 24px);
+
   .mainContent {
     overflow-x: hidden;
     position: relative;
+    display: grid;
+    grid-template-rows: 65px 1fr;
+    gap: 12px;
     @include scroll(6px, 6px, transparent);
   }
 }
 
+.collapsed {
+  width: calc(100vw - 86px);
+}

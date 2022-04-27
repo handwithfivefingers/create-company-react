@@ -24,7 +24,7 @@ const UserOrder = () => {
   const getScreenData = () => {
     setLoading(true);
     axios
-      .get("/api/user/orders")
+      .get("/order")
       .then((res) => {
         if (res.data.status === 200) {
           setData(res.data.data);

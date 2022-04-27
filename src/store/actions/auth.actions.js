@@ -1,6 +1,7 @@
 import { AUTH, AUTH_LOGIN, AUTH_LOGOUT } from "../type/auth.type";
 import axios from "src/config/axios";
 import AuthService from "src/service/AuthService";
+import history from "src/helper/history";
 export const AuthUser = () => {
   return (dispatch) => {
     dispatch({

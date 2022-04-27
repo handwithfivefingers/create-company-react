@@ -1,4 +1,7 @@
 import axios from "axios";
+import store from "src/store";
+import { AuthAction } from "src/store/actions";
+import history from "../helper/history";
 const instance = axios.create({
   baseURL: "http://localhost:3001/api",
   timeout: 1000 * 30, // Wait for 30 seconds
@@ -17,14 +20,19 @@ instance.interceptors.request.use(
   (error) => {
     console.log("request error", error);
     return Promise.reject(error);
-  }
+  },
 );
 
 instance.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    return res;
+  },
   (err) => {
+    if (err.response.status === 401) {
+      store.dispatch(AuthAction.AuthLogout());
+    }
     return Promise.reject(err);
-  }
+  },
 );
 
 export default instance;

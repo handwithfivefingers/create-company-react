@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import LoginForm from "src/components/Form/Login";
 import RegisterForm from "src/components/Form/Register";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Tabs } from "antd";
 import AuthService from "src/service/AuthService";
 import { AuthAction } from "src/store/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import RouterContext from "src/helper/Context";
 
 const { TabPane } = Tabs;
 
@@ -14,10 +15,19 @@ export default function HomePage() {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const { route } = useContext(RouterContext);
+  const authReducer = useSelector((state) => state.authReducer);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (route.to && authReducer.status) {
+      navigate(route.to);
+    }
+  }, []);
+
   const onLogin = async (val) => {
-    setLoading(true)
-    dispatch(AuthAction.AuthLogin(val)).then((callbackUrl) => <Navigate to={`${callbackUrl}`} />);
-    setLoading(false)
+    setLoading(true);
+    dispatch(AuthAction.AuthLogin(val)).then((callbackUrl) => navigate(route.to || -1));
+    setLoading(false);
   };
 
   const onRegister = async (val) => {
@@ -41,7 +51,9 @@ export default function HomePage() {
   //   if (status === "authenticated") {
   //     Router.push("/");
   //   }
-
+  if (authReducer.status) {
+    navigate(authReducer.role);
+  }
   return (
     <Tabs defaultActiveKey="1" centered>
       <TabPane tab="Đăng nhập" key="1">

@@ -1,9 +1,17 @@
 import { Form, Input, Select } from "antd";
 import React, { forwardRef } from "react";
+import clsx from "clsx";
+import styles from "../styles.module.scss";
 
-const TamNgungKinhDoanh = forwardRef((ref, props) => {
+const TamNgungKinhDoanh = forwardRef((props, ref) => {
+  console.log(props.index, props.current);
   return (
-    <>
+    <Form.Item
+      label="Đăng ký tạm ngưng kinh doanh"
+      className={clsx(styles.current, {
+        [styles.active]: props.current === props.index,
+      })}
+    >
       <Form.Item name={["pending", "company_name"]} label="Tên doanh nghiệp (ghi bằng chữ in hoa)">
         <Input />
       </Form.Item>
@@ -45,7 +53,7 @@ const TamNgungKinhDoanh = forwardRef((ref, props) => {
       <Form.Item name={["pending", "org_person"]} label="Tên người đại diện pháp luật/người đứng đầu chi nhánh">
         <Input />
       </Form.Item>
-    </>
+    </Form.Item>
   );
 });
 

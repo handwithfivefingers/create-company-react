@@ -43,7 +43,6 @@ const storage = multer.diskStorage({
     cb(null, path.join(path.dirname(__dirname), "uploads"));
   },
   filename: function (req, file, cb) {
-    
     cb(null, shortid.generate() + "-" + file.originalname);
   },
 });
@@ -53,7 +52,8 @@ exports.upload = multer({ storage });
 exports.requireSignin = async (req, res, next) => {
   let token = req.cookies["create-company-token"];
 
-  if (!token) return res.status(400).json({ message: "Authorization required" });
+  if (!token) return res.status(401).json({ message: "Authorization required" });
+  // if (!token) return authFailedHandler(res);
   else {
     try {
       const decoded = await jwt.verify(token, process.env.SECRET);
@@ -63,8 +63,11 @@ exports.requireSignin = async (req, res, next) => {
         });
         req.role = decoded.role;
         req.id = decoded._id;
+
+        var hour = 3600000;
+
         res.cookie("create-company-token", newToken, {
-          maxAge: 900000,
+          maxAge: 2 * 24 * hour,
           httpOnly: true,
         });
         next();

@@ -5,8 +5,9 @@ const { getCategories } = require("../controller/category");
 const router = express.Router();
 
 //Get
-router.get("/category", requireSignin, upload.none(), getCategories);
+router.get("/admin/category", requireSignin, upload.none(), getCategories);
 
+router.get("/category", requireSignin, upload.none(), getCategories);
 
 // get by ID
 // router.get("/product/:id", requireSignin, upload.none(), getProductById);

@@ -21,7 +21,6 @@ const UserProductPage = () => {
       .then((res) => {
         const { status, data } = res.data;
         if (status === 200) {
-          console.log(data);
           setProduct(data);
         } else {
           message.error(res.data.message);

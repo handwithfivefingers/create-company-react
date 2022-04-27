@@ -136,6 +136,7 @@ const AdminOrder = () => {
   return (
     <>
       <Card
+    className="cc-card"
         title="Quản lý đơn hàng"
         extra={[
           <Form key="filter" layout="vertical" ref={formRef} onFinish={onFilter}>

@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button, Card, Modal, Row, Col, message, Tabs } from "antd";
-import CCPageHeader from "../../../components/CCPageHeader";
-import CreateCompany from "../../../components/Form/CreateCompany";
+import CCPageHeader from "src/components/CCPageHeader";
+import CreateCompany from "src/components/Form/CreateCompany";
 
 import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import axios from "../../../config/axios";
-import ProductForm from "./../../../components/Form/ProductForm";
-import Aos from "aos";
+import axios from "src/config/axios";
+import ProductForm from "./src/components/Form/ProductForm";
 import Head from "next/head";
-import CCSteps from "../../../components/CCHeaderSteps";
-import PreviewData from "./../../../components/Form/PreviewData";
-import { stepType1, stepType2 } from "../../../contants/Step";
-import ChangeInforForm from "../../../components/Form/ChangeInforForm";
-import LoginForm from "../../../components/Form/Login";
-import ContactForm from "../../../components/Form/Contact";
-import AuthService from "../../../service/AuthService";
+import CCSteps from "src/components/CCHeaderSteps";
+import PreviewData from "./src/components/Form/PreviewData";
+import { stepType1, stepType2 } from "src/contants/Step";
+import ChangeInforForm from "src/components/Form/ChangeInforForm";
+import LoginForm from "src/components/Form/Login";
+import ContactForm from "src/components/Form/Contact";
+import AuthService from "src/service/AuthService";
+import TamHoanForm from "src/components/Form/PendingForm";
 
 // import { NextResponse } from 'next/server';
 const { TabPane } = Tabs;
@@ -49,10 +49,6 @@ const Sanpham = (props) => {
     width: 0,
     component: null,
   });
-
-  useEffect(() => {
-    Aos.init({ duration: 300 });
-  }, []);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -235,7 +231,31 @@ const Sanpham = (props) => {
           </Card>
         );
       case 3:
-        return;
+        return (
+          <Card className="card-boxShadow">
+            <TamHoanForm
+              data={props.data}
+              ref={formRef}
+              current={current}
+              onFinishScreen={(val) => handleChangeInforForm(val)}
+            />
+
+            {current === changeInforStep?.length ? renderPrewviewForm() : ""}
+
+            <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
+              {current < changeInforStep.length - 1 ? <Button onClick={Next}>Next</Button> : ""}
+              {current === changeInforStep.length - 1 ? (
+                <>
+                  {/* <Button onClick={handlePreview}>Kiểm tra</Button> */}
+                  <Button onClick={() => handlePurchase("change")}>Thanh toán</Button>
+                </>
+              ) : (
+                ""
+              )}
+              {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
+            </div>
+          </Card>
+        );
       case 4:
         return;
       default:
@@ -254,42 +274,8 @@ const Sanpham = (props) => {
         return null;
     }
   };
-  
-  const handleLogin = () => {
-    const val = loginRef.current.getFieldsValue();
-    // console.log(val);
-    let { origin, pathname } = window.location;
-    signIn("credentials", {
-      phone: val.phone,
-      password: val.password,
-      callbackUrl: `${origin}${pathname}`,
-    }).finally();
-  };
 
-  const handleRegister = (val) => {
-    let { name, phone, email } = val;
-    let { origin, pathname } = window.location;
 
-    AuthService.userRegister(val)
-      .then((res) => {
-        if (res.data.status === 201) {
-          let { phone, password } = res.data.data;
-          message.success(res.data.message);
-          return signIn("credentials", {
-            phone: phone,
-            password: password,
-            callbackUrl: `${origin}${pathname}`,
-          }).finally();
-        } else {
-          message.error(res.data.message);
-        }
-      })
-      .catch((err) => {
-        message.error("Something were wrong, comeback later !");
-        console.log(err.response);
-        throw err;
-      });
-  };
 
   return (
     <>
@@ -300,18 +286,8 @@ const Sanpham = (props) => {
       <div className="container" style={{ paddingBottom: 50 }}>
         <CCPageHeader data-aos="fade-in" />
         {renderHeaderStep(props.type)}
-        {status !== "authenticated" && (
-          <Tabs defaultActiveKey="1" centered>
-            <TabPane tab="Thông tin liên hệ" key="1" style={{ minHeight: "500px" }}>
-              <ContactForm ref={registerRef} onFinish={handleRegister} />
-            </TabPane>
-            <TabPane tab="Đăng nhập" key="2" style={{ minHeight: "500px" }}>
-              <LoginForm loading={false} ref={loginRef} onFinish={() => handleLogin()} />
-            </TabPane>
-          </Tabs>
-        )}
-
-        {status === "authenticated" && renderFormByType(props.type)}
+      
+        {renderFormByType(props.type)}
 
         <Modal
           visible={childModal.visible}

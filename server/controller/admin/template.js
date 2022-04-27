@@ -1,5 +1,14 @@
-const { errHandler, successHandler } = require("../../response");
+const {
+  errHandler,
+  successHandler,
+  createdHandler,
+  existHandler,
+  updatedHandler,
+  deletedHandler,
+} = require("../../response");
 const { TemplateMail } = require("../../model");
+const _ = require("lodash");
+
 const PAGE_SIZE = 10;
 
 exports.fetchTemplate = async (req, res) => {
@@ -22,5 +31,57 @@ exports.fetchTemplate = async (req, res) => {
     return successHandler({ _template, count }, res);
   } catch (err) {
     return errHandler(err, res);
+  }
+};
+
+exports.createTemplate = async (req, res) => {
+  try {
+    let _exist = await TemplateMail.findOne({ name: req.body.name });
+    if (_exist) {
+      return existHandler(res);
+    }
+  } catch (e) {
+    return errHandler(e, res);
+  }
+
+  let _template = new TemplateMail({
+    name: req.body.name,
+    content: req.body.content,
+    subject: req.body.subject,
+  });
+
+  try {
+    let _save = await _template.save();
+    return createdHandler(_save, res);
+  } catch (e) {
+    return errHandler(e, res);
+  }
+};
+
+exports.editTemplate = async (req, res) => {
+  let { id } = req.params;
+  console.log(id);
+  let _update = {
+    name: req.body.name,
+    content: req.body.content,
+    subject: req.body.subject,
+  };
+
+  try {
+    let _updated = await TemplateMail.findOneAndUpdate({ _id: id }, _update, { new: true });
+
+    return updatedHandler(_updated, res);
+  } catch (e) {
+    return errHandler(e, res);
+  }
+};
+
+exports.deleteTemplate = async (req, res) => {
+  let { id } = req.params;
+  try {
+    await TemplateMail.findOneAndDelete({ _id: id });
+    return deletedHandler(_, res);
+  } catch (e) {
+    return errHandler(e, res);
   }
 };

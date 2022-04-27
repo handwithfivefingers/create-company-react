@@ -1,5 +1,4 @@
 import { Button, Card, message, Modal, Tabs } from "antd";
-import Aos from "aos";
 import React, { useEffect, useRef, useState } from "react";
 import CCSteps from "src/components/CCHeaderSteps";
 import ChangeInforForm from "src/components/Form/ChangeInforForm";
@@ -8,18 +7,26 @@ import PreviewData from "src/components/Form/PreviewData";
 import axios from "src/config/axios";
 import { stepType1 } from "src/contants/Step";
 import { useParams } from "react-router-dom";
+import TamHoanForm from "src/components/Form/PendingForm";
+import styles from "./styles.module.scss";
 // import { NextResponse } from 'next/server';
 const { TabPane } = Tabs;
 const UserProductItem = (props) => {
-  const productRef = useRef();
-  const registerRef = useRef();
   const formRef = useRef();
-  const loginRef = useRef();
-  const inforRef = useRef();
   const [form, setForm] = useState({});
   const [current, setCurrent] = useState(0);
   const [data, setData] = useState();
   const [changeInforStep, setChangeInforStep] = useState([
+    {
+      title: "Bước 1",
+      desc: "Chọn loại hình",
+    },
+    {
+      title: `Bước 2`,
+      desc: "Preview",
+    },
+  ]);
+  const [pendingStep, setPendingStep] = useState([
     {
       title: "Bước 1",
       desc: "Chọn loại hình",
@@ -34,23 +41,18 @@ const UserProductItem = (props) => {
     width: 0,
     component: null,
   });
+
   let params = useParams();
+
   useEffect(() => {
-    // console.log(slug);
     getDataBySlug();
-    Aos.init({ duration: 300 });
   }, []);
+
   const getDataBySlug = () => {
     axios.get(`/product/${params.slug}`).then((res) => {
-      console.log(res.data);
       setData(res.data);
     });
   };
-  // useEffect(() => {
-  //   if (status === "authenticated") {
-  //     setCurrent(0);
-  //   }
-  // }, [status]);
 
   const Next = () => {
     // case here
@@ -169,9 +171,35 @@ const UserProductItem = (props) => {
     setChangeInforStep(data);
   };
 
+  const handlesetPendingStep = (val) => {
+    let data = [
+      {
+        title: "Bước 1",
+        desc: "Chọn loại hình",
+      },
+    ];
+    // let current = null;
+    // for (let i = 0; i < val.length; i++) {
+    //   data.push({ desc: val[i].children, title: `Bước ${i + 2}` });
+    //   current = i;
+    // }
+    data.push(
+      {
+        title: `Bước 2`,
+        desc: `${val.children}`,
+      },
+      {
+        title: `Bước 3`,
+        desc: "Preview",
+      },
+    );
+    setPendingStep(data);
+  };
+
   const renderFormByType = (type) => {
     switch (type) {
-      case 1: // create Company
+      case 1:
+        // Thành lập doanh nghiệp
         return (
           <>
             <Card className="card-boxShadow">
@@ -203,6 +231,7 @@ const UserProductItem = (props) => {
           </>
         );
       case 2:
+        // Thay đổi thông tin
         return (
           <Card className="card-boxShadow">
             <ChangeInforForm
@@ -229,7 +258,32 @@ const UserProductItem = (props) => {
           </Card>
         );
       case 3:
-        return;
+        // Tạm hoãn
+        return (
+          <Card className="card-boxShadow">
+            <TamHoanForm
+              data={data.data}
+              ref={formRef}
+              current={current}
+              onFinishScreen={(val) => handlesetPendingStep(val)}
+            />
+
+            {current === 3 ? renderPrewviewForm() : ""}
+
+            <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
+              {current < 2 ? <Button onClick={Next}>Next</Button> : ""}
+              {current === 2 ? (
+                <>
+                  {/* <Button onClick={handlePreview}>Kiểm tra</Button> */}
+                  <Button onClick={() => handlePurchase("change")}>Thanh toán</Button>
+                </>
+              ) : (
+                ""
+              )}
+              {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
+            </div>
+          </Card>
+        );
       case 4:
         return;
       default:
@@ -241,9 +295,10 @@ const UserProductItem = (props) => {
     switch (type) {
       case 1:
         return <CCSteps step={current} data={stepType1} />;
-
       case 2:
         return <CCSteps step={current} data={changeInforStep} />;
+      case 3:
+        return <CCSteps step={current} data={pendingStep} />;
       default:
         return null;
     }
@@ -251,7 +306,7 @@ const UserProductItem = (props) => {
 
   return (
     <>
-      <div className="" style={{ paddingBottom: 50 }}>
+      <div className={styles.mainContent}>
         {data && renderHeaderStep(data?.type)}
 
         {data && renderFormByType(data?.type)}

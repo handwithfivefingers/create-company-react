@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import clsx from "clsx";
 import { Skeleton, Card } from "antd";
+import { useSelector } from "react-redux";
 const CCSteps = (props) => {
   const [current, setCurrent] = useState(0);
-
+  const collapsed = useSelector((state) => state.commonReducer.collapsed);
   useEffect(() => {
     setCurrent(props.step);
   }, [props.step]);
@@ -12,7 +13,7 @@ const CCSteps = (props) => {
   const offset = props?.data?.length;
 
   return (
-    <Card>
+    <Card className={clsx([styles.cardHeader, { [styles.collapsed]: collapsed }])}>
       <div className={styles.listStep} style={{ "--offset": offset }}>
         {props?.data?.map((item, index) => {
           return (

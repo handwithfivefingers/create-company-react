@@ -23,7 +23,7 @@ const MailRoute = require("./server/route/template");
 mongoose
   .connect(
     // `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@todo1242021.hehew.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`
-    `mongodb+srv://hdme1995:hdme1995@todo1242021.hehew.mongodb.net/createCompany?retryWrites=true&w=majority`
+    `mongodb+srv://hdme1995:hdme1995@todo1242021.hehew.mongodb.net/createCompany?retryWrites=true&w=majority`,
   )
   .then(() => {
     console.log("DB connected");
@@ -39,8 +39,11 @@ app.use(
   cors({
     credentials: true,
     origin: ["http://localhost:3000"],
-  })
+  }),
 );
+
+
+global.__basedir = __dirname;
 
 // Routes middleware
 app.use("/public", express.static(path.join(__dirname, "uploads")));

@@ -5,7 +5,6 @@ import clsx from "clsx";
 import { number_format } from "../../helper/Common";
 import { Link } from "react-router-dom";
 const CardCategory = (props) => {
-  console.log(props);
   return (
     <Link to={`/user/san-pham/${props?.data?.slug}`}>
       <div className={clsx([styles.card])}>

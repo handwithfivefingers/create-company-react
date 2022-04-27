@@ -1,0 +1,5 @@
+export const SIDEBAR_COLLAPSE = {
+  COLLAPSED: "COLLAPSED",
+  EXPANDED: "EXPANDED",
+};
+
