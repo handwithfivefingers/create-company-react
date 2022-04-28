@@ -2,74 +2,86 @@ import React, { forwardRef, useState } from "react";
 import { Form, Input, Select, Card, Row, Col, DatePicker, InputNumber } from "antd";
 import styles from "../DaiDienPhapLuat/styles.module.scss";
 import clsx from "clsx";
+import CCInput from "src/components/CCInput";
 const HopDongChuyenNhuong = forwardRef((props, ref) => {
   const [sohuu, setSohuu] = useState();
 
   const renderFormFieldByValue = (val) => {
     let xhtml = null;
     if (sohuu === 1) {
-      xhtml = ( // chủ sở hữu là cá nhân
-        <Row>
-          <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Họ và tên">
-              <Select>
-                <Select.Option value={0}>Nữ</Select.Option>
-                <Select.Option value={1}>Nam</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Ngày sinh">
-              <DatePicker style={{ width: "100%" }} />
-            </Form.Item>
-          </Col>
+      xhtml = // chủ sở hữu là cá nhân
+        (
+          <Row>
+            <Col lg={12} md={12} sm={24} xs={24}>
+              <Form.Item name={["change_info"]} label="Họ và tên">
+                <Select>
+                  <Select.Option value={0}>Nữ</Select.Option>
+                  <Select.Option value={1}>Nam</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col lg={12} md={12} sm={24} xs={24}>
+              <Form.Item name={["change_info"]} label="Ngày sinh">
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
 
-          <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Loại giấy tờ pháp lý">
-              <Select>
-                <Select.Option value={0}>CMND</Select.Option>
-                <Select.Option value={1}>CCCD</Select.Option>
-                <Select.Option value={1}>Hộ chiếu</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
+            <Col lg={12} md={12} sm={24} xs={24}>
+              {/* <Form.Item name={["change_info"]} label="Loại giấy tờ pháp lý">
+                <Select>
+                  <Select.Option value={0}>CMND</Select.Option>
+                  <Select.Option value={1}>CCCD</Select.Option>
+                  <Select.Option value={1}>Hộ chiếu</Select.Option>
+                </Select>
+              </Form.Item> */}
+              <CCInput
+                type="select"
+                name={["change_info"]}
+                label="Loại giấy tờ pháp lý"
+                options={[
+                  { name: "CMND", value: "CMND" },
+                  { name: "CCCD", value: "CCCD" },
+                  { name: "Hộ chiếu", value: "Hộ chiếu" },
+                ]}
+              />
+            </Col>
 
-          <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Số giấy tờ pháp lý">
-              <Input />
-            </Form.Item>
-          </Col>
+            <Col lg={12} md={12} sm={24} xs={24}>
+              <Form.Item name={["change_info"]} label="Số giấy tờ pháp lý">
+                <Input />
+              </Form.Item>
+            </Col>
 
-          <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Ngày cấp">
-              <Input />
-            </Form.Item>
-          </Col>
+            <Col lg={12} md={12} sm={24} xs={24}>
+              <Form.Item name={["change_info"]} label="Ngày cấp">
+                <Input />
+              </Form.Item>
+            </Col>
 
-          <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Nơi cấp">
-              <Input />
-            </Form.Item>
-          </Col>
+            <Col lg={12} md={12} sm={24} xs={24}>
+              <Form.Item name={["change_info"]} label="Nơi cấp">
+                <Input />
+              </Form.Item>
+            </Col>
 
-          <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Địa chỉ liên lạc">
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-      );
+            <Col lg={12} md={12} sm={24} xs={24}>
+              <Form.Item name={["change_info"]} label="Địa chỉ liên lạc">
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+        );
     } else {
       // Chủ sở hữu là tổ chức
       xhtml = (
         <Row>
           <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Tên doanh nghiệp">
+            <Form.Item name={["change_info"]} label="Tên doanh nghiệp">
               <Input />
             </Form.Item>
           </Col>
           <Col lg={12} md={12} sm={24} xs={24}>
-            <Form.Item name="" label="Mã số doanh nghiệp">
+            <Form.Item name={["change_info"]} label="Mã số doanh nghiệp">
               <Input />
             </Form.Item>
           </Col>
@@ -105,12 +117,21 @@ const HopDongChuyenNhuong = forwardRef((props, ref) => {
             </Form.Item>
           </Col>
           <Col span={24}>
-            <Form.Item label="Người đại diện theo pháp luật của công ty">
+            {/* <Form.Item label="Người đại diện theo pháp luật của công ty">
               <Select>
                 <Select.Option value={1}>Chuyển nhượng toàn bộ phần vốn góp</Select.Option>
                 <Select.Option value={2}>Chuyển nhượng một phần vốn góp</Select.Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
+            <CCInput
+              type="select"
+              name={["change_info"]}
+              label="Người đại diện theo pháp luật của công ty"
+              options={[
+                { name: "Chuyển nhượng toàn bộ phần vốn góp", value: "Chuyển nhượng toàn bộ phần vốn góp" },
+                { name: "Chuyển nhượng một phần vốn góp", value: "Chuyển nhượng một phần vốn góp" },
+              ]}
+            />
           </Col>
           {/** Display when selected === 2 */}
           <Col span={24}>

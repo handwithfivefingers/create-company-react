@@ -12,24 +12,24 @@ const DiaChiTruSoChinh = forwardRef((props, ref) => {
       })}
     >
       {/* <Form ref={ref} layout="vertical"> */}
-      <Form.Item label="Tên doanh nghiệp" name={["location", "company_name"]}>
+      <Form.Item label="Tên doanh nghiệp" name={["change_info", "location", "company_name"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["location", "mst"]}>
+      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "location", "mst"]}>
         <Input />
       </Form.Item>
       <Form.Item label="Địa chỉ trụ sở hiện tại">
-        <Form.Item name={["location", "old", "address"]} label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn">
+        <Form.Item name={["change_info", "location", "old", "address"]} label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn">
           <Input />
         </Form.Item>
-        <Form.Item name={["location", "old", "town"]} label="Xã/Phường/Thị Trấn">
+        <Form.Item name={["change_info", "location", "old", "town"]} label="Xã/Phường/Thị Trấn">
           <Input />
         </Form.Item>
-        <Form.Item name={["location", "old", "district"]} label="Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh">
+        <Form.Item name={["change_info", "location", "old", "district"]} label="Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh">
           <Input />
         </Form.Item>
-        <Form.Item name={["location", "old", "city"]} label="Tỉnh/Thành phố">
+        <Form.Item name={["change_info", "location", "old", "city"]} label="Tỉnh/Thành phố">
           <Input />
         </Form.Item>
       </Form.Item>

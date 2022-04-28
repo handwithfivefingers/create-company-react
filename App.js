@@ -24,6 +24,10 @@ mongoose
   .connect(
     // `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@todo1242021.hehew.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`
     `mongodb+srv://hdme1995:hdme1995@todo1242021.hehew.mongodb.net/createCompany?retryWrites=true&w=majority`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
   )
   .then(() => {
     console.log("DB connected");
@@ -41,7 +45,6 @@ app.use(
     origin: ["http://localhost:3000"],
   }),
 );
-
 
 global.__basedir = __dirname;
 

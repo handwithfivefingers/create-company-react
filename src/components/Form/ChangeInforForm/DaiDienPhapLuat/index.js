@@ -4,37 +4,27 @@ import styles from "./styles.module.scss";
 import clsx from "clsx";
 
 const DaiDienPhapLuat = forwardRef((props, ref) => {
+  console.log(props);
   return (
-    // <Card
-    //   title="Đăng ký thay đổi người đại diện theo pháp luật"
-    //   bordered={false}
-    //   className={clsx(styles.current, {
-    //     [styles.active]: props.current === props.index,
-    //   })}
-    // >
-    //   {/* <Form ref={ref} layout="vertical"> */}
-
-    //   {/* </Form> */}
-    // </Card>
     <Form.Item
       label="Đăng ký thay đổi người đại diện theo pháp luật"
       className={clsx(styles.current, {
         [styles.active]: props.current === props.index,
       })}
     >
-      <Form.Item label="Tên doanh nghiệp" name={["legal_respon", "company_name"]}>
+      <Form.Item label="Tên doanh nghiệp" name={["change_info", "legal_respon", "company_name"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["legal_respon", "mst"]}>
+      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "legal_respon", "mst"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Tên người đại diện pháp luật cũ" name={["legal_respon", "old", "name"]}>
+      <Form.Item label="Tên người đại diện pháp luật cũ" name={["change_info", "legal_respon", "old", "name"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Chức danh người ĐDPL cũ" name={["legal_respon", "old", "title"]}>
+      <Form.Item label="Chức danh người ĐDPL cũ" name={["change_info", "legal_respon", "old", "title"]}>
         <Select>
           <Select.Option value={1}>Chủ tịch công ty</Select.Option>
 
@@ -45,11 +35,11 @@ const DaiDienPhapLuat = forwardRef((props, ref) => {
       </Form.Item>
 
       <Form.Item label="Thông tin người đại diện theo pháp luật sau khi thay đổi">
-        <Form.Item label="Họ và tên" name={["legal_respon", "name"]}>
+        <Form.Item label="Họ và tên" name={["change_info", "legal_respon", "name"]}>
           <Input />
         </Form.Item>
 
-        <Form.Item name={["legal_respon", "gender"]} label="Giới tính: ">
+        <Form.Item name={["change_info", "legal_respon", "gender"]} label="Giới tính: ">
           <Select>
             <Select.Option value={0}>Nữ</Select.Option>
             <Select.Option value={1}>Nam</Select.Option>

@@ -1,7 +1,7 @@
 const express = require("express");
 const { upload, requireSignin } = require("./../middleware/index");
-const { getOrders, getOrderBySlug } = require("../controller/order");
-const { createOrders, getOrdersFromUser, orderWithPayment } = require("../controller/admin/order");
+const { getOrders, getOrderBySlug, createOrders, orderWithPayment, getUrlReturn } = require("../controller/order");
+const { getOrdersFromUser } = require("../controller/admin/order");
 
 const router = express.Router();
 // admin
@@ -11,6 +11,11 @@ router.get("/admin/order/:id", requireSignin, upload.none(), getOrderBySlug);
 
 //create and payment
 router.post("/order/create/payment", requireSignin, upload.none(), orderWithPayment);
+
+router.get("/order/payment/url_return", requireSignin, upload.none(), getUrlReturn);
+
+
+
 //create
 router.post("/order/create", requireSignin, upload.none(), createOrders);
 //get

@@ -13,37 +13,43 @@ const TangVonDieuLe = forwardRef((props, ref) => {
     >
       <Row gutter={[16, 0]}>
         <Col span={24}>
-          <Form.Item label="Tên doanh nghiệp" name={["up_value", "company_name"]}>
+          <Form.Item label="Tên doanh nghiệp" name={["change_info", "up_value", "company_name"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={24}>
-          <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["up_value", "mst"]}>
+          <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "up_value", "mst"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ đã đăng ký (bằng số)" name={["up_value", "base_val", "num"]}>
+          <Form.Item label="Vốn điều lệ đã đăng ký (bằng số)" name={["change_info", "up_value", "base_val", "num"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ đã đăng ký (bằng chữ)" name={["up_value", "base_val", "char"]}>
+          <Form.Item label="Vốn điều lệ đã đăng ký (bằng chữ)" name={["change_info", "up_value", "base_val", "char"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ sau khi tăng (bằng số)" name={["up_value", "new_base_val", "num"]}>
+          <Form.Item
+            label="Vốn điều lệ sau khi tăng (bằng số)"
+            name={["change_info", "up_value", "new_base_val", "num"]}
+          >
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ sau khi tăng (bằng chữ)" name={["up_value", "new_base_val", "char"]}>
+          <Form.Item
+            label="Vốn điều lệ sau khi tăng (bằng chữ)"
+            name={["change_info", "up_value", "new_base_val", "char"]}
+          >
             <Input />
           </Form.Item>
         </Col>
         <Col span={24}>
-          <Form.Item label="Hình thức tăng vốn" name={["up_value", "type"]}>
+          <Form.Item label="Hình thức tăng vốn" name={["change_info", "up_value", "type"]}>
             <Input />
           </Form.Item>
         </Col>

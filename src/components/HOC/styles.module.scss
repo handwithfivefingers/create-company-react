@@ -43,8 +43,8 @@
   .mainContent {
     overflow-x: hidden;
     position: relative;
-    display: grid;
-    grid-template-rows: 65px 1fr;
+    // display: grid;
+    // grid-template-rows: 65px 1fr;
     gap: 12px;
     @include scroll(6px, 6px, transparent);
   }

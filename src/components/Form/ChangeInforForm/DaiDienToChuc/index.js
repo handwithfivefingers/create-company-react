@@ -11,11 +11,11 @@ const DaiDienToChuc = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      <Form.Item label="Tên doanh nghiệp" name={["present_change", "company_name"]}>
+      <Form.Item label="Tên doanh nghiệp" name={["change_info", "present_change", "company_name"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["present_change", "mst"]}>
+      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "present_change", "mst"]}>
         <Input />
       </Form.Item>
     </Form.Item>

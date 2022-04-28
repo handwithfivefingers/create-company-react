@@ -52,14 +52,16 @@ const ChangeInforForm = forwardRef((props, ref) => {
       props.onFinishScreen(opt);
     }
   };
-
+  useEffect(() => {
+    console.log(ref?.current.getFieldsValue());
+  }, []);
   // console.log("selectType", selectType, props.current);
 
   return (
     // <Card style={{ minWidth: "350px" }} title="Chọn loại hình doanh nghiệp">    {/* </Card> */}
-    <Form ref={ref} layout="vertical">
+    <Form ref={ref} layout="vertical" name="change_info">
       <Form.Item
-        name="selectProduct"
+        name={["selectProduct"]}
         label="Chọn loại hình doanh nghiệp"
         required
         className={clsx(styles.current, {
@@ -78,7 +80,7 @@ const ChangeInforForm = forwardRef((props, ref) => {
       </Form.Item>
 
       <Form.Item
-        name="selectChildProduct"
+        name={["selectChildProduct"]}
         label="Chọn thông tin thay đổi"
         required
         className={clsx(styles.current, {

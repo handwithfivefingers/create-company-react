@@ -12,7 +12,7 @@ import RouterContext, { RouterProvider } from "src/helper/Context";
 import moment from "moment";
 import "aos/dist/aos.css";
 import "./assets/css/styles.scss";
-
+import datejs from "datejs";
 ConfigProvider.config({
   theme: {
     primaryColor: "#cd2027",
@@ -41,7 +41,7 @@ function App() {
   });
 
   const authReducer = useSelector((state) => state.authReducer);
-  
+
   useEffect(() => {
     moment.defaultFormat = "YYYY-MM-DD";
   }, []);

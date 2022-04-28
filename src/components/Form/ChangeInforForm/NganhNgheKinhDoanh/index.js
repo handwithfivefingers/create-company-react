@@ -12,19 +12,19 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
       })}
     >
       {/* <Form ref={ref} layout="vertical"> */}
-      <Form.Item label="Tên doanh nghiệp" name={["company_career", "company_name"]}>
+      <Form.Item label="Tên doanh nghiệp" name={["change_info", "company_career", "company_name"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["company_career", "mst"]}>
+      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "company_career", "mst"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Bổ sung ngành, nghề kinh doanh" name={["company_career", "include"]}>
+      <Form.Item label="Bổ sung ngành, nghề kinh doanh" name={["change_info", "company_career", "include"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Bỏ ngành, nghề kinh doanh" name={["company_career", "exclude"]}>
+      <Form.Item label="Bỏ ngành, nghề kinh doanh" name={["change_info", "company_career", "exclude"]}>
         <Input />
       </Form.Item>
 

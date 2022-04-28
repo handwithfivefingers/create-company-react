@@ -2,8 +2,7 @@ const { existHandler, successHandler, errHandler } = require("../../response");
 const { Order, Product } = require("../../model");
 const shortid = require("shortid");
 const mongoose = require("mongoose");
-// const dateFormat = require("dateformat");
-const moment = require("moment");
+const datejs = require("datejs");
 const QueryString = require("query-string");
 const crypto = require("crypto");
 
@@ -22,12 +21,6 @@ exports.getOrdersFromUser = async (req, res) => {
 };
 
 exports.createOrders = async (req, res) => {
-  // const dateFormat = require("dateformat");
-  // var date = new Date();
-  // var orderId = dateFormat(date, "HHmmss");
-  // let exist = await Order.findOne({ orderId: orderId }); // findOne.length > 0 => exist || valid
-  // if (exist) return existHandler(res);
-
   //  khai báo
   const { track, payment, products, data, categories } = req.body;
   var newData = {
@@ -69,7 +62,7 @@ exports.createOrders = async (req, res) => {
 
 exports.orderWithPayment = async (req, res) => {
   var date = new Date();
-  var orderId = moment(date, "HHmmss");
+  var orderId = date.toString("HHmmss");
   let exist = await Order.findOne({ orderId: orderId }); // findOne.length > 0 => exist || valid
   if (exist) return existHandler(res);
 
@@ -135,8 +128,8 @@ const paymentOrder = (req, res, params = null) => {
   var returnUrl = `http://localhost:3000/user/order`;
 
   var date = new Date();
-  var createDate = moment(date, "yyyymmddHHmmss");
-  var orderId = moment(date, "HHmmss");
+  var createDate = date.toString("yyyymmddHHmmss");
+  var orderId = date.toString("HHmmss");
 
   if (params !== null) {
     var amount = params?.amount;
@@ -149,9 +142,9 @@ const paymentOrder = (req, res, params = null) => {
     var bankCode = params?.bankCode || req.body.bankCode;
     var orderInfo = params?.orderDescription || req.body.orderDescription;
     // var orderType = params?.orderType || req.body.orderType;
-    var date = new Date();
-    var createDate = dateFormat(date, "yyyymmddHHmmss");
-    var orderId = dateFormat(date, "HHmmss");
+    // var date = new Date();
+    // var createDate = date.toString("yyyymmddHHmmss");
+    // var orderId = date.toString("HHmmss");
   }
 
   var orderType = req.body.orderType;
