@@ -27,6 +27,7 @@ const AdminUser = () => {
         pagination={{
           className: styles.pagination,
         }}
+        rowKey={(record) => record._id}
         size="small"
       >
         <Table.Column

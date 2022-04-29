@@ -14,7 +14,7 @@ export default function Tracking(props) {
   }, []);
 
   const getTemplateMail = () => {
-    axios.get("/api/admin/template").then((res) => {
+    axios.get("/admin/template").then((res) => {
       if (res.data.status === 200) {
         setList(res.data.data);
       } else message.error(res.data.message);
@@ -32,14 +32,13 @@ export default function Tracking(props) {
   };
   const onFinish = (val) => {
     let { template, attachments } = val;
-    // console.log(props.data.orderOwner.email);
     let email = props.data.orderOwner.email;
-    // console.log(template, attachments, content, email);
     let newContent = editorRef.current.getContent();
     if (props.onFinishScreen) {
       props.onFinishScreen(attachments, newContent, email);
     }
   };
+  
   return (
     <Card title="Chức năng gửi mail đính kèm" bordered={false}>
       <Row>

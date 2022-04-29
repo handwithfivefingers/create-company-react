@@ -1,33 +1,16 @@
-import {
-  Card,
-  Form,
-  Input,
-  Select,
-  Row,
-  Col,
-  DatePicker,
-  InputNumber,
-  Button,
-  Space,
-  Alert,
-  message,
-  Popover,
-  Collapse,
-  Modal,
-} from "antd";
-import React, { forwardRef, useEffect, useRef, useState } from "react";
-import { MinusCircleOutlined, PlusOutlined, CaretRightOutlined } from "@ant-design/icons";
-import HomepageService from "../../../service/HomepageService";
-import axios from "../../../config/axios";
-import moment from "moment";
-import { debounce } from "lodash";
-import { number_format } from "../../../helper/Common";
+import { CaretRightOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Alert, Button, Card, Col, Collapse, DatePicker, Form, Input, Row, Select, Space } from "antd";
 import clsx from "clsx";
-import styles from "./CreateCompany.module.scss";
-import PreviewData from "../PreviewData";
-import { FormFieldText, BaseFieldText } from "../../../contants/Common";
-import { FORM_SELECT } from "../../../contants/FormConstant";
+import { debounce } from "lodash";
+import moment from "moment";
+import React, { forwardRef, useEffect, useState } from "react";
+import axios from "src/config/axios";
+import { FormFieldText } from "src/contants/Common";
+import { FORM_SELECT } from "src/contants/FormConstant";
+import { number_format } from "src/helper/Common";
+import HomepageService from "src/service/GlobalService";
 import CCInput from "../../CCInput";
+import styles from "./CreateCompany.module.scss";
 
 const popData = {
   content: (

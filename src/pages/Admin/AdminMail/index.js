@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Table, Button, message, Drawer, Input, Form, Row, Col, Space, Tooltip, Card } from "antd";
-import styles from "./styles.module.scss";
-// import { useRouter } from "next/router";
-import axios from "../../../config/axios";
-import parser from "html-react-parser";
 import { DeleteOutlined, FormOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import TemplateMail from "../../../components/Form/TemplateMail";
+import { Button, Card, Col, Drawer, message, Row, Table, Tooltip } from "antd";
+import parser from "html-react-parser";
+import React, { useEffect, useState } from "react";
+import TemplateMail from "src/components/Form/TemplateMail";
+import axios from "src/config/axios";
+import styles from "./styles.module.scss";
 function ListTemplateMail(props) {
   // const router = useRouter();
   const [data, setData] = useState([]);
@@ -17,7 +16,6 @@ function ListTemplateMail(props) {
     width: 0,
   });
   const fetchTemplateMail = (page = 1) => {
-    console.log(page);
     setLoading(true);
     let params = { page: page };
     axios
@@ -63,8 +61,8 @@ function ListTemplateMail(props) {
       ),
     });
   };
+
   const onClose = () => {
-    // fetchTemplateMail();
     setDrawer({
       ...drawer,
       visible: false,
@@ -74,7 +72,7 @@ function ListTemplateMail(props) {
   const deleteTemplate = (record) => {
     setLoading(true);
     axios
-      .post(`/api/admin/template/delete/${record._id}`)
+      .post(`/admin/template/delete/${record._id}`)
       .then((res) => {
         if (res.data.status === 200) {
           message.success(res.data.message);
@@ -97,11 +95,6 @@ function ListTemplateMail(props) {
         </Button>,
       ]}
     >
-      {/* <div className={styles.mail}> */}
-      {/* <div className={styles.header}>
-					<div className={styles.title}>Danh sách Mẫu Email</div>
-					<div className={styles.action}></div>
-				</div> */}
       <Table
         size="small"
         bordered
@@ -167,7 +160,6 @@ function ListTemplateMail(props) {
       >
         {drawer.component}
       </Drawer>
-      {/* </div> */}
     </Card>
   );
 }

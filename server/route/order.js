@@ -10,11 +10,10 @@ router.post("/admin/order", requireSignin, upload.none(), getOrders);
 router.get("/admin/order/:id", requireSignin, upload.none(), getOrderBySlug);
 
 //create and payment
+
 router.post("/order/create/payment", requireSignin, upload.none(), orderWithPayment);
 
-router.get("/order/payment/url_return", requireSignin, upload.none(), getUrlReturn);
-
-
+router.get("/order/payment/url_return", getUrlReturn);
 
 //create
 router.post("/order/create", requireSignin, upload.none(), createOrders);

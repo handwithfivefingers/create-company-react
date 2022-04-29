@@ -1,3 +1,4 @@
+const dateFormat = require("date-format");
 const { errHandler, successHandler, permisHandler, existHandler } = require("../response");
 const { Product, Category, Career, User, Order } = require("./../model");
 
@@ -91,6 +92,7 @@ exports.getOrderBySlug = async (req, res) => {
 exports.createOrders = async (req, res) => {
   //  khai báo
   const { track, payment, data, categories } = req.body;
+  const { selectProduct, selectChildProduct } = data;
   var newData = {
     track,
     payment,
@@ -98,11 +100,7 @@ exports.createOrders = async (req, res) => {
     categories,
     orderOwner: req.id,
     name: shortid.generate(),
-  };
-  const { selectProduct, selectChildProduct } = data;
-  let idArray = {
-    childProduct: [],
-    product: "",
+    products: selectChildProduct ? selectChildProduct : selectProduct,
   };
 
   // Handle Calculate Price with multi Product
@@ -114,23 +112,17 @@ exports.createOrders = async (req, res) => {
   if (selectChildProduct) {
     // By child product
     price += await calcPrice(selectChildProduct);
-    for (let i = 0; i < selectChildProduct.length; i++) {
-      // idArray.product = idArray.push(mongoose.Types.ObjectId(selectChildProduct[i]));
-      idArray.childProduct.push(mongoose.Types.ObjectId(selectChildProduct[i]));
-    }
   }
 
   if (selectProduct) {
     // By Category product
     price += await calcPrice(selectProduct);
-    idArray.product = mongoose.Types.ObjectId(selectProduct);
-    // idArray.push(mongoose.Types.ObjectId(selectProduct));
   }
 
-  newData.products = { ...idArray }; // List Products
   newData.price = price;
-  // newData.orderId = orderId;
+
   newData.slug = newData.name + "-" + shortid.generate();
+
   let _save = new Order({ ...newData });
   let _obj = await _save.save();
 
@@ -144,6 +136,9 @@ exports.createOrders = async (req, res) => {
 exports.orderWithPayment = async (req, res) => {
   var date = new Date();
   var orderId = date.toString("HHmmss");
+
+  // const session = await mongoose.startSession();
+
   let exist = await Order.findOne({ orderId: orderId }); // findOne.length > 0 => exist || valid
   if (exist) return existHandler(res);
 
@@ -167,10 +162,6 @@ exports.orderWithPayment = async (req, res) => {
   if (selectChildProduct) {
     // By child product
     price += await calcPrice(selectChildProduct);
-    // for (let i = 0; i < selectChildProduct.length; i++) {
-    //   // idArray.product = idArray.push(mongoose.Types.ObjectId(selectChildProduct[i]));
-    //   idArray.childProduct.push(new mongoose.Types.ObjectId(selectChildProduct[i])));
-    // }
   }
 
   if (selectProduct) {
@@ -189,7 +180,7 @@ exports.orderWithPayment = async (req, res) => {
   // handle Payment Here
   let params = {
     amount: price * 10,
-    orderDescription: `Thanh toan don hang ${_obj.name}`,
+    orderDescription: `Thanh toán đơn hàng ${_obj.name} tại app.thanhlapcongtyonline.vn`,
     _id: _obj._id,
   };
 
@@ -211,11 +202,12 @@ const paymentOrder = (req, res, params = null) => {
   var tmnCode = "6KGPLEH9";
   var secretKey = "AGYRQMFNZHMFDYBWOVAIBJZMZHZHLDUO";
   var vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-  var returnUrl = `http://localhost:3000/user/order`;
+
+  var returnUrl = `http://localhost:3000/order/payment/url_return`;
 
   var date = new Date();
-  var createDate = date.toString("yyyymmddHHmmss");
-  var orderId = date.toString("HHmmss");
+  var createDate = dateFormat(date, "yyyymmddHHmmss");
+  var orderId = dateFormat(date, "HHmmss");
   var orderInfo;
   var amount;
   var bankCode;
@@ -262,6 +254,41 @@ const paymentOrder = (req, res, params = null) => {
   return res.status(200).json({ status: 200, url: vnpUrl });
 };
 
+exports.getUrlReturn = async (req, res) => {
+  var vnp_Params = req.query;
+
+  var secureHash = vnp_Params["vnp_SecureHash"];
+
+  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHashType"];
+
+  vnp_Params = sortObject(vnp_Params);
+
+  var tmnCode = "6KGPLEH9";
+  var secretKey = "AGYRQMFNZHMFDYBWOVAIBJZMZHZHLDUO";
+
+  var signData = qs.stringify(vnp_Params, { encode: false });
+
+  var hmac = crypto.createHmac("sha512", secretKey);
+  var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
+
+  if (secureHash === signed) {
+    //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
+
+    const query = qs.stringify({
+      code: vnp_Params["vnp_ResponseCode"],
+    });
+
+    return res.redirect(`${process.env.BASEHOST}/user/order?` + query);
+  } else {
+    const query = qs.stringify({
+      code: "97",
+    });
+
+    return res.redirect(`${process.env.BASEHOST}/admin/order?` + query);
+  }
+};
+
 function sortObject(obj) {
   var sorted = {};
   var str = [];
@@ -277,6 +304,7 @@ function sortObject(obj) {
   }
   return sorted;
 }
+
 const calcPrice = async (productArray) => {
   if (typeof productArray === "string") {
     let _product = await Product.findOne({ _id: productArray }).select("price");
@@ -291,31 +319,4 @@ const calcPrice = async (productArray) => {
   return await Promise.all(allProduct)
     .then((res) => res.reduce((prev, current) => (prev += current.price), 0))
     .catch((err) => console.log(err));
-};
-
-exports.getUrlReturn = async (req, res) => {
-  var vnp_Params = req.query;
-
-  var secureHash = vnp_Params["vnp_SecureHash"];
-
-  delete vnp_Params["vnp_SecureHash"];
-  delete vnp_Params["vnp_SecureHashType"];
-
-  vnp_Params = sortObject(vnp_Params);
-
-  var tmnCode = "6KGPLEH9";
-  var secretKey = "AGYRQMFNZHMFDYBWOVAIBJZMZHZHLDUO";
-
-  var signData = qs.stringify(vnp_Params, { encode: false });
-  var crypto = require("crypto");
-  var hmac = crypto.createHmac("sha512", secretKey);
-  var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
-
-  if (secureHash === signed) {
-    //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-
-    res.render("success", { code: vnp_Params["vnp_ResponseCode"] });
-  } else {
-    res.render("success", { code: "97" });
-  }
 };

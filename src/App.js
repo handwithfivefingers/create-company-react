@@ -27,10 +27,30 @@ const RouterComponent = (props) => {
   const routeDetect = useDetectLocation(location);
 
   const { route, setRoute } = useContext(RouterContext);
+  const [displayLocation, setDisplayLocation] = useState(location);
+
+  const [transitionStage, setTransistionStage] = useState("fadeIn");
   useEffect(() => {
     if (route !== routeDetect) setRoute(routeDetect);
   }, [location]);
-  return Route;
+
+  useEffect(() => {
+    if (location !== displayLocation && location.pathname === "/") setTransistionStage("fadeOut");
+  }, [location]);
+
+  return (
+    <div
+      className={`${transitionStage}`}
+      onAnimationEnd={() => {
+        if (transitionStage === "fadeOut") {
+          setTransistionStage("fadeIn");
+          setDisplayLocation(location);
+        }
+      }}
+    >
+      {Route}
+    </div>
+  );
 };
 
 function App() {

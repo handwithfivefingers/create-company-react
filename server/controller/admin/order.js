@@ -1,3 +1,4 @@
+const dateFormat = require("date-format");
 const { existHandler, successHandler, errHandler } = require("../../response");
 const { Order, Product } = require("../../model");
 const shortid = require("shortid");
@@ -128,8 +129,8 @@ const paymentOrder = (req, res, params = null) => {
   var returnUrl = `http://localhost:3000/user/order`;
 
   var date = new Date();
-  var createDate = date.toString("yyyymmddHHmmss");
-  var orderId = date.toString("HHmmss");
+  var createDate = dateFormat(date, "yyyymmddHHmmss");
+  var orderId = dateFormat(date, "HHmmss");
 
   if (params !== null) {
     var amount = params?.amount;
@@ -141,10 +142,6 @@ const paymentOrder = (req, res, params = null) => {
     var amount = params?.amount || req.body.amount;
     var bankCode = params?.bankCode || req.body.bankCode;
     var orderInfo = params?.orderDescription || req.body.orderDescription;
-    // var orderType = params?.orderType || req.body.orderType;
-    // var date = new Date();
-    // var createDate = date.toString("yyyymmddHHmmss");
-    // var orderId = date.toString("HHmmss");
   }
 
   var orderType = req.body.orderType;
@@ -181,23 +178,6 @@ const paymentOrder = (req, res, params = null) => {
   // return res.redirect(vnpUrl);
 };
 
-const registerCompany = async (data) => {
-  //   price, orderOwner, track, payment, product, data, orderId, categories, orderId;
-  //   let obj = {
-  //     price: data.price,
-  //     orderOwner: data.orderOwner,
-  //     track: data.track,
-  //     payment: data.payment,
-  //     product: data.product,
-  //     create_company: data.data,
-  //     orderId: data.orderId,
-  //     categories: data.categories,
-  //   };
-
-  //   return "hello";
-  let _obj = new Order({ ...data });
-  return await _obj.save();
-};
 
 const calcPrice = async (productArray) => {
   console.log(productArray);

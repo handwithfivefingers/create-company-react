@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { Card, Form, Button, message, Spin, Input } from "antd";
-import CCInput from "../../../../components/CCInput";
-import CCEditor from "../../../../components/Editor";
-import { RiArrowGoBackFill } from "react-icons/ri";
-import styles from "./styles.module.scss";
-import { useRouter } from "next/router";
-import axios from "../../../../config/axios";
+import { Button, Form, Input, message, Spin } from "antd";
 import clsx from "clsx";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { RiArrowGoBackFill } from "react-icons/ri";
+import CCEditor from "../../../../components/Editor";
+import axios from "../../../../config/axios";
+import styles from "./styles.module.scss";
 
 export default function EditMail() {
   const [name, setName] = useState();
@@ -23,7 +22,7 @@ export default function EditMail() {
 
     setLoading(true);
     axios
-      .post("/api/admin/template/create", { name, subject, content })
+      .post("/admin/template/create", { name, subject, content })
       .then((res) => {
         if (res.data.status === 201) {
           message.success(res.data.message);
@@ -51,13 +50,8 @@ export default function EditMail() {
       <Form.Item>
         <Input placeholder={"Subject"} onChange={(e) => setSubject(e.target.value)} />
       </Form.Item>
-
-      {/* <Form.Item>
-        <Input placeholder={"Text"} onChange={(e) => setName(e.target.value)} />
-      </Form.Item> */}
-
-      {/* subject
-text */}
+      
+      {/* subject text */}
 
       <CCEditor content={content} onChange={(e) => setContent(e)} />
 
