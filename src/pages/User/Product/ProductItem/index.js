@@ -446,8 +446,8 @@ const UserProductItem = (props) => {
         ...body,
       },
     };
-    console.log(val.create_company.present_person, create_company_files[val.create_company.present_person]);
-    // saveService(params);
+    // console.log(val.create_company.present_person, create_company_files[val.create_company.present_person]);
+    saveService(params);
   };
 
   const handleSaveChangeInfo = () => {
@@ -462,8 +462,8 @@ const UserProductItem = (props) => {
         ...val,
       },
     };
-    console.log(val);
-    // saveService(params);
+    // console.log(val);
+    saveService(params);
   };
 
   const handleSavePending = () => {
