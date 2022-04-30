@@ -3,9 +3,42 @@ import { Card, Row, Col, Typography, Descriptions } from "antd";
 import moment from "moment";
 import { FormFieldText, BaseFieldText } from "../../../contants/Common";
 import { number_format, renderField, flattenObject } from "../../../helper/Common";
+import { LABEL } from "src/contants/FormConstant";
 
 const PreviewData = ({ data }) => {
+
   let { pending, create_company, change_info, dissolution } = data;
+  
+  const renderTitle = (pathName) => {
+    let xhtml = "";
+    for (let property in LABEL[pathName]) {
+      console.log(pathName, )
+      xhtml += [data?.[pathName]?.[property] && LABEL[pathName][property]?.title];
+    }
+    return xhtml;
+  };
+
+  const checkData = (pathName) => {
+    let xhtml = [];
+    for (let property in LABEL[pathName]) {
+      let label = LABEL[pathName][property].fields;
+      xhtml.push(
+        Object.keys(label).map((item) => {
+          console.log("data valid");
+          return data?.[pathName]?.[property]?.[item] ? (
+            <Descriptions.Item key={[pathName, item]} label={LABEL?.[pathName]?.[property]?.fields?.[item]}>
+              {data?.[pathName]?.[property]?.[item]}
+            </Descriptions.Item>
+          ) : (
+            ""
+          );
+        })
+      );
+    }
+
+    return xhtml;
+    
+  };
 
   const renderFormByArray = (array, name = "") => {
     let xhtml = null;
@@ -23,7 +56,7 @@ const PreviewData = ({ data }) => {
             if (["code", "key", "value", "name"].includes(key)) return "";
             return <Descriptions.Item label={[name, " ", index + 1]}>{item["children"]}</Descriptions.Item>;
           }
-          return <Descriptions.Item label={[name, " ", key , " ", index + 1]}>{item[key]}</Descriptions.Item>;
+          return <Descriptions.Item label={[name, " ", key, " ", index + 1]}>{item[key]}</Descriptions.Item>;
         });
       }
       return item;
@@ -43,10 +76,9 @@ const PreviewData = ({ data }) => {
       </div>
     );
   }
+
   if (create_company) {
     let flatten = flattenObject(create_company);
-
-    console.log(flatten);
 
     return (
       <Descriptions title=" Thành lập doanh nghiệp">
@@ -71,12 +103,20 @@ const PreviewData = ({ data }) => {
       </Descriptions>
     );
   }
+
   if (change_info) {
     console.log(change_info);
   }
+
   if (dissolution) {
-    console.log(dissolution);
+    let xhtml = [];
+    for (var property in data) {
+      // console.log(property); // Outputs: foo, fiz or fiz, foo
+      xhtml.push(<Descriptions layout="vertical" title={renderTitle(property)}>{checkData(property)}</Descriptions>);
+    }
+    return xhtml;
   }
+
   return (
     <div>
       {/* <Row gutter={[16, 12]}>

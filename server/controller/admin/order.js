@@ -8,7 +8,7 @@ const QueryString = require("query-string");
 const crypto = require("crypto");
 
 exports.getOrdersFromUser = async (req, res) => {
-  let _order = await Order.find({ orderOwner: req.user })
+  let _order = await Order.find({ orderOwner: req.id })
     .populate("products", "name")
     .populate("main_career", "name")
     .populate("orderOwner", "name")

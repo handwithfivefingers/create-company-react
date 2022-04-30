@@ -166,7 +166,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
     path: "/user",
     element: <UserDashboard status={status} />,
     children:
-      status && role === "user" ? (
+      status  ? (
         [
           {
             path: "san-pham",

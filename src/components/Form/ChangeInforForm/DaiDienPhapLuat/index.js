@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import { Form, Input, Select, Card, DatePicker } from "antd";
 import styles from "./styles.module.scss";
 import clsx from "clsx";
+import CCInput from "src/components/CCInput";
 
 const DaiDienPhapLuat = forwardRef((props, ref) => {
   console.log(props);
@@ -12,92 +13,123 @@ const DaiDienPhapLuat = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      <Form.Item label="Tên doanh nghiệp" name={["change_info", "legal_respon", "company_name"]}>
+      <Form.Item label="Tên doanh nghiệp" name={["change_info", "legal_representative", "company_name"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "legal_respon", "mst"]}>
+      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "legal_representative", "mst"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Tên người đại diện pháp luật cũ" name={["change_info", "legal_respon", "old", "name"]}>
+      <Form.Item label="Tên người đại diện pháp luật cũ" name={["change_info", "legal_representative", "old_name"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Chức danh người ĐDPL cũ" name={["change_info", "legal_respon", "old", "title"]}>
-        <Select>
-          <Select.Option value={1}>Chủ tịch công ty</Select.Option>
-
-          <Select.Option value={2}>Giám đốc</Select.Option>
-
-          <Select.Option value={3}>Tổng giám đốc</Select.Option>
-        </Select>
-      </Form.Item>
+      <CCInput
+        type="select"
+        name={["change_info", "legal_representative", "old_title"]}
+        label="Chức danh"
+        options={[
+          {
+            value: "Chủ tịch công ty",
+            name: "Chủ tịch công ty",
+          },
+          {
+            value: "Giám đốc",
+            name: "Giám đốc",
+          },
+          {
+            value: "Tổng giám đốc",
+            name: "Tổng giám đốc",
+          },
+        ]}
+      />
 
       <Form.Item label="Thông tin người đại diện theo pháp luật sau khi thay đổi">
-        <Form.Item label="Họ và tên" name={["change_info", "legal_respon", "name"]}>
+        <Form.Item label="Họ và tên" name={["change_info", "legal_representative", "new_name"]}>
           <Input />
         </Form.Item>
 
-        <Form.Item name={["change_info", "legal_respon", "gender"]} label="Giới tính: ">
-          <Select>
-            <Select.Option value={0}>Nữ</Select.Option>
-            <Select.Option value={1}>Nam</Select.Option>
-          </Select>
-        </Form.Item>
+        <CCInput
+          type="select"
+          name={["change_info", "legal_representative", "gender"]}
+          label="Giới tính"
+          options={[
+            { value: "Nữ", name: "Nữ" },
+            { value: "Nam", name: "Nam" },
+          ]}
+        />
+        <CCInput
+          type="select"
+          name={["change_info", "legal_representative", "new_title"]}
+          label="Chức danh"
+          options={[
+            {
+              value: "Chủ tịch công ty",
+              name: "Chủ tịch công ty",
+            },
+            {
+              value: "Giám đốc",
+              name: "Giám đốc",
+            },
+            {
+              value: "Tổng giám đốc",
+              name: "Tổng giám đốc",
+            },
+          ]}
+        />
 
-        <Form.Item name={["legal_respon", "title"]} label="Chức danh">
-          <Select>
-            <Select.Option value={1}>Chủ tịch công ty</Select.Option>
-
-            <Select.Option value={2}>Giám đốc</Select.Option>
-
-            <Select.Option value={3}>Tổng giám đốc</Select.Option>
-          </Select>
-        </Form.Item>
-
-        <Form.Item name={["legal_respon", "birth_day"]} label="Sinh ngày">
+        <Form.Item name={["change_info", "legal_representative", "birth_day"]} label="Sinh ngày">
           <DatePicker />
         </Form.Item>
 
-        <Form.Item name={["legal_respon", "per_type"]} label="Dân tộc:">
+        <Form.Item name={["change_info", "legal_representative", "per_type"]} label="Dân tộc">
           <Input />
         </Form.Item>
 
-        <Form.Item name={["legal_respon", "national"]} label="Quốc tịch">
+        <Form.Item name={["change_info", "legal_representative", "national"]} label="Quốc tịch">
           <Input />
         </Form.Item>
 
-        <Form.Item name={["legal_respon", "doc_type"]} label="Giấy tờ pháp lý">
-          <Select>
-            <Select.Option value={1}>CMND</Select.Option>
-            <Select.Option value={2}>CCCD</Select.Option>
-            <Select.Option value={3}>Hộ chiếu</Select.Option>
-          </Select>
-        </Form.Item>
+        <CCInput
+          type="select"
+          name={["change_info", "legal_representative", "doc_type"]}
+          label="Loại giấy tờ pháp lý"
+          options={[
+            { name: "CMND", value: "CMND" },
+            { name: "CCCD", value: "CCCD" },
+            { name: "Hộ chiếu", value: "Hộ chiếu" },
+          ]}
+        />
 
-        <Form.Item name={["legal_respon", "doc_code"]} label="Số CMND/ CCCD/ Hộ chiếu">
+        <Form.Item name={["change_info", "legal_representative", "doc_code"]} label="Số CMND/ CCCD/ Hộ chiếu">
           <Input />
         </Form.Item>
 
-        <Form.Item name={["legal_respon", "doc_time_provide"]} label="Ngày cấp">
+        <Form.Item name={["change_info", "legal_representative", "doc_time_provide"]} label="Ngày cấp">
           <DatePicker />
         </Form.Item>
 
-        <Form.Item name={["legal_respon", "doc_place_provide"]} label="Nơi cấp">
+        <Form.Item name={["change_info", "legal_representative", "doc_place_provide"]} label="Nơi cấp">
           <Input />
         </Form.Item>
         <Form.Item label="Địa chỉ thường trú">
-          <Form.Item name={["legal_respon", "reg_address"]} label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn">
+          <Form.Item
+            name={["change_info", "legal_representative", "reg_address"]}
+            label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn"
+          >
             <Input />
           </Form.Item>
-          <Form.Item name={["legal_respon", "town"]} label="Xã/Phường/Thị Trấn">
+          <Form.Item name={["change_info", "legal_representative", "town"]} label="Xã/Phường/Thị Trấn">
             <Input />
           </Form.Item>
-          <Form.Item name={["legal_respon", "district"]} label="Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh">
+          <Form.Item
+            name={["change_info", "legal_representative", "district"]}
+            label="Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh"
+          >
             <Input />
           </Form.Item>
-          <Form.Item name={["legal_respon", "city"]} label="Tỉnh/Thành phố">
+          <Form.Item name={["change_info", "legal_representative", "city"]} label="Tỉnh/Thành phố">
             <Input />
           </Form.Item>
         </Form.Item>

@@ -48,8 +48,6 @@ const popData = {
 const CreateCompany = forwardRef((props, formRef) => {
   const [careerData, setCareerData] = useState([]);
 
-  const [loading, setLoading] = useState(false);
-
   const [current, setCurrent] = useState(1);
 
   const [formData, setFormData] = useState({});
@@ -369,8 +367,8 @@ const CreateCompany = forwardRef((props, formRef) => {
                 name={["create_company", "present_person"]}
                 onSelect={(e) => setFormData({ ...formData, present_person: e })}
                 options={[
-                  { value: 1, name: "Người đại diện là cá nhân" },
-                  { value: 2, name: "Người đại diện là tổ chức" },
+                  { value: "personal", name: "Người đại diện là cá nhân" },
+                  { value: "organization", name: "Người đại diện là tổ chức" },
                 ]}
               />
             </Col>

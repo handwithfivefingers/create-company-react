@@ -5,13 +5,12 @@ import clsx from "clsx";
 const NganhNgheKinhDoanh = forwardRef((props, ref) => {
   return (
     <Form.Item
-      label="Đăng ký thay đổi người đại diện theo pháp luật"
+      label="Thông báo thay đổi ngành, nghề kinh doanh"
       // bordered={false}
       className={clsx(styles.current, {
         [styles.active]: props.current === props.index,
       })}
     >
-      {/* <Form ref={ref} layout="vertical"> */}
       <Form.Item label="Tên doanh nghiệp" name={["change_info", "company_career", "company_name"]}>
         <Input />
       </Form.Item>
@@ -34,7 +33,7 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
         </Select>
       </Form.Item> */}
 
-      <Form.Item label="Tên người Đại diện pháp luật" name={["company_career", "legal_person"]}>
+      <Form.Item label="Tên người Đại diện pháp luật" name={["change_info","company_career", "legal_person"]}>
         <Input />
       </Form.Item>
       {/* </Form> */}

@@ -54,7 +54,7 @@ export default function HomePage() {
   //     Router.push("/");
   //   }
   if (authReducer.status) {
-    console.log(navigate, location, type);
+    // console.log(navigate, location, type);
     // navigate(-1 || authReducer.role);
     if (type !== "POP") {
       navigate(-1);

@@ -50,6 +50,9 @@ module.exports = {
   orderId: {
     type: Number,
   },
+  orderCreated: {
+    type: Number,
+  },
   categories: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",

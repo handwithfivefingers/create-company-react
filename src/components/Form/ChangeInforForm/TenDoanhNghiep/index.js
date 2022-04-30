@@ -5,7 +5,7 @@ import clsx from "clsx";
 const TenDoanhNghiep = forwardRef((props, ref) => {
   return (
     <Form.Item
-      label="ĐĂNG KÝ THAY ĐỔI TÊN DOANH NGHIỆP"
+      label="Đăng ký thay đổi tên doanh nghiệp"
       // bordered={false}
       className={clsx(styles.current, {
         [styles.active]: props.current === props.index,

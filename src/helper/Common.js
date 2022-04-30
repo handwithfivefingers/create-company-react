@@ -72,7 +72,7 @@ export const flattenObject = (obj) => {
       _template[item] = obj[item]; // create exist value for Number || String field
     } else {
       // Handle with Object field
-      // 2 case : Array || Object 
+      // 2 case : Array || Object
 
       if (obj[item].length > 0) {
         // Handle with Array
@@ -149,3 +149,11 @@ export function setLink(editor) {
   // update link
   editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
 }
+
+export const checkMoment = (date) => {
+  if (!date.isValid) {
+    console.log("this is not a moment object");
+  } else {
+    console.log("this is a moment object");
+  }
+};

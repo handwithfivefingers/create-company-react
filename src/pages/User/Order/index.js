@@ -4,6 +4,7 @@ import axios from "../../../config/axios";
 import Tracking from "../../../components/Tracking";
 import { RiLoader4Line } from "react-icons/ri";
 import { number_format } from "src/helper/Common";
+import dateformat from "dateformat";
 
 const UserOrder = () => {
   const [state, setState] = useState({
@@ -35,17 +36,37 @@ const UserOrder = () => {
         setLoading(false);
       });
   };
-  const handleTracking = () => {
-    setModal({
-      ...modal,
-      width: "50%",
-      visible: true,
-      component: <Tracking />,
-    });
-  };
+
+  // const handleTracking = () => {
+  //   setModal({
+  //     ...modal,
+  //     width: "50%",
+  //     visible: true,
+  //     component: <Tracking />,
+  //   });
+  // };
   const handlePurchase = (record) => {
-    console.log("purchase");
+    setLoading(true);
+    const date = new Date();
+    var createDate = dateformat(date, "yyyymmddHHmmss");
+    var orderId = dateformat(date, "HHmmss");
+    let params = {
+      ...record,
+      createDate,
+      orderId,
+    };
+    paymentService(params);
   };
+
+  const paymentService = async (params) => {
+    setLoading(true);
+    const res = await axios.post(`/payment`, params);
+    if (res.status === 200) {
+      window.open(res.data.url);
+    }
+    setLoading(false);
+  };
+
   const closeModal = () => {
     setModal({
       ...modal,
@@ -70,21 +91,7 @@ const UserOrder = () => {
             return record?.orderOwner.name;
           }}
         />
-        {/* <Table.Column
-          title="Tên công ty"
-          dataIndex=""
-          render={(val, record, i) => record?.company_core?.name}
-        />
-        <Table.Column
-          title="Ngành đăng kí"
-          dataIndex="company_main_career"
-          render={(val, record, i) => val?.name}
-        />
-        <Table.Column
-          title="Vốn"
-          dataIndex=""
-          render={(val, record, i) => record?.company_value}
-        /> */}
+
         <Table.Column
           align="center"
           title="Loại hình"
@@ -99,6 +106,7 @@ const UserOrder = () => {
             }
           }}
         />
+
         <Table.Column
           align="center"
           title="Giá tiền"
@@ -106,7 +114,8 @@ const UserOrder = () => {
             return <>{number_format(record?.price)} VND</>;
           }}
         />
-        <Table.Column
+
+        {/* <Table.Column
           title="Progress"
           dataIndex=""
           align="center"
@@ -115,20 +124,21 @@ const UserOrder = () => {
               <RiLoader4Line />
             </Button>
           )}
-        />
-        {/* <Table.Column align="center" title="File" dataIndex="" render={(val, record, i) => "...."} /> */}
+        /> */}
+
         <Table.Column
           align="center"
           title="Thanh toán"
           dataIndex=""
           render={(val, record, i) => {
-            return record?.status === 1 ? (
+            return record?.payment === "1" ? (
               <Tag color="green">Đã thanh toán</Tag>
             ) : (
               <Tag color="volcano">Chưa thanh toán</Tag>
             );
           }}
         />
+
         <Table.Column
           align="center"
           render={(v, record, i) => <Button onClick={() => handlePurchase(record)}>Thanh toán</Button>}

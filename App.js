@@ -4,7 +4,10 @@ const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
 var cookieParser = require("cookie-parser");
+
+const { task } = require("./server/controller/service/cronjob");
 
 env.config();
 
@@ -23,11 +26,12 @@ const MailRoute = require("./server/route/template");
 mongoose
   .connect(
     // `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@todo1242021.hehew.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`
-    `mongodb+srv://hdme1995:hdme1995@todo1242021.hehew.mongodb.net/createCompany?retryWrites=true&w=majority`,
+    // `mongodb+srv://hdme1995:hdme1995@todo1242021.hehew.mongodb.net/createCompany?retryWrites=true&w=majority`,
+    process.env.DATABASE_URL,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    },
+    }
   )
   .then(() => {
     console.log("DB connected");
@@ -42,8 +46,8 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000"],
-  }),
+    origin: ["http://localhost:3000", "https://app.thanhlapcongtyonline.vn"],
+  })
 );
 
 global.__basedir = __dirname;
@@ -81,6 +85,10 @@ app.use((req, res, next) => {
   res.header("Content-Encoding", "gzip, deflate, br");
   next();
 });
+
+// Cron running ;
+// task.start();
+
 
 app.listen(3001, () => {
   console.log("Server is runnign in port 3001");

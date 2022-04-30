@@ -5,7 +5,7 @@ import clsx from "clsx";
 const DiaChiTruSoChinh = forwardRef((props, ref) => {
   return (
     <Form.Item
-      label="Đăng ký thay đổi người đại diện theo pháp luật"
+      label="Đăng ký thay đổi địa chỉ trụ sở chính"
       // bordered={false}
       className={clsx(styles.current, {
         [styles.active]: props.current === props.index,
@@ -20,7 +20,10 @@ const DiaChiTruSoChinh = forwardRef((props, ref) => {
         <Input />
       </Form.Item>
       <Form.Item label="Địa chỉ trụ sở hiện tại">
-        <Form.Item name={["change_info", "location", "old", "address"]} label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn">
+        <Form.Item
+          name={["change_info", "location", "old", "address"]}
+          label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn"
+        >
           <Input />
         </Form.Item>
         <Form.Item name={["change_info", "location", "old", "town"]} label="Xã/Phường/Thị Trấn">

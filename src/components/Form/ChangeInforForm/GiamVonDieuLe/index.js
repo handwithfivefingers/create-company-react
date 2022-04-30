@@ -5,7 +5,7 @@ import clsx from "clsx";
 const GiamVonDieuLe = forwardRef((props, ref) => {
   return (
     <Form.Item
-      label="ĐĂNG KÝ THAY ĐỔI VỐN ĐIỀU LỆ"
+      label="Đăng ký thay đổi vốn điều lệ"
       // bordered={false}
       className={clsx(styles.current, {
         [styles.active]: props.current === props.index,
@@ -14,38 +14,38 @@ const GiamVonDieuLe = forwardRef((props, ref) => {
       {/* <Form ref={ref} layout="vertical"> */}
       <Row gutter={[16, 0]}>
         <Col span={24}>
-          <Form.Item label="Tên doanh nghiệp" name={["change_info", "down_value", "company_name"]}>
+          <Form.Item label="Tên doanh nghiệp" name={["change_info", "down_authorized_capital", "company_name"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={24}>
-          <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "down_value", "mst"]}>
+          <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "down_authorized_capital", "mst"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ đã đăng ký (bằng số)" name={["change_info", "down_value", "base_val", "num"]}>
+          <Form.Item label="Vốn điều lệ đã đăng ký (bằng số)" name={["change_info", "down_authorized_capital", "base_val", "num"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ đã đăng ký (bằng chữ)" name={["change_info", "down_value", "base_val", "char"]}>
+          <Form.Item label="Vốn điều lệ đã đăng ký (bằng chữ)" name={["change_info", "down_authorized_capital", "base_val", "char"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ sau khi giảm (bằng số)" name={["down_value", "new_base_val", "num"]}>
+          <Form.Item label="Vốn điều lệ sau khi giảm (bằng số)" name={["change_info","down_authorized_capital", "new_base_val", "num"]}>
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ sau khi giảm (bằng chữ)" name={["down_value", "new_base_val", "char"]}>
+          <Form.Item label="Vốn điều lệ sau khi giảm (bằng chữ)" name={["change_info","down_authorized_capital", "new_base_val", "char"]}>
             <Input />
           </Form.Item>
         </Col>
 
         <Col span={24}>
-          <Form.Item label="Hình thức giảm vốn" name={["down_value", "type"]}>
+          <Form.Item label="Hình thức giảm vốn" name={["change_info","down_authorized_capital", "type"]}>
             <Input />
           </Form.Item>
         </Col>

@@ -26,12 +26,7 @@ const AdminDashboard = () => {
       orderId,
     };
     const res = await axios.post(`/payment`, params);
-    // console.log(res);
     if (res.status === 200) {
-      console.log(res);
-      // setModal((state) => ({ ...state, visible: true, component: res.data.url }));
-      // console.log(iframeRef.current);
-      // return (window.location.href = res.data.url);
       window.open(res.data.url);
     }
     setLoading(false);

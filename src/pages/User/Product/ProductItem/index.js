@@ -10,13 +10,18 @@ import { useParams } from "react-router-dom";
 import TamHoanForm from "src/components/Form/PendingForm";
 import styles from "./styles.module.scss";
 import ProductService from "src/service/UserService/ProductService";
-// import { NextResponse } from 'next/server';
+import Dissolution from "src/components/Form/Dissolution";
+import dateformat from "dateformat";
 const { TabPane } = Tabs;
 
 const UserProductItem = (props) => {
   const formRef = useRef();
+  let params = useParams();
+
   const [form, setForm] = useState({});
+
   const [current, setCurrent] = useState(0);
+
   const [data, setData] = useState();
 
   const [changeInforStep, setChangeInforStep] = useState([
@@ -41,13 +46,22 @@ const UserProductItem = (props) => {
     },
   ]);
 
+  const [dissolutionStep, setDissolutionStep] = useState([
+    {
+      title: "Bước 1",
+      desc: "Chọn loại hình",
+    },
+    {
+      title: `Bước 2`,
+      desc: "Preview",
+    },
+  ]);
+
   const [childModal, setChildModal] = useState({
     visible: false,
     width: 0,
     component: null,
   });
-
-  let params = useParams();
 
   useEffect(() => {
     getDataBySlug();
@@ -161,7 +175,7 @@ const UserProductItem = (props) => {
               data={data.data}
               ref={formRef}
               current={current}
-              onFinishScreen={(val) => handlesetPendingStep(val)}
+              onFinishScreen={(val) => handleSetPendingStep(val)}
             />
 
             {current === 2 ? renderPrewviewForm(formRef) : ""}
@@ -181,7 +195,31 @@ const UserProductItem = (props) => {
           </Card>
         );
       case 4:
-        return;
+        return (
+          <Card className="card-boxShadow">
+            <Dissolution
+              data={data.data}
+              ref={formRef}
+              current={current}
+              onFinishScreen={(val) => handleSetDissolutionStep(val)}
+            />
+
+            {current === 2 ? renderPrewviewForm(formRef) : ""}
+
+            <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
+              {current < 2 ? <Button onClick={Next}>Next</Button> : ""}
+              {current === 2 ? (
+                <>
+                  <Button onClick={handleSaveDissolution}>Lưu lại</Button>
+                  <Button onClick={handlePurchaseDissolution}>Thanh toán</Button>
+                </>
+              ) : (
+                ""
+              )}
+              {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
+            </div>
+          </Card>
+        );
       default:
         return null;
     }
@@ -195,6 +233,8 @@ const UserProductItem = (props) => {
         return <CCSteps step={current} data={changeInforStep} />;
       case 3:
         return <CCSteps step={current} data={pendingStep} />;
+      case 4:
+        return <CCSteps step={current} data={dissolutionStep} />;
       default:
         return null;
     }
@@ -222,7 +262,7 @@ const UserProductItem = (props) => {
     setChangeInforStep(data);
   };
 
-  const handlesetPendingStep = (val) => {
+  const handleSetPendingStep = (val) => {
     let data = [
       {
         title: "Bước 1",
@@ -237,9 +277,29 @@ const UserProductItem = (props) => {
       {
         title: `Bước 3`,
         desc: "Preview",
-      },
+      }
     );
     setPendingStep(data);
+  };
+
+  const handleSetDissolutionStep = (val) => {
+    let data = [
+      {
+        title: "Bước 1",
+        desc: "Chọn loại hình",
+      },
+    ];
+    data.push(
+      {
+        title: `Bước 2`,
+        desc: `${val.children}`,
+      },
+      {
+        title: `Bước 3`,
+        desc: "Preview",
+      }
+    );
+    setDissolutionStep(data);
   };
 
   const closeModal = () => {
@@ -264,6 +324,7 @@ const UserProductItem = (props) => {
     console.log(val);
     paymentService(params);
   };
+
   const handlePurchaseCreateCompany = () => {
     let val = formRef.current.getFieldsValue();
     let body = {
@@ -289,6 +350,25 @@ const UserProductItem = (props) => {
       },
     };
 
+    paymentService(params);
+  };
+
+  const handlePurchaseDissolution = () => {
+    console.log("handlePurchaseDissolution");
+    let val = formRef.current.getFieldsValue();
+
+    let params = {
+      track: {
+        step: 1,
+        status: "progress",
+      },
+      payment: 0,
+      data: {
+        ...val,
+      },
+    };
+
+    console.log("handlePurchaseDissolution", params);
     paymentService(params);
   };
 
@@ -348,7 +428,7 @@ const UserProductItem = (props) => {
       ...val,
       create_company: {
         ...val.create_company,
-        company_opt_career: val.create_company.company_opt_career.map((item) => ({
+        company_opt_career: val?.create_company?.company_opt_career?.map((item) => ({
           value: item.value,
           name: item.name,
           code: item.code,
@@ -366,7 +446,8 @@ const UserProductItem = (props) => {
         ...body,
       },
     };
-    saveService(params);
+    console.log(val.create_company.present_person, create_company_files[val.create_company.present_person]);
+    // saveService(params);
   };
 
   const handleSaveChangeInfo = () => {
@@ -382,12 +463,16 @@ const UserProductItem = (props) => {
       },
     };
     console.log(val);
-    saveService(params);
+    // saveService(params);
   };
 
   const handleSavePending = () => {
     let val = formRef.current.getFieldsValue();
     console.log(val);
+  };
+
+  const handleSaveDissolution = () => {
+    console.log("save dissolution");
   };
 
   // Service
@@ -404,10 +489,16 @@ const UserProductItem = (props) => {
   };
 
   const paymentService = (params) => {
+    const date = new Date();
+    var createDate = dateformat(date, "yyyymmddHHmmss");
+    var orderId = dateformat(date, "HHmmss");
+
+    params.createDate = createDate;
+    params.orderId = orderId;
+
     ProductService.createCompanyWithPayment(params)
       .then((res) => {
         if (res.data.status === 200) {
-          // message.success(res.data.message);
           return (window.location.href = res.data.url);
         }
       })
@@ -440,13 +531,3 @@ const UserProductItem = (props) => {
 };
 
 export default UserProductItem;
-
-// export const getServerSideProps = async (context) => {
-//   let slug = context.params.slug;
-//   let res = await axios.get(`${process.env.NEXTAUTH_URL}/api/product/${slug}`);
-//   return {
-//     props: {
-//       ...res.data,
-//     },
-//   };
-// };
