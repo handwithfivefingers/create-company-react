@@ -57,4 +57,9 @@ module.exports = {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
   },
+  files: [
+    {
+      type: Object,
+    },
+  ],
 };

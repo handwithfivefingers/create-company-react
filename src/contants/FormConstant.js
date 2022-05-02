@@ -59,17 +59,88 @@ export const LABEL = {
     },
     down_authorized_capital: {
       title: "Đăng kí thay đổi vốn điều lệ",
-      fields: {},
+      fields: {
+        company_name: "Tên doanh nghiệp",
+        mst: "Mã số doanh nghiệp/ mã số thuế",
+        base_val: {
+          num: "Vốn điều lệ đã đăng ký (bằng số)",
+          char: "Vốn điều lệ đã đăng ký (bằng chữ)",
+        },
+        new_base_val: {
+          num: "Vốn điều lệ sau khi giảm (bằng số)",
+          char: "Vốn điều lệ sau khi giảm (bằng chữ)",
+        },
+        type: "Hình thức giảm vốn",
+      },
     },
     transfer_contract: { title: "Đăng ký thay đổi hợp đồng chuyển nhượng phần góp vốn", fields: {} },
     company_career: { title: "Đăng ký thay đổi ngành nghề kinh doanh", fields: {} },
     up_authorized_capital: { title: "Đăng kí thay đổi vốn điều lệ", fields: {} },
-    name: { title: "Đăng ký thay đổi tên doanh nghiệp", fields: {} },
+    name: {
+      title: "Đăng ký thay đổi tên doanh nghiệp",
+      fields: {
+        company_name: "Tên doanh nghiệp",
+        mst: "Mã số doanh nghiệp/ mã số thuế",
+        base_type: "Doanh nghiệp đăng ký thay đổi tên cơ sở",
+        name_en: "Tên công ty bằng tiếng nước ngoài",
+        name_etc: "Tên công ty viết tắt",
+        legal_person: "Tên người đại diện pháp luật",
+      },
+    },
     tax: { title: "Đăng ký thay đổi thông tin đăng ký thuế", fields: {} },
   },
   create_company: {
     // Thành lập công ty
-    approve: {},
+    approve: {
+      title: "Thành lập doanh nghiệp",
+      fields: {
+        base_val: {
+          num: "Vốn điều lệ (bằng số)",
+          char: "Vốn điều lệ (bằng chữ)",
+        },
+        origin_person: {
+          name: "Thành viên góp vốn",
+          doc_type: "Loại giấy tờ",
+          doc_code: "Mã doanh nghiệp",
+          doc_time_provide: "Ngày cấp",
+          doc_place_provide: " Nơi cấp",
+        },
+        present_person: "Người đại diện",
+        company_value: "Giá trị góp vốn",
+        legal_respon: {
+          name: "Họ và tên",
+          gender: "Giới tính",
+          birth_day: "Ngày sinh",
+          per_type: "Dân tộc",
+          reg_address: "Nơi đăng kí hộ khẩu thường trú",
+          current_address: "Nơi ở hiện tại",
+          doc_type: "Loại giấy tờ",
+          doc_code: "Số CMND/ CCCD/ Hộ chiếu",
+          doc_time_provide: "Ngày cấp",
+          doc_place_provide: " Nơi cấp",
+          title: "Chức danh",
+          national: "Quốc tịch",
+        },
+        per_main: {
+          name: "Họ và tên",
+          gender: "Giới tính",
+          birth_day: "Ngày sinh",
+          per_type: "Dân tộc",
+          reg_address: "Nơi đăng kí hộ khẩu thường trú",
+          current_address: "Chỗ ở hiện tại",
+        },
+        company_core: {
+          name: "Tên công ty bằng Tiếng Việt",
+          name_en: "Tên công ty bằng Tiếng Anh (nếu có)",
+          name_vn: "Tên công ty viết tắt (nếu có)",
+          address: "Địa chỉ trụ sở chính",
+          address_opt_1: "Địa chỉ chi nhánh (nếu có)",
+          address_opt_2: "Địa chỉ văn phòng đại diện (nếu có)",
+        },
+        company_main_career: "Ngành nghề chính",
+        company_opt_career: "Ngành nghề phụ",
+      },
+    },
   },
   pending: {
     cancel: {

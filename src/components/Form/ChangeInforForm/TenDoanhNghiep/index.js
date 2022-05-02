@@ -21,8 +21,8 @@ const TenDoanhNghiep = forwardRef((props, ref) => {
       </Form.Item>
       <Form.Item label="Doanh nghiệp đăng ký thay đổi tên cơ sở" name={["change_info", "name", "base_type"]}>
         <Select>
-          <Select.Option value="1">Đăng ký thay đổi trên cơ sở tách doanh nghiệp</Select.Option>
-          <Select.Option value="2">Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp</Select.Option>
+          <Select.Option value="Đăng ký thay đổi trên cơ sở tách doanh nghiệp">Đăng ký thay đổi trên cơ sở tách doanh nghiệp</Select.Option>
+          <Select.Option value="Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp">Đăng ký thay đổi trên cơ sở sáp nhập doanh nghiệp</Select.Option>
         </Select>
       </Form.Item>
 

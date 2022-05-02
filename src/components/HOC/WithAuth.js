@@ -11,10 +11,8 @@ import { BrowserRouter, useRoutes, useLocation, useNavigate } from "react-router
 const { Header, Content, Footer, Sider } = Layout;
 
 const { SubMenu } = Menu;
-
 export default function WithAuth(Component, role) {
   return function Authenticated(props) {
-
 
     if (!props.status) {
       return <Navigate to="/" />;
@@ -26,10 +24,7 @@ export default function WithAuth(Component, role) {
           <AdminSidebar />
           <Layout className={clsx(["site-layout", styles.adminSiteLayout])}>
             <Content className={clsx([styles.adminMainContent])}>
-              <div
-                className={`site-layout-background`}
-            
-              >
+              <div className={`site-layout-background`}>
                 <Component {...props} />
               </div>
             </Content>

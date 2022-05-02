@@ -99,7 +99,7 @@ const Admin = (props) => {
   };
 
   // https://api.cloudinary.com/v1_1/${cloudName}/upload
-
+  console.log("admin", props);
   return (
     <>
       <Outlet />

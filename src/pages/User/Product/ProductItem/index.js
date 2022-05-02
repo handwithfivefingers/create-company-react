@@ -150,7 +150,7 @@ const UserProductItem = (props) => {
               onFinishScreen={(val) => handleChangeInforForm(val)}
             />
 
-            {current === changeInforStep?.length ? renderPrewviewForm() : ""}
+            {current === changeInforStep?.length - 1 ? renderPrewviewForm(formRef) : ""}
 
             <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
               {current < changeInforStep.length - 1 ? <Button onClick={Next}>Next</Button> : ""}
@@ -446,8 +446,9 @@ const UserProductItem = (props) => {
         ...body,
       },
     };
+    console.log(val);
     // console.log(val.create_company.present_person, create_company_files[val.create_company.present_person]);
-    saveService(params);
+    // saveService(params);
   };
 
   const handleSaveChangeInfo = () => {

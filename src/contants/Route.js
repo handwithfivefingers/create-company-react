@@ -104,7 +104,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
   {
     title: "Admin",
     path: "/admin",
-    element: <Admin status={status} />,
+    element: <Admin status={status}  />,
     children:
       status && role === "admin" ? (
         [
@@ -165,44 +165,43 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
     title: "User",
     path: "/user",
     element: <UserDashboard status={status} />,
-    children:
-      status  ? (
-        [
-          {
-            path: "san-pham",
-            title: "Sản phẩm",
-            icon: <RiBarChartFill />,
-            children: [
-              {
-                index: true,
-                element: <UserProductPage />,
-              },
-              {
-                path: ":slug",
-                element: <UserProductItem />,
-              },
-            ],
-          },
-          {
-            path: "order",
-            title: "Orders",
-            icon: <RiChatPollLine />,
-            element: <UserOrder />,
-          },
-          // {
-          //   path: "setting",
-          //   title: "Đổi mật khẩu",
-          //   icon: <RiAdminFill />,
-          //   element: <AdminSetting />,
-          // },
-          {
-            path: "*",
-            element: <Error />,
-          },
-        ]
-      ) : (
-        <Navigate to="/" />
-      ),
+    children: status ? (
+      [
+        {
+          path: "san-pham",
+          title: "Sản phẩm",
+          icon: <RiBarChartFill />,
+          children: [
+            {
+              index: true,
+              element: <UserProductPage />,
+            },
+            {
+              path: ":slug",
+              element: <UserProductItem />,
+            },
+          ],
+        },
+        {
+          path: "order",
+          title: "Orders",
+          icon: <RiChatPollLine />,
+          element: <UserOrder />,
+        },
+        // {
+        //   path: "setting",
+        //   title: "Đổi mật khẩu",
+        //   icon: <RiAdminFill />,
+        //   element: <AdminSetting />,
+        // },
+        {
+          path: "*",
+          element: <Error />,
+        },
+      ]
+    ) : (
+      <Navigate to="/" />
+    ),
   },
   {
     path: "*",

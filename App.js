@@ -53,13 +53,12 @@ app.use(
 global.__basedir = __dirname;
 
 // Routes middleware
+
 app.use("/public", express.static(path.join(__dirname, "uploads")));
 
-// app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "build")));
 
-// app.get("/*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "build", "index.html"));
-// });
+
 
 app.use("/api", AuthRoute); // /register
 app.use("/api", ProductRoute);
@@ -69,6 +68,10 @@ app.use("/api", OrderRoute);
 app.use("/api", ServiceRoute);
 app.use("/api", UserRoute);
 app.use("/api", MailRoute);
+
+// app.get("/*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "build", "index.html"));
+// });
 
 // Handling 500
 app.use((err, req, res, next) => {
@@ -81,14 +84,12 @@ app.use((err, req, res, next) => {
 app.use((req, res, next) => {
   // res.header("Access-Control-Allow-Origin", "*");
   // res.header("Access-Control-Request-Headers", "POST");
-  // console.log(req, res);
   res.header("Content-Encoding", "gzip, deflate, br");
   next();
 });
 
 // Cron running ;
 // task.start();
-
 
 app.listen(3001, () => {
   console.log("Server is runnign in port 3001");
