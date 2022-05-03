@@ -1,12 +1,13 @@
 const dateFormat = require("date-format");
 const { errHandler, successHandler, permisHandler, existHandler } = require("../response");
 const { Product, Category, Career, User, Order } = require("./../model");
-
+const { sendmailWithAttachments } = require("./sendmail");
 const shortid = require("shortid");
 const mongoose = require("mongoose");
 const qs = require("query-string");
 const crypto = require("crypto");
 const { ResponseCode } = require("../common/ResponseCode");
+const { list_files } = require("../contants/File");
 const PAGE_SIZE = 10;
 // admin
 exports.getOrders = async (req, res) => {
@@ -88,199 +89,50 @@ exports.getOrderBySlug = async (req, res) => {
 };
 
 exports.createOrders = async (req, res) => {
-  //  khai báo
-  const { track, payment, data, categories } = req.body;
-
-  const { selectProduct, selectChildProduct } = data;
-
-  const file_contants = {
-    // create_company
-    create_company_uyquyen: {
-      name: "Ủy quyền",
-      path: "/files/create_company/create_company_uyquyen.doc",
-    },
-    create_company_dieuleA: {
-      name: "Điều lệ cá nhân",
-      path: "/files/create_company/create_company_File_1A_DieuLeCaNhan.docx",
-    },
-    create_company_dieuleB: {
-      name: "Điều lệ tổ chức",
-      path: "/files/create_company/create_company_File_1B_DieuLeToChuc.docx",
-    },
-    create_company_phu_luc_2: {
-      name: "Phụ lục I - 2",
-      path: "/files/create_company/create_company_File_2_PhuLuc_I_2_GiayDeNghiDangKiMTV.docx",
-    },
-    create_company_phu_luc_4: {
-      name: "Phụ lục I - 10",
-      path: "/files/create_company/create_company_File_4_PhuLuc_I_10_DanhSachNguoiDaiDien.docx",
-    },
-
-    // change_info
-    change_info_hop_dong_chuyen_nhuong: {
-      name: "Hợp đồng chuyển nhượng",
-      path: "/files/change_info/change_info_File_B_hopdong.docx",
-    },
-    change_info_quyetdinh: {
-      name: "Quyết định",
-      path: "/files/change_info/change_info_quyetdinh.docx",
-    },
-    change_info_phu_luc_2: {
-      name: "Đăng kí MTV",
-      path: "/files/change_info/change_info_File_2_PhuLuc_I_2_GiayDeNghiDangKiMTV.docx",
-    },
-    change_info_phu_luc_4: {
-      name: "Danh sách người đại diện",
-      path: "/files/change_info/change_info_File_4_PhuLuc_I_10_DanhSachNguoiDaiDien.docx",
-    },
-    change_info_uyquyen: {
-      // ??
-      name: "Ủy quyền",
-      path: "/files/change_info/change_info_uyquyen.doc",
-    },
-
-    // pending
-    pending_quyetdinh: {
-      name: "Quyết định",
-      path: "/files/pending/pending_File_1_quyetdinh.docx",
-    }, // uy quyen
-    pending_uyquyen: {
-      name: "Ủy quyền",
-      path: "/files/pending/pending_uyquyen.doc",
-    }, // uy quyen
-    pending_a_b: {
-      name: "Phụ lục II - 19",
-      path: "/files/pending/pending_File_A_B_Phuluc_II_19.docx",
-    }, // phu luc 19
-
-    // giai the
-    giai_the_1: {
-      name: "Quyết định",
-      path: "/files/dissolution/dissolution_File_1_Quyetdinh.docx",
-    },
-    giai_the_A: {
-      name: "A - Phụ lục - 22",
-      path: "/files/dissolution/dissolution_File_A_Phuluc_22.docx",
-    },
-    giai_the_B: {
-      name: "A - Phụ lục - 23",
-      path: "/files/dissolution/dissolution_File_B_Phuluc_23.docx",
-    },
-    giai_the_uy_quyen: {
-      name: "Ủy quyền",
-      path: "/files/dissolution/dissolution_uyquyen.doc",
-    },
-  };
-
-  const list_files = {
-    create_company: {
-      approve: {
-        personal: [
-          file_contants.create_company_dieuleA,
-          file_contants.create_company_phu_luc_2,
-          file_contants.create_company_uyquyen,
-        ],
-        organization: [
-          file_contants.create_company_dieuleB,
-          file_contants.create_company_phu_luc_2,
-          file_contants.create_company_uyquyen,
-          file_contants.create_company_phu_luc_4,
-        ],
-      },
-    },
-    change_info: {
-      // Đại diện pháp luật: "Quyết định thay đổi", "Phụ lục II-2", "File_3_UyQuyen.doc",
-      legal_representative: [
-        file_contants.change_info_quyetdinh,
-        file_contants.change_info_phu_luc_2,
-        file_contants.change_info_uyquyen,
-      ],
-
-      // Người đại diện theo ủy quyền của chủ sở hữu là tổ chức: "Phụ lục II-1","File_3_UyQuyen.doc",
-      present_change: [file_contants.phu_luc_1, file_contants.change_info_uyquyen],
-
-      // Địa chỉ trụ sở chính: "Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-      location: [file_contants.change_info_quyetdinh, file_contants.phu_luc_1, file_contants.change_info_uyquyen],
-
-      // Giảm vốn điều lệ: "Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-      down_authorized_capital: [
-        file_contants.change_info_quyetdinh,
-        file_contants.phu_luc_1,
-        file_contants.change_info_uyquyen,
-      ],
-
-      // Chủ sở hữu: "Hợp đồng chuyển nhượng", "Phụ lục II-4","File_3_UyQuyen.doc",
-      transfer_contract: [
-        file_contants.change_info_hop_dong_chuyen_nhuong,
-        file_contants.phu_luc_3,
-        file_contants.change_info_uyquyen,
-      ],
-
-      // Ngành nghề kinh doanh:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-      company_career: [file_contants.change_info_quyetdinh, file_contants.phu_luc_1, file_contants.change_info_uyquyen],
-
-      // Tăng vốn điều lệ:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-      up_authorized_capital: [
-        file_contants.change_info_quyetdinh,
-        file_contants.phu_luc_1,
-        file_contants.change_info_uyquyen,
-      ],
-
-      // Tên doanh nghiệp:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-      name: [file_contants.change_info_quyetdinh, file_contants.phu_luc_1, file_contants.change_info_uyquyen],
-
-      // Nội dung đăng ký thuế: "Phụ lục II-1","File_3_UyQuyen.doc",
-      tax: [file_contants.phu_luc_1, file_contants.change_info_uyquyen],
-    },
-    pending: {
-      approve: {},
-      cancel: {},
-    },
-    dissolution: {
-      approve: [file_contants.giai_the_1, file_contants.giai_the_A, file_contants.giai_the_uy_quyen],
-      cancel: [file_contants.giai_the_B, file_contants.giai_the_uy_quyen],
-    },
-  };
-
-  let newData = {
-    track,
-    payment,
-    data,
-    categories,
-    orderOwner: req.id,
-    name: shortid.generate(),
-    products: selectChildProduct ? selectChildProduct : selectProduct,
-  };
-
-  // console.log(data);
-  let files = findKeysByObject(data, list_files).flat();
-
-  newData.files = files;
-
-  // Handle Calculate Price with multi Product
-
-  let price = 0;
-
-  // Push Multi Product
-
-  if (selectChildProduct) {
-    // By child product
-    price += await calcPrice(selectChildProduct);
-  }
-
-  if (selectProduct) {
-    // By Category product
-    price += await calcPrice(selectProduct);
-  }
-
-  newData.price = price;
-
-  newData.slug = newData.name + "-" + shortid.generate();
-
-  let _save = new Order({ ...newData });
-  let _obj = await _save.save();
-
   try {
+    //  khai báo
+    const { track, payment, data, categories } = req.body;
+
+    const { selectProduct, selectChildProduct } = data;
+
+    let newData = {
+      track,
+      payment,
+      data,
+      categories,
+      orderOwner: req.id,
+      name: shortid.generate(),
+      products: selectChildProduct ? selectChildProduct : selectProduct,
+    };
+
+    // console.log(data);
+    let files = findKeysByObject(data, list_files).flat();
+
+    newData.files = files;
+
+    // Handle Calculate Price with multi Product
+
+    let price = 0;
+
+    // Push Multi Product
+
+    if (selectChildProduct) {
+      // By child product
+      price += await calcPrice(selectChildProduct);
+    }
+
+    if (selectProduct) {
+      // By Category product
+      price += await calcPrice(selectProduct);
+    }
+
+    newData.price = price;
+
+    newData.slug = newData.name + "-" + shortid.generate();
+
+    let _save = new Order({ ...newData });
+    // let _obj = await _save.save().then((t) => t.populate("orderOwner", "_id name email").execPopulate());
+    let _obj = await _save.save();
     return successHandler(_obj, res);
   } catch (err) {
     return errHandler(err, res);
@@ -289,58 +141,62 @@ exports.createOrders = async (req, res) => {
 
 exports.orderWithPayment = async (req, res) => {
   // const session = await mongoose.startSession();
-
-  let exist = await Order.findOne({ orderId: req.body.orderId }); // findOne.length > 0 => exist || valid
-
-  if (exist) return existHandler(res);
-
-  //  khai báo
-  const { track, payment, data, categories } = req.body;
-  const { selectProduct, selectChildProduct } = data;
-
-  var newData = {
-    track,
-    payment,
-    data,
-    categories,
-    orderOwner: req.id,
-    name: shortid.generate(),
-    products: selectChildProduct ? selectChildProduct : selectProduct,
-  };
-
-  let price = 0;
-
-  // Handle Calculate Price with multi Product
-
-  if (selectChildProduct) {
-    // By child product
-    price += await calcPrice(selectChildProduct);
-  }
-
-  if (selectProduct) {
-    // By Category product
-    price += await calcPrice(selectProduct);
-  }
-
-  newData.price = price;
-
-  newData.slug = newData.name + "-" + shortid.generate();
-
-  let _save = new Order({ ...newData });
-
-  let _obj = await _save.save();
-
-  // handle Payment Here
-  let params = {
-    amount: price * 100,
-    // orderInfo: `Thanh toán đơn hàng ${_obj.name} tại app.thanhlapcongtyonline.vn`,
-    // _id: _obj._id,
-    orderInfo: _obj._id,
-    orderId: req.body.orderId,
-    createDate: req.body.createDate,
-  };
-
   try {
+    let exist = await Order.findOne({ orderId: req.body.orderId }); // findOne.length > 0 => exist || valid
+
+    if (exist) return existHandler(res);
+
+    //  khai báo
+    const { track, payment, data, categories } = req.body;
+    const { selectProduct, selectChildProduct } = data;
+
+    var newData = {
+      track,
+      payment,
+      data,
+      categories,
+      orderOwner: req.id,
+      name: shortid.generate(),
+      products: selectChildProduct ? selectChildProduct : selectProduct,
+    };
+
+    let price = 0;
+
+    // Handle Calculate Price with multi Product
+
+    if (selectChildProduct) {
+      // By child product
+      price += await calcPrice(selectChildProduct);
+    }
+
+    if (selectProduct) {
+      // By Category product
+      price += await calcPrice(selectProduct);
+    }
+    // console.log(data);
+
+    let files = findKeysByObject(data, list_files).flat();
+    
+    newData.files = files;
+
+    newData.price = price;
+
+    newData.slug = newData.name + "-" + shortid.generate();
+
+    let _save = new Order({ ...newData });
+
+    let _obj = await _save.save();
+
+    // handle Payment Here
+    let params = {
+      amount: price * 100,
+      // orderInfo: `Thanh toán đơn hàng ${_obj.name} tại app.thanhlapcongtyonline.vn`,
+      // _id: _obj._id,
+      orderInfo: _obj._id,
+      orderId: req.body.orderId,
+      createDate: req.body.createDate,
+    };
+
     // return successHandler(_obj, res);
     return paymentOrder(req, res, params);
   } catch (err) {
@@ -437,8 +293,19 @@ exports.getUrlReturn = async (req, res) => {
       await Order.findOneAndUpdate({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
 
       console.log("updated Success");
-    }
+      let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate("orderOwner", "_id name email");
+      console.log(_order);
+      let params = {
+        filesPath: _order.files,
+        email: _order.orderOwner.email,
+        subject: "Thông tin giấy tờ từ app.thanhlapdoanhnghieponline.vn",
+        content: `Chào ${_order.orderOwner.name},<br /> xin gửi quý khách các loại giấy tờ đăng kí sau.<br /> Vui lòng kiểm tra và phản hồi lại với admin sau khi nhận.<br /> Xin cảm ơn`,
+        type: "path",
+        redirect: `${process.env.BASEHOST}/user/order?${query}`,
+      };
 
+      return sendmailWithAttachments(req, res, params);
+    }
     return res.redirect(`${process.env.BASEHOST}/user/order?` + query);
   } else {
     const query = qs.stringify({

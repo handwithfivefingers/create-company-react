@@ -474,6 +474,18 @@ const UserProductItem = (props) => {
 
   const handleSaveDissolution = () => {
     console.log("save dissolution");
+    let val = formRef.current.getFieldsValue();
+    let params = {
+      track: {
+        step: 1,
+        status: "progress",
+      },
+      payment: 0,
+      data: {
+        ...val,
+      },
+    };
+    saveService(params);
   };
 
   // Service

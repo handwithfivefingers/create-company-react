@@ -40,7 +40,7 @@ exports.getSignCloud = async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(path.dirname(__dirname), "uploads"));
+    cb(null, path.join(path.dirname(global.__basedir), "uploads"));
   },
   filename: function (req, file, cb) {
     cb(null, shortid.generate() + "-" + file.originalname);

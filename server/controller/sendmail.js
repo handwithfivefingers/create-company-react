@@ -7,28 +7,83 @@ const { path } = require("path");
 const docxConverter = require("docx-pdf");
 const PizZip = require("pizzip");
 const Docxtemplater = require("docxtemplater");
+const { google } = require("googleapis");
+const REFRESH_TOKEN =
+  "1//04K6u6HWQI-iwCgYIARAAGAQSNwF-L9Ir_J79AZtqdNJUWte_8FJXnmIcrIUIjSAdb9tq-8_3KF5AErYeXDkBUadAX5sMDPDVX9k";
+const REFRESH_URI = "https://developers.google.com/oauthplayground";
+const CLIENT_ID = process.env.GG_EMAIL_CLIENT_ID;
+const CLIENT_SECRET = process.env.GG_EMAIL_CLIENT_SECRET;
 
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REFRESH_URI);
 
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-exports.sendmailWithAttachments = async (req, res) => {
+exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...rest }) => {
   const adminEmail = "tbkimt97@gmail.com";
   const adminPass = "Net@Kim!21";
   const mailHost = "smtp.gmail.com";
   const mailPort = "587";
 
-  const transporter = nodeMailer.createTransport({
-    host: mailHost,
-    port: 465,
-    secure: true,
-    auth: {
-      user: adminEmail, //Tài khoản gmail vừa tạo
-      pass: adminPass, //Mật khẩu tài khoản gmail vừa tạo
-    },
-    forceAuth: true,
-  });
+  // const transporter = nodeMailer.createTransport({
+  //   host: mailHost,
+  //   port: 465,
+  //   secure: true,
+  //   auth: {
+  //     user: adminEmail, //Tài khoản gmail vừa tạo
+  //     pass: adminPass, //Mật khẩu tài khoản gmail vừa tạo
+  //   },
+  //   forceAuth: true,
+  // });
+  try {
+    const accessToken = await oAuth2Client.getAccessToken();
 
-  let attachments;
+    const transporter = nodeMailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAUTH2",
+        user: adminEmail,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: accessToken,
+      },
+    });
+
+    if (type === "attachments") {
+      let params = {
+        adminEmail,
+        email: req.body.email,
+        subject: req.body.subject,
+        content: req.body.content,
+        redirect: rest?.redirect,
+      };
+      return withAttachments(req, res, params, transporter);
+    } else if (type === "path") {
+      let params = {
+        adminEmail,
+        email: rest.email,
+        subject: rest.subject,
+        content: rest.content,
+        filesPath: rest.filesPath,
+        redirect: rest?.redirect,
+      };
+      return withFilesPath(req, res, params, transporter);
+    } else if (type === "any") {
+      let params = {
+        adminEmail,
+        email: rest.email,
+        subject: rest.subject,
+        content: rest.content,
+        redirect: rest?.redirect,
+      };
+      return sendMail(req, res, params, transporter);
+    }
+  } catch (err) {}
+
   // validate file
+};
+const withAttachments = async (req, res, { adminEmail, email, subject, content, redirect }, transporter) => {
+  let attachments;
   try {
     let validFiles = req.files.some((item) => item.mimetype !== "application/pdf");
     if (validFiles) {
@@ -51,15 +106,58 @@ exports.sendmailWithAttachments = async (req, res) => {
     const resp = await transporter.sendMail({
       from: adminEmail, // sender address
       attachments,
-      to: req.body.email,
-      subject: req.body.subject, // Subject line
-      html: req.body.content, // html body,
+      to: email,
+      subject: subject, // Subject line
+      html: content, // html body,
     });
-    return sendSuccess(resp, res);
+    if (redirect) {
+      return res.redirect(redirect);
+    } else return sendSuccess(resp, res);
   } catch (err) {
     return sendFailed(err, res);
   } finally {
     attachments?.map((item) => removeFile(item.path));
+  }
+};
+
+const sendMail = async (req, res, { adminEmail, email, subject, content, redirect }, transporter) => {
+  try {
+    const resp = await transporter.sendMail({
+      from: adminEmail, // sender address
+      to: email,
+      subject: subject, // Subject line
+      html: content, // html body,
+    });
+    if (redirect) {
+      return res.redirect(redirect);
+    } else return sendSuccess(resp, res);
+  } catch (err) {
+    return sendFailed(err, res);
+  }
+};
+
+const withFilesPath = async (req, res, { adminEmail, email, subject, content, filesPath, redirect }, transporter) => {
+  console.log("sendmail via withFilesPath");
+  let attachments = filesPath.map((file) => {
+    return { filename: file.name, path: global.__basedir + "/uploads" + file.path };
+  });
+
+  try {
+    console.log("ready to send ");
+    const resp = await transporter.sendMail({
+      from: adminEmail, // sender address
+      to: email,
+      attachments,
+      subject: subject, // Subject line
+      html: content, // html body,
+    });
+    if (redirect) {
+      return res.redirect(redirect);
+    } else return sendSuccess(resp, res);
+  } catch (err) {
+    console.log("send mail failed ", err);
+
+    return sendFailed(err, res);
   }
 };
 
@@ -238,7 +336,7 @@ const handlerCronJob = async (req, res) => {
 
   //   console.log(docxFile); // filePath;
 
-  let pdfLocation = path.join(__dirname, "/uploads", `${shortid.generate()}-output.pdf`);
+  let pdfLocation = path.join(global.__basedir, "/uploads", `${shortid.generate()}-output.pdf`);
 
   docxConverter(docxFile, pdfLocation, async (err, result) => {
     await removeFile(docxFile);
@@ -250,7 +348,7 @@ const handlerCronJob = async (req, res) => {
 const applyContent = async (data = null) => {
   const content = await fs.readFileSync(
     path.resolve(path.join(__dirname, "/public/files/dieulecanhan.docx")),
-    "binary",
+    "binary"
   );
 
   const zip = new PizZip(content);
@@ -268,7 +366,7 @@ const applyContent = async (data = null) => {
 };
 
 const saveFileAsDocx = async (buffer) => {
-  let filePath = path.join(__dirname, "/uploads", `${shortid.generate()}-output.docx`);
+  let filePath = path.join(global.__basedir, "/uploads", `${shortid.generate()}-output.docx`);
   fs.writeFileSync(filePath, buffer);
   return filePath;
 };

@@ -113,7 +113,7 @@ export const handleMailerWithAttachments = async (req, response) => {
       (newFiles.join("").length > 0 &&
         newFiles?.map((item) => {
           const data = fs.readFileSync(item.filepath);
-          let filePath = __dirname + "/" + shortid.generate() + "-" + item.originalFilename;
+          let filePath = global.__basedir + "/" + shortid.generate() + "-" + item.originalFilename;
           fs.writeFileSync(filePath, data);
           removeFile(item.filepath);
           return { filepath: filePath, name: item.originalFilename };

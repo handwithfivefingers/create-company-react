@@ -30,6 +30,7 @@
     "express": "^4.17.2",
     "file-saver": "^2.0.5",
     "formidable": "^2.0.1",
+    "googleapis": "^100.0.0",
     "html-react-parser": "^1.4.5",
     "html2canvas": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
