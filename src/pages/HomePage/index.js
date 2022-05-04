@@ -20,6 +20,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   let location = useLocation();
   let type = useNavigationType();
+
   useEffect(() => {
     if (route.to && authReducer.status) {
       navigate(route.to);
@@ -28,27 +29,31 @@ export default function HomePage() {
 
   const onLogin = async (val) => {
     setLoading(true);
-    dispatch(AuthAction.AuthLogin(val)).then((callbackUrl) => navigate(route.to || -1));
+    dispatch(AuthAction.AuthLogin(val)).then((callbackUrl) => navigate(route.to || callbackUrl));
     setLoading(false);
   };
 
-  const onRegister = async (val) => {
-    console.log(val);
-  };
+  // const onRegister = async (val) => {
+  //   console.log(val);
+  // };
 
-  //   const onRegister = async (val) => {
-  //     setLoading(true);
-  //     let { phone, email, name } = val;
-  //     const res = await axios.post("/api/register", { phone, email, name });
-  //     console.log(res);
-  //     if (res) {
-  //       signIn("credentials", {
-  //         phone,
-  //         password,
-  //         callbackUrl: `${window.location.origin}/`,
-  //       }).finally(() => setLoading(false));
-  //     }
-  //   };
+  const onRegister = async (val) => {
+    setLoading(true);
+    // let { phone, email, name } = val;
+
+    // const res = await axios.post("/register", { phone, email, name });
+    // console.log(res);
+    // if (res) {
+    //   signIn("credentials", {
+    //     phone,
+    //     password,
+    //     callbackUrl: `${window.location.origin}/`,
+    //   }).finally(() => setLoading(false));
+    // }
+    setLoading(true);
+    dispatch(AuthAction.AuthRegister(val));
+    setLoading(false);
+  };
 
   //   if (status === "authenticated") {
   //     Router.push("/");

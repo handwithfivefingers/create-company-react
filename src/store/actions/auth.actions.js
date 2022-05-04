@@ -1,7 +1,8 @@
-import { AUTH, AUTH_LOGIN, AUTH_LOGOUT } from "../type/auth.type";
+import { AUTH, AUTH_LOGIN, AUTH_LOGOUT, AUTH_REGISTER } from "../type/auth.type";
 import axios from "src/config/axios";
 import AuthService from "src/service/AuthService";
 import history from "src/helper/history";
+import { message } from "antd";
 export const AuthUser = () => {
   return (dispatch) => {
     dispatch({
@@ -46,6 +47,34 @@ export const AuthLogin = (val) => {
     } catch (err) {
       dispatch({
         type: AUTH_LOGIN.FAILURE,
+      });
+    }
+  };
+};
+
+export const AuthRegister = (form) => {
+  return async (dispatch) => {
+    dispatch({
+      type: AUTH_REGISTER.REQUEST,
+    });
+
+    let resp = await AuthService.onRegister(form);
+
+    if (resp.data.status === 201) {
+      let { callbackUrl, email, phonen, role } = resp.data.data;
+      // console.log(role);
+      message.success(resp.data.message);
+      dispatch({
+        type: AUTH_REGISTER.SUCCESS,
+        payload: {
+          status: true,
+          role: resp.data.data.role,
+        },
+      });
+    } else {
+      message.error(resp.data.message);
+      dispatch({
+        type: AUTH_REGISTER.FAILURE,
       });
     }
   };

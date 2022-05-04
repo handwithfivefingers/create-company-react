@@ -1,4 +1,4 @@
-import { AUTH, AUTH_LOGIN, AUTH_LOGOUT } from "src/store/type/auth.type";
+import { AUTH, AUTH_LOGIN, AUTH_LOGOUT, AUTH_REGISTER } from "src/store/type/auth.type";
 
 const initState = {
   status: "",
@@ -43,6 +43,24 @@ const AuthReducer = (state = initState, action) => {
       return {
         ...state,
         authenticating: false,
+      };
+
+    case AUTH_REGISTER.REQUEST:
+      return {
+        ...state,
+        // authenticating: true,
+      };
+    case AUTH_REGISTER.SUCCESS:
+      return {
+        ...state,
+        status: action.payload.status,
+        role: action.payload.role,
+        // authenticating: false,
+      };
+    case AUTH_REGISTER.FAILURE:
+      return {
+        ...state,
+        // authenticating: false,
       };
 
     case AUTH_LOGOUT.SUCCESS:

@@ -348,7 +348,7 @@ const handlerCronJob = async (req, res) => {
 const applyContent = async (data = null) => {
   const content = await fs.readFileSync(
     path.resolve(path.join(__dirname, "/public/files/dieulecanhan.docx")),
-    "binary"
+    "binary",
   );
 
   const zip = new PizZip(content);

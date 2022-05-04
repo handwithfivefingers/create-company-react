@@ -10,7 +10,7 @@ var cookieParser = require("cookie-parser");
 const { task } = require("./server/controller/service/cronjob");
 
 env.config();
-
+console.log(process.env)
 //Routes
 
 const AuthRoute = require("./server/route/auth");
@@ -81,12 +81,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.use((req, res, next) => {
-  // res.header("Access-Control-Allow-Origin", "*");
-  // res.header("Access-Control-Request-Headers", "POST");
-  res.header("Content-Encoding", "gzip, deflate, br");
-  next();
-});
+// app.use((req, res, next) => {
+//   // res.header("Access-Control-Allow-Origin", "*");
+//   // res.header("Access-Control-Request-Headers", "POST");
+//   res.header("Content-Encoding", "deflate, br");
+//   next();
+// });
 
 // Cron running ;
 // task.start();

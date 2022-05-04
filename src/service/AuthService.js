@@ -7,7 +7,7 @@ const api_path = {
 };
 
 const AuthService = {
-  userRegister: (form) => {
+  onRegister: (form) => {
     return axios.post(api_path.register, form);
   },
   getSession: () => {

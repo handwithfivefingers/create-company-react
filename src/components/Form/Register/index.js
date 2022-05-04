@@ -18,9 +18,9 @@ const RegisterForm = forwardRef((props, ref) => {
           <Form.Item name="phone" label="Số điện thoại (Zalo)">
             <Input />
           </Form.Item>
-          <Form.Item name="password" label="Mật khẩu">
+          {/* <Form.Item name="password" label="Mật khẩu">
             <Input.Password />
-          </Form.Item>
+          </Form.Item> */}
           <Space style={{ display: "flex", justifyContent: "space-between" }}>
             <Button type="primary" htmlType="submit">
               Đăng kí

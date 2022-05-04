@@ -2,8 +2,11 @@ import axios from "axios";
 import store from "src/store";
 import { AuthAction } from "src/store/actions";
 import history from "../helper/history";
+
 const instance = axios.create({
-  baseURL: 'http://localhost:3001/api',
+  // baseURL: 'http://localhost:3001/api',
+  baseURL:
+    process.env.NODE_ENV == "development" ? `http://localhost:3001/api` : +`${process.env.REACT_APP_BASEHOST_PROD}/api`,
   timeout: 1000 * 30, // Wait for 30 seconds
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -20,7 +23,7 @@ instance.interceptors.request.use(
   (error) => {
     console.log("request error", error);
     return Promise.reject(error);
-  }
+  },
 );
 
 instance.interceptors.response.use(
@@ -32,7 +35,7 @@ instance.interceptors.response.use(
       store.dispatch(AuthAction.AuthLogout());
     }
     return Promise.reject(err);
-  }
+  },
 );
 
 export default instance;

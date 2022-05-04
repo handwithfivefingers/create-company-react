@@ -9,6 +9,13 @@ export const AUTH_LOGIN = {
   SUCCESS: "SUCCESS",
   FAILURE: "FAILURE",
 };
+
+export const AUTH_REGISTER = {
+  REQUEST: "REQUEST",
+  SUCCESS: "SUCCESS",
+  FAILURE: "FAILURE",
+};
+
 export const AUTH_LOGOUT = {
   SUCCESS: "SUCCESS",
 };
