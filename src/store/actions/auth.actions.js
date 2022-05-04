@@ -60,15 +60,15 @@ export const AuthRegister = (form) => {
 
     let resp = await AuthService.onRegister(form);
 
-    if (resp.data.status === 201) {
-      let { callbackUrl, email, phonen, role } = resp.data.data;
+    if (resp.data.message === "Sent attachments ok") {
       // console.log(role);
-      message.success(resp.data.message);
+      message.success("Tạo tài khoản thành công");
+      let { role } = resp.data.info;
       dispatch({
         type: AUTH_REGISTER.SUCCESS,
         payload: {
           status: true,
-          role: resp.data.data.role,
+          role,
         },
       });
     } else {

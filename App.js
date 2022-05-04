@@ -10,7 +10,7 @@ var cookieParser = require("cookie-parser");
 const { task } = require("./server/controller/service/cronjob");
 
 env.config();
-console.log(process.env)
+// console.log(process.env)
 //Routes
 
 const AuthRoute = require("./server/route/auth");
@@ -26,7 +26,6 @@ const MailRoute = require("./server/route/template");
 mongoose
   .connect(
     // `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@todo1242021.hehew.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`
-    // `mongodb+srv://hdme1995:hdme1995@todo1242021.hehew.mongodb.net/createCompany?retryWrites=true&w=majority`,
     process.env.DATABASE_URL,
     {
       useNewUrlParser: true,
@@ -69,9 +68,9 @@ app.use("/api", ServiceRoute);
 app.use("/api", UserRoute);
 app.use("/api", MailRoute);
 
-// app.get("/*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "build", "index.html"));
-// });
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 // Handling 500
 app.use((err, req, res, next) => {

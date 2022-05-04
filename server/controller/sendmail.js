@@ -1,7 +1,7 @@
 const nodeMailer = require("nodemailer");
 const shortid = require("shortid");
 const fs = require("fs");
-const { removeFile } = require("../response");
+const { removeFile, errHandler } = require("../response");
 const { TemplateMail } = require("../model");
 const { path } = require("path");
 const docxConverter = require("docx-pdf");
@@ -35,6 +35,7 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
   //   forceAuth: true,
   // });
   try {
+    console.log("setting options");
     const accessToken = await oAuth2Client.getAccessToken();
 
     const transporter = nodeMailer.createTransport({
@@ -69,16 +70,22 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
       };
       return withFilesPath(req, res, params, transporter);
     } else if (type === "any") {
+      console.log("match params");
+
       let params = {
         adminEmail,
         email: rest.email,
         subject: rest.subject,
         content: rest.content,
         redirect: rest?.redirect,
+        ...rest,
       };
       return sendMail(req, res, params, transporter);
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log("error 1", err);
+    errHandler(err, res);
+  }
 
   // validate file
 };
@@ -120,8 +127,9 @@ const withAttachments = async (req, res, { adminEmail, email, subject, content, 
   }
 };
 
-const sendMail = async (req, res, { adminEmail, email, subject, content, redirect }, transporter) => {
+const sendMail = async (req, res, { adminEmail, email, subject, content, redirect, ...rest }, transporter) => {
   try {
+    console.log("send");
     const resp = await transporter.sendMail({
       from: adminEmail, // sender address
       to: email,
@@ -130,8 +138,9 @@ const sendMail = async (req, res, { adminEmail, email, subject, content, redirec
     });
     if (redirect) {
       return res.redirect(redirect);
-    } else return sendSuccess(resp, res);
+    } else return sendSuccess({ ...resp, role: rest.role }, res);
   } catch (err) {
+    console.log("send failed");
     return sendFailed(err, res);
   }
 };
@@ -348,7 +357,7 @@ const handlerCronJob = async (req, res) => {
 const applyContent = async (data = null) => {
   const content = await fs.readFileSync(
     path.resolve(path.join(__dirname, "/public/files/dieulecanhan.docx")),
-    "binary",
+    "binary"
   );
 
   const zip = new PizZip(content);

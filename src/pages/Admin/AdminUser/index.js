@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Card, Table } from "antd";
+import { Card, message, Modal, Table, Button } from "antd";
 import AdminUserService from "src/service/AdminService/AdminUserService";
 import styles from "./styles.module.scss";
 const AdminUser = () => {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -10,6 +11,7 @@ const AdminUser = () => {
   }, []);
 
   const fetchUser = () => {
+    setLoading(true);
     AdminUserService.getUser()
       .then((res) => {
         let { status, data } = res.data;
@@ -17,18 +19,38 @@ const AdminUser = () => {
           setData(data._user);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
+  };
+  const handleDelete = (record) => {
+    Modal.confirm({
+      title: "Warning",
+      content: `Bạn có chắc chắn muốn xóa user ${record.name}?`,
+      onOk: () => {
+        setLoading(true);
+        AdminUserService.deleteUser(record._id)
+          .then((res) => {
+            if (res.data.status === 200) {
+              message.success(res.data.message);
+            } else {
+              message.error(res.data.message);
+            }
+          })
+          .finally(() => fetchUser());
+      },
+    });
   };
   return (
     <Card title="Quản lý người dùng">
       <Table
+        size="small"
+        loading={loading}
         dataSource={data}
-        scroll={{ x: 768 }}
         pagination={{
           className: styles.pagination,
         }}
         rowKey={(record) => record._id}
-        size="small"
+        scroll={{ x: 768 }}
       >
         <Table.Column
           title="Tên người dùng"
@@ -43,6 +65,11 @@ const AdminUser = () => {
           title="Ngày khởi tạo"
           width={"130px"}
           render={(v, record, i) => record.createdAt.substring(0, 10)}
+        />
+        <Table.Column
+          title=""
+          width={"130px"}
+          render={(v, record, i) => <Button onClick={() => handleDelete(record)}>Xóa</Button>}
         />
       </Table>
     </Card>
