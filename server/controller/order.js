@@ -9,6 +9,22 @@ const crypto = require("crypto");
 const { ResponseCode } = require("../common/ResponseCode");
 const { list_files } = require("../contants/File");
 const PAGE_SIZE = 10;
+
+// Get getOrdersFromUser
+exports.getOrdersFromUser = async (req, res) => {
+  let _order = await Order.find({ orderOwner: req.id })
+    .populate("products", "name")
+    .populate("main_career", "name")
+    .populate("orderOwner", "name")
+    // .limit(10)
+    .sort("-createdAt");
+  try {
+    return successHandler(_order, res);
+  } catch (err) {
+    return errHandler(err, res);
+  }
+};
+
 // admin
 exports.getOrders = async (req, res) => {
   const { page, ...condition } = req.body;
@@ -176,7 +192,7 @@ exports.orderWithPayment = async (req, res) => {
     // console.log(data);
 
     let files = findKeysByObject(data, list_files).flat();
-    
+
     newData.files = files;
 
     newData.price = price;
@@ -202,57 +218,6 @@ exports.orderWithPayment = async (req, res) => {
   } catch (err) {
     return errHandler(err, res);
   }
-};
-
-const paymentOrder = (req, res, params) => {
-  let { createDate, orderId, amount, orderInfo } = params;
-
-  var ipAddr =
-    req.headers["x-forwarded-for"] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress;
-
-  var tmnCode = process.env.TMN_CODE_VPN;
-
-  var secretKey = process.env.SECRET_KEY_VPN;
-
-  var vnpUrl = process.env.VNPAY_URL;
-
-  var returnUrl = process.env.RETURN_URL;
-
-  var orderType = req?.body?.orderType || "billpayment";
-
-  var locale = (Boolean(req.body?.language) && req.body?.language) || "vn";
-
-  var vnp_Params = {
-    vnp_Version: "2.1.0",
-    vnp_Command: "pay",
-    vnp_TmnCode: tmnCode,
-    vnp_Locale: locale,
-    vnp_CurrCode: "VND",
-    vnp_TxnRef: orderId,
-    vnp_OrderInfo: orderInfo,
-    vnp_OrderType: orderType,
-    vnp_Amount: amount,
-    vnp_ReturnUrl: returnUrl,
-    vnp_IpAddr: ipAddr,
-    vnp_CreateDate: createDate,
-  };
-
-  vnp_Params = sortObject(vnp_Params);
-
-  var signData = qs.stringify(vnp_Params, { encode: false });
-
-  var hmac = crypto.createHmac("sha512", secretKey);
-
-  var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
-
-  vnp_Params["vnp_SecureHash"] = signed;
-
-  vnpUrl += "?" + qs.stringify(vnp_Params, { encode: false });
-
-  return res.status(200).json({ status: 200, url: vnpUrl });
 };
 
 exports.getUrlReturn = async (req, res) => {
@@ -315,6 +280,58 @@ exports.getUrlReturn = async (req, res) => {
   }
 };
 
+const paymentOrder = (req, res, params) => {
+  let { createDate, orderId, amount, orderInfo } = params;
+
+  var ipAddr =
+    req.headers["x-forwarded-for"] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress;
+
+  var tmnCode = process.env.TMN_CODE_VPN;
+
+  var secretKey = process.env.SECRET_KEY_VPN;
+
+  var vnpUrl = process.env.VNPAY_URL;
+
+  var returnUrl = process.env.RETURN_URL;
+
+  var orderType = req?.body?.orderType || "billpayment";
+
+  var locale = (Boolean(req.body?.language) && req.body?.language) || "vn";
+
+  var vnp_Params = {
+    vnp_Version: "2.1.0",
+    vnp_Command: "pay",
+    vnp_TmnCode: tmnCode,
+    vnp_Locale: locale,
+    vnp_CurrCode: "VND",
+    vnp_TxnRef: orderId,
+    vnp_OrderInfo: orderInfo,
+    vnp_OrderType: orderType,
+    vnp_Amount: amount,
+    vnp_ReturnUrl: returnUrl,
+    vnp_IpAddr: ipAddr,
+    vnp_CreateDate: createDate,
+  };
+
+  vnp_Params = sortObject(vnp_Params);
+
+  var signData = qs.stringify(vnp_Params, { encode: false });
+
+  var hmac = crypto.createHmac("sha512", secretKey);
+
+  var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
+
+  vnp_Params["vnp_SecureHash"] = signed;
+
+  vnpUrl += "?" + qs.stringify(vnp_Params, { encode: false });
+
+  return res.status(200).json({ status: 200, url: vnpUrl });
+};
+
+// common
 function sortObject(obj) {
   var sorted = {};
   var str = [];

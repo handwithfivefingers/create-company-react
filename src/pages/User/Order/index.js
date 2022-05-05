@@ -141,7 +141,7 @@ const UserOrder = () => {
 
         <Table.Column
           align="center"
-          render={(v, record, i) => <Button onClick={() => handlePurchase(record)}>Thanh toán</Button>}
+          render={(v, record, i) =>  record?.payment === "0" ? (<Button onClick={() => handlePurchase(record)}>Thanh toán</Button>) : ''}
         />
       </Table>
 

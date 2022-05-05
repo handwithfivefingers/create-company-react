@@ -61,14 +61,10 @@ const AdminUser = () => {
         <Table.Column title="Email" render={(v, record, i) => record.email} />
         <Table.Column title="Số điện thoại" className={styles.inline} render={(v, record, i) => record.phone} />
         <Table.Column title="Role" width={"50px"} render={(v, record, i) => record.role} />
-        <Table.Column
-          title="Ngày khởi tạo"
-          width={"130px"}
-          render={(v, record, i) => record.createdAt.substring(0, 10)}
-        />
+        <Table.Column title="Ngày khởi tạo" render={(v, record, i) => record.createdAt.substring(0, 10)} />
         <Table.Column
           title=""
-          width={"130px"}
+          width={"50px"}
           render={(v, record, i) => <Button onClick={() => handleDelete(record)}>Xóa</Button>}
         />
       </Table>

@@ -11,12 +11,18 @@ const CardCategory = (props) => {
         <div className={styles.cardIcon}>
           <Skeleton.Avatar size="large" active />
         </div>
-        <Typography.Title className={styles.cardTitle} level={3}>
-          {props?.data?.name}
-        </Typography.Title>
-        <div className={styles.cardContent}>
-          <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-          <Tag color="#f50">Giá Tiền: {number_format(props?.data?.price)}</Tag>
+        <div className={clsx(styles.contentBody)}>
+          <Typography.Title className={styles.bodyTitle} level={3}>
+            {props?.data?.name}
+          </Typography.Title>
+          <div className={styles.bodyContent}>
+            <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
+            <div className={styles.tags}>
+              <Tag color="#87d068">
+                <span style={{ color: "#333" ,fontWeight:'bold'}}>Giá Tiền: {number_format(props?.data?.price)}</span>
+              </Tag>
+            </div>
+          </div>
         </div>
       </div>
     </Link>
