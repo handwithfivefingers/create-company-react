@@ -253,8 +253,9 @@ exports.getUrlReturn = async (req, res) => {
     if (code === "00") {
       // Success
       const _update = {
-        payment: "1",
+        payment: Number(1),
       };
+
       await Order.findOneAndUpdate({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
 
       console.log("updated Success");

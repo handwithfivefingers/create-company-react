@@ -19,11 +19,11 @@
 .descSection {
   display: flex;
   flex-direction: column;
-//   gap: 12px;
+  gap: 12px;
   .descSectionTitle {
     font-size: 18px;
     font-weight: bold;
-    // padding: 8px 0;
+    padding: 8px 0;
   }
   .descSectionContent {
     display: grid;

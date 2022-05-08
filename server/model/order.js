@@ -24,7 +24,8 @@ module.exports = {
     },
   },
   payment: {
-    type: String,
+    type: Number,
+    default: 0,
     required: true,
   },
   products: [
@@ -46,6 +47,9 @@ module.exports = {
     dissolution: {
       type: Object,
     },
+    uy_quyen: {
+      type: Object,
+    },
   },
   orderId: {
     type: Number,
@@ -62,4 +66,8 @@ module.exports = {
       type: Object,
     },
   ],
+  send: {
+    type: Number,
+    default: 0,
+  },
 };

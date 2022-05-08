@@ -12,11 +12,13 @@ import styles from "./styles.module.scss";
 import ProductService from "src/service/UserService/ProductService";
 import Dissolution from "src/components/Form/Dissolution";
 import dateformat from "dateformat";
+
+import UyQuyen from "src/components/Form/UyQuyen";
 const { TabPane } = Tabs;
 
 const UserProductItem = (props) => {
   const formRef = useRef();
-  let params = useParams();
+  const uyquyenRef = useRef();
 
   const [form, setForm] = useState({});
 
@@ -31,6 +33,10 @@ const UserProductItem = (props) => {
     },
     {
       title: `Bước 2`,
+      desc: "Ủy quyền",
+    },
+    {
+      title: `Bước 3`,
       desc: "Preview",
     },
   ]);
@@ -42,6 +48,10 @@ const UserProductItem = (props) => {
     },
     {
       title: `Bước 2`,
+      desc: "Ủy quyền",
+    },
+    {
+      title: `Bước 3`,
       desc: "Preview",
     },
   ]);
@@ -53,6 +63,10 @@ const UserProductItem = (props) => {
     },
     {
       title: `Bước 2`,
+      desc: "Ủy quyền",
+    },
+    {
+      title: `Bước 3`,
       desc: "Preview",
     },
   ]);
@@ -62,6 +76,8 @@ const UserProductItem = (props) => {
     width: 0,
     component: null,
   });
+
+  let params = useParams();
 
   useEffect(() => {
     getDataBySlug();
@@ -94,10 +110,16 @@ const UserProductItem = (props) => {
 
   const renderPrewviewForm = (ref) => {
     let val = ref?.current.getFieldsValue();
-    console.log(val);
+    let uy_quyen = uyquyenRef.current?.getFieldsValue();
+    let input = {};
+    if (uy_quyen) {
+      input = { ...val, ...uy_quyen };
+    } else {
+      input = { ...val };
+    }
     return (
       <PreviewData
-        data={val}
+        data={input}
         onFinishScreen={() => {
           closeModal();
         }}
@@ -124,7 +146,6 @@ const UserProductItem = (props) => {
 
               <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
                 {current < 8 ? <Button onClick={Next}>Next</Button> : ""}
-
                 {current === 8 ? (
                   <>
                     <Button onClick={handleSave}>Lưu lại</Button>
@@ -152,13 +173,15 @@ const UserProductItem = (props) => {
 
             {current === changeInforStep?.length - 1 ? renderPrewviewForm(formRef) : ""}
 
+            <UyQuyen ref={uyquyenRef} current={current === changeInforStep.length - 2} />
+
             <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
               {current < changeInforStep.length - 1 ? <Button onClick={Next}>Next</Button> : ""}
 
               {current === changeInforStep.length - 1 ? (
                 <>
                   <Button onClick={handleSaveChangeInfo}>Lưu lại</Button>
-                  <Button onClick={() => handlePurchaseChangeInfo()}>Thanh toán</Button>
+                  <Button onClick={handlePurchaseChangeInfo}>Thanh toán</Button>
                 </>
               ) : (
                 ""
@@ -178,14 +201,16 @@ const UserProductItem = (props) => {
               onFinishScreen={(val) => handleSetPendingStep(val)}
             />
 
-            {current === 2 ? renderPrewviewForm(formRef) : ""}
+            <UyQuyen ref={uyquyenRef} current={current === 2} />
+
+            {current === 3 ? renderPrewviewForm(formRef) : ""}
 
             <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
-              {current < 2 ? <Button onClick={Next}>Next</Button> : ""}
-              {current === 2 ? (
+              {current < 3 ? <Button onClick={Next}>Next</Button> : ""}
+              {current === 3 ? (
                 <>
                   <Button onClick={handleSavePending}>Lưu lại</Button>
-                  <Button onClick={() => handlePurchase()}>Thanh toán</Button>
+                  <Button onClick={handlePurchasePending}>Thanh toán</Button>
                 </>
               ) : (
                 ""
@@ -204,11 +229,13 @@ const UserProductItem = (props) => {
               onFinishScreen={(val) => handleSetDissolutionStep(val)}
             />
 
-            {current === 2 ? renderPrewviewForm(formRef) : ""}
+            <UyQuyen ref={uyquyenRef} current={current === 2} />
+
+            {current === 3 ? renderPrewviewForm(formRef) : ""}
 
             <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
-              {current < 2 ? <Button onClick={Next}>Next</Button> : ""}
-              {current === 2 ? (
+              {current < 3 ? <Button onClick={Next}>Next</Button> : ""}
+              {current === 3 ? (
                 <>
                   <Button onClick={handleSaveDissolution}>Lưu lại</Button>
                   <Button onClick={handlePurchaseDissolution}>Thanh toán</Button>
@@ -247,17 +274,22 @@ const UserProductItem = (props) => {
         desc: "Chọn loại hình",
       },
     ];
-    let current = null;
 
     for (let i = 0; i < val.length; i++) {
       data.push({ desc: val[i].children, title: `Bước ${i + 2}` });
-      current = i;
+      // current = i;
     }
 
-    data.push({
-      title: `Bước ${val.length > 0 ? val.length + 2 : data.length + 1}`,
-      desc: "Preview",
-    });
+    data.push(
+      {
+        title: `Bước ${val.length > 0 ? val.length + 2 : data.length + 1}`,
+        desc: "Ủy quyền",
+      },
+      {
+        title: `Bước ${val.length > 0 ? val.length + 3 : data.length + 2}`,
+        desc: "Preview",
+      }
+    );
 
     setChangeInforStep(data);
   };
@@ -276,6 +308,10 @@ const UserProductItem = (props) => {
       },
       {
         title: `Bước 3`,
+        desc: "Ủy quyền",
+      },
+      {
+        title: `Bước 4`,
         desc: "Preview",
       }
     );
@@ -296,6 +332,10 @@ const UserProductItem = (props) => {
       },
       {
         title: `Bước 3`,
+        desc: "Ủy quyền",
+      },
+      {
+        title: `Bước 4`,
         desc: "Preview",
       }
     );
@@ -311,6 +351,7 @@ const UserProductItem = (props) => {
 
   const handlePurchaseChangeInfo = () => {
     let val = formRef.current.getFieldsValue();
+    let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -319,9 +360,9 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
+        ...uy_quyen,
       },
     };
-    console.log(val);
     paymentService(params);
   };
 
@@ -353,10 +394,9 @@ const UserProductItem = (props) => {
     paymentService(params);
   };
 
-  const handlePurchaseDissolution = () => {
-    console.log("handlePurchaseDissolution");
+  const handlePurchasePending = () => {
     let val = formRef.current.getFieldsValue();
-
+    let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -365,61 +405,33 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
+        ...uy_quyen,
       },
     };
 
-    console.log("handlePurchaseDissolution", params);
     paymentService(params);
   };
 
-  const handlePurchase = (type) => {
+  const handlePurchaseDissolution = () => {
     let val = formRef.current.getFieldsValue();
+    let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
-      price: 999999,
       track: {
         step: 1,
         status: "progress",
       },
       payment: 0,
-
-      data: {},
+      data: {
+        ...val,
+        ...uy_quyen,
+      },
     };
-    if (type === "change") {
-      let newForm = {
-        ...form,
-        productId: form.selectProduct,
-      };
-      params.data = {
-        change_info: {
-          ...newForm,
-        },
-      };
-      params.products = val?.selectChildProduct;
-    }
-    if (type === "register") {
-      let newForm = {
-        ...form,
-        productId: form.selectProduct,
-      };
-      params.data = {
-        create_company: {
-          ...newForm,
-        },
-      };
-      params.products = form.selectProduct;
-    }
 
-    // console.log(params);
-    console.log(params);
-    axios
-      .post("/order/create", params)
-      .then((res) => {
-        console.log(res);
-        if (res.data.status === 200) {
-          message.success(res.data.message);
-        }
-      })
-      .catch((err) => console.log(err));
+    paymentService(params);
+  };
+
+  const handlePurchase = () => {
+    console.log("purchase");
   };
 
   const handleSave = () => {
@@ -446,13 +458,12 @@ const UserProductItem = (props) => {
         ...body,
       },
     };
-    console.log(val);
-    // console.log(val.create_company.present_person, create_company_files[val.create_company.present_person]);
-    // saveService(params);
+    saveService(params);
   };
 
   const handleSaveChangeInfo = () => {
     let val = formRef.current.getFieldsValue();
+    let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -461,20 +472,16 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
+        ...uy_quyen,
       },
     };
-    // console.log(val);
     saveService(params);
   };
 
   const handleSavePending = () => {
     let val = formRef.current.getFieldsValue();
-    console.log(val);
-  };
+    let uy_quyen = uyquyenRef.current.getFieldsValue();
 
-  const handleSaveDissolution = () => {
-    console.log("save dissolution");
-    let val = formRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -483,8 +490,28 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
+        ...uy_quyen,
       },
     };
+
+    saveService(params);
+  };
+
+  const handleSaveDissolution = () => {
+    let val = formRef.current.getFieldsValue();
+    let uy_quyen = uyquyenRef.current.getFieldsValue();
+    let params = {
+      track: {
+        step: 1,
+        status: "progress",
+      },
+      payment: 0,
+      data: {
+        ...val,
+        ...uy_quyen,
+      },
+    };
+
     saveService(params);
   };
 

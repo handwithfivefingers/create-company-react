@@ -174,4 +174,19 @@ export const LABEL = {
       },
     },
   },
+  uy_quyen: {
+    approve: {
+      title: "Ủy quyền",
+      fields: {
+        name: "Họ và tên",
+        birth_day: "Ngày tháng năm sinh",
+        per_type: "Dân tộc",
+        national: "Quốc tịch",
+        doc_code: "CMND/CCCD/Hộ chiếu số",
+        doc_time_provide: "Cấp ngày",
+        doc_place_provide: "Nơi cấp",
+        reg_address: "Nơi đăng ký hộ khẩu thường trú",
+      },
+    },
+  },
 };

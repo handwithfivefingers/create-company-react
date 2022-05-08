@@ -145,24 +145,36 @@ const sendMail = async (req, res, { adminEmail, email, subject, content, redirec
   }
 };
 
-const withFilesPath = async (req, res, { adminEmail, email, subject, content, filesPath, redirect }, transporter) => {
-  console.log("sendmail via withFilesPath");
+const withFilesPath = async (
+  req,
+  res,
+  { adminEmail, email, subject, content, filesPath, redirect, removeFiles },
+  transporter
+) => {
   let attachments = filesPath.map((file) => {
-    return { filename: file.name, path: global.__basedir + "/uploads" + file.path };
+    return { path: file.filepath};
   });
-
+  console.log("sendmail via withFilesPath", attachments);
   try {
-    console.log("ready to send ");
-    const resp = await transporter.sendMail({
-      from: adminEmail, // sender address
-      to: email,
-      attachments,
-      subject: subject, // Subject line
-      html: content, // html body,
-    });
-    if (redirect) {
-      return res.redirect(redirect);
-    } else return sendSuccess(resp, res);
+    transporter
+      .sendMail({
+        from: adminEmail, // sender address
+        to: email,
+        attachments,
+        subject: subject, // Subject line
+        html: content, // html body,
+      })
+      .then((info) => {
+        console.log("send result");
+        return sendSuccess(info, res);
+      })
+      .catch((err) => {
+        return sendFailed(err, res);
+      })
+      .finally(() => {
+        // attachFiles?.map((item) => removeFile(item.filepath)); // remove all file
+        console.log("error", "???");
+      });
   } catch (err) {
     console.log("send mail failed ", err);
 

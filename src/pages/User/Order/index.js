@@ -131,7 +131,7 @@ const UserOrder = () => {
           title="Thanh toán"
           dataIndex=""
           render={(val, record, i) => {
-            return record?.payment === "1" ? (
+            return record?.payment === 1 ? (
               <Tag color="green">Đã thanh toán</Tag>
             ) : (
               <Tag color="volcano">Chưa thanh toán</Tag>

@@ -6,7 +6,7 @@ import { number_format, renderField, flattenObject } from "../../../helper/Commo
 import { LABEL } from "src/contants/FormConstant";
 import CCDescription from "src/components/CCDescription";
 const PreviewData = ({ data }) => {
-  let { pending, create_company, change_info, dissolution } = data;
+  // console.log(data, "data");
 
   const renderTitle = (newData, label) => {
     let xhtml = "";
@@ -65,13 +65,13 @@ const PreviewData = ({ data }) => {
 
   const getDataFromObj = (objData, label, ind = null) => {
     let xhtml = [];
-    console.log('getDataFromObj', objData, label);
+    // console.log("getDataFromObj", objData, label);
     xhtml.push(
       Object.keys(objData).map((key, index) => {
         let currentPath = objData[key];
-        console.log(4);
+        // console.log(4);
         if (currentPath) {
-          console.log(5);
+          // console.log(5);
           return renderDescription(currentPath, label?.[key], key, index);
         }
       })
@@ -87,7 +87,7 @@ const PreviewData = ({ data }) => {
    * @returns
    */
   const renderDescription = (item, label, keys = null, index1 = null, index2 = null) => {
-    console.log(item, label)
+    // console.log(item, label);
     let itemVariable = checkVariable(item);
     if (itemVariable === "String") {
       return (
@@ -124,7 +124,7 @@ const PreviewData = ({ data }) => {
       return getDataFromObj(item, label, index2 + 1);
     } else {
       console.log("item", item);
-      return null
+      return null;
     }
   };
 
@@ -159,11 +159,13 @@ const PreviewData = ({ data }) => {
       for (let props in LABEL[property]) {
         let label = LABEL[property][props].fields;
         let newData = data[property][props];
-        console.log(1, label)
+        // console.log(1, label);
         xhtml.push(
-          <CCDescription.Desc layout="vertical" bordered title={renderTitle(newData, LABEL[property][props])}>
-            {checkData(newData, label)}
-          </CCDescription.Desc>
+          newData && (
+            <CCDescription.Desc layout="vertical" bordered title={renderTitle(newData, LABEL[property][props])}>
+              {checkData(newData, label)}
+            </CCDescription.Desc>
+          )
         );
       }
     }
