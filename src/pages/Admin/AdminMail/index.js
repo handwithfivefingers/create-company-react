@@ -2,6 +2,7 @@ import { DeleteOutlined, FormOutlined, PlusSquareOutlined } from "@ant-design/ic
 import { Button, Card, Col, Drawer, message, Row, Table, Tooltip } from "antd";
 import parser from "html-react-parser";
 import React, { useEffect, useState } from "react";
+import AdminMailService from "src/service/AdminService/AdminMailService";
 import TemplateMail from "src/components/Form/TemplateMail";
 import axios from "src/config/axios";
 import styles from "./styles.module.scss";
@@ -15,19 +16,21 @@ function ListTemplateMail(props) {
     component: null,
     width: 0,
   });
-  const fetchTemplateMail = (page = 1) => {
+  const fetchTemplateMail = async (page = 1) => {
     setLoading(true);
     let params = { page: page };
-    axios
-      .get("/admin/template", { params })
-      .then((res) => {
-        if (res.data.status === 200) {
-          setData(res.data.data);
-        } else {
-          message.error(res.data.message);
-        }
-      })
-      .finally(() => setLoading(false));
+    try {
+      let res = await AdminMailService.getTemplate(params);
+      if (res.data.status === 200) {
+        setData(res.data.data);
+      } else {
+        message.error(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -69,19 +72,19 @@ function ListTemplateMail(props) {
     });
   };
 
-  const deleteTemplate = (record) => {
+  const deleteTemplate = async (record) => {
     setLoading(true);
-    axios
-      .post(`/admin/template/delete/${record._id}`)
-      .then((res) => {
-        if (res.data.status === 200) {
-          message.success(res.data.message);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-        fetchTemplateMail();
-      });
+    try {
+      let res = await AdminMailService.deleteTemplate(record._id);
+      if (res.data.status === 200) {
+        message.success(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+      fetchTemplateMail();
+    }
   };
 
   return (

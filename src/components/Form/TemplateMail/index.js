@@ -4,6 +4,7 @@ import CCEditor from "../../Editor";
 import { RiArrowGoBackFill, RiCloseFill } from "react-icons/ri";
 import styles from "./styles.module.scss";
 import axios from "src/config/axios";
+import AdminMailService from "src/service/AdminService/AdminMailService";
 import clsx from "clsx";
 
 export default function TemplateMail(props) {
@@ -26,47 +27,47 @@ export default function TemplateMail(props) {
     };
   }, [props]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (name.length <= 1) return;
     let newContent = editorRef.current.getContent();
     if (newContent.length <= 1) return;
     setLoading(true);
-    // console.log(newContent);
-    // Add new
 
+    // Add new
     if (props.type === 1) {
-      axios
-        .post("/api/admin/template/create", { name, content: newContent })
-        .then((res) => {
-          if (res.data.status === 201) {
-            message.success(res.data.message);
-          } else message.error(res.data.message);
-        })
-        .finally(() => {
-          if (props.onFinishScreen) {
-            props.onFinishScreen();
-          }
-          setLoading(false);
-        });
+      try {
+        let res = await AdminMailService.addTemplate({ name, content: newContent });
+        if (res.data.status === 201) {
+          message.success(res.data.message);
+        } else message.error(res.data.message);
+      } catch (err) {
+        message.error(err) || console.log(err);
+      } finally {
+        if (props.onFinishScreen) {
+          props.onFinishScreen();
+        }
+        setLoading(false);
+      }
     }
     if (props.type === 2) {
-      axios
-        .post(`/api/admin/template/edit/${props.data._id}`, {
+      try {
+        let res = await AdminMailService.editTemplate({
+          _id: props.data._id,
           name,
           content: newContent,
           subject,
-        })
-        .then((res) => {
-          if (res.data.status === 200) {
-            message.success(res.data.message);
-          } else message.error(res.data.message);
-        })
-        .finally(() => {
-          if (props.onFinishScreen) {
-            props.onFinishScreen();
-          }
-          setLoading(false);
         });
+        if (res.data.status === 200) {
+          message.success(res.data.message);
+        } else message.error(res.data.message);
+      } catch (err) {
+        message.error(err) || console.log(err);
+      } finally {
+        if (props.onFinishScreen) {
+          props.onFinishScreen();
+        }
+        setLoading(false);
+      }
     }
   };
 

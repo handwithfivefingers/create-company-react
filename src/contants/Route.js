@@ -58,7 +58,7 @@ export const AdminRouter = [
   },
   {
     path: "/admin/setting",
-    name: "Đổi mật khẩu",
+    name: "Cài đặt",
     icon: <RiAdminFill />,
   },
 ];
@@ -148,7 +148,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
           },
           {
             path: "setting",
-            title: "Đổi mật khẩu",
+            title: "Cài đặt",
             icon: <RiAdminFill />,
             element: <AdminSetting />,
           },

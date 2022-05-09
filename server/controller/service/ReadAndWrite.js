@@ -32,18 +32,24 @@ const convertFile = async (order, req, res) => {
     let attachments = [];
     if (files) {
       for (let file of files) {
-        let buffer = await applyContent(file, data);
-        let docxFile = await saveFileAsDocx(buffer, ".docx"); // docx input
+        try {
+          let buffer = await applyContent(file, data);
+          let docxFile = await saveFileAsDocx(buffer, ".docx"); // docx input
 
-        const docxBuf = await fs.readFileSync(docxFile);
+          const docxBuf = await fs.readFileSync(docxFile);
 
-        let ext = ".pdf";
+          let ext = ".pdf";
 
-        let pdfBuf = await libre.convertAsync(docxBuf, ext, undefined);
+          let pdfBuf = await libre.convertAsync(docxBuf, ext, undefined);
 
-        let filepath = await saveFileAsDocx(pdfBuf, ext); // docx input
-        attachments.push({ filepath, name: file.name });
-        fs.unlinkSync(docxFile);
+          let filepath = await saveFileAsDocx(pdfBuf, ext); // docx input
+          attachments.push({ filepath, name: file.name });
+          fs.unlinkSync(docxFile);
+        } catch (err) {
+          return res.status(400).json({
+            error: err,
+          });
+        }
 
         // Here in done you have pdf file which you can save or transfer in another stream
       }
