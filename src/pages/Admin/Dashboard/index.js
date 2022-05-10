@@ -9,12 +9,8 @@ import dateformat from "dateformat";
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [fileUpload, setFileUpload] = useState([]);
-  // const [modal, setModal] = useState({
-  //   visible: false,
-  //   component: "",
-  // });
+
   const formRef = useRef();
-  const iframeRef = useRef();
   const onFinish = async (val) => {
     setLoading(true);
     const date = new Date();
@@ -65,9 +61,6 @@ const AdminDashboard = () => {
                 <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
             </Form.Item>
-            {/* <Form.Item>
-            <Button onClick={uploadFiles}> UP to cloud</Button>
-          </Form.Item> */}
           </Col>
           <Col span={8}>
             <Card style={{ margin: 10 }} title="Chức năng thanh toán">
@@ -126,13 +119,6 @@ const AdminDashboard = () => {
           </Col>
         </Row>
       </Form>
-      {/* <Modal
-        visible={modal.visible}
-        destroyOnClose
-        onCancel={() => setModal((state) => ({ ...state, visible: false, component: "" }))}
-      >
-        <iframe ref={iframeRef} title="Payment" src={modal.component} />
-      </Modal> */}
     </div>
   );
 };

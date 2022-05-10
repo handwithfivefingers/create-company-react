@@ -3,3 +3,7 @@ export const SIDEBAR_COLLAPSE = {
   EXPANDED: "EXPANDED",
 };
 
+export const TITLE = {
+  TITLE_CHANGE: "TITLE_CHANGE",
+  SUBTITLE_CHANGE: "SUBTITLE_CHANGE",
+};

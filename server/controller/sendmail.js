@@ -9,7 +9,7 @@ const PizZip = require("pizzip");
 const Docxtemplater = require("docxtemplater");
 const { google } = require("googleapis");
 const REFRESH_TOKEN =
-  "1//04K6u6HWQI-iwCgYIARAAGAQSNwF-L9Ir_J79AZtqdNJUWte_8FJXnmIcrIUIjSAdb9tq-8_3KF5AErYeXDkBUadAX5sMDPDVX9k";
+  "1//04qCUnDYb-Sp0CgYIARAAGAQSNwF-L9IrCAXsz1miKphMYC3JXNrt8fKsRFHv1Ycpw9SdYShYqr_Fa_jvHmhlJcTU3tyU983ByJo";
 const REFRESH_URI = "https://developers.google.com/oauthplayground";
 const CLIENT_ID = process.env.GG_EMAIL_CLIENT_ID;
 const CLIENT_SECRET = process.env.GG_EMAIL_CLIENT_SECRET;
@@ -152,7 +152,7 @@ const withFilesPath = async (
   transporter
 ) => {
   let attachments = filesPath.map((file) => {
-    return { path: file.filepath};
+    return { path: file.filepath };
   });
   console.log("sendmail via withFilesPath", attachments);
   try {

@@ -12,7 +12,7 @@ import RouterContext, { RouterProvider } from "src/helper/Context";
 import moment from "moment";
 import "aos/dist/aos.css";
 import "./assets/css/styles.scss";
-import datejs from "datejs";
+
 
 ConfigProvider.config({
   theme: {

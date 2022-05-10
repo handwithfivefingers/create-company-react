@@ -2,9 +2,9 @@ import axios from "src/config/axios";
 
 const api_path = {
   getTemplate: "/admin/template",
-  deleteTemplate: "/admin/template/delete/",
-  addTemplate: "/admin/template/create",
-  editTemplate: "/admin/template/edit/",
+  deleteTemplate: "/admin/template/delete",
+  addTemplate: "/admin/template",
+  editTemplate: "/admin/template/edit",
 };
 
 const AdminMailService = {

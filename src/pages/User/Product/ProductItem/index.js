@@ -436,15 +436,19 @@ const UserProductItem = (props) => {
 
   const handleSave = () => {
     let val = formRef.current.getFieldsValue();
+    console.log(val);
+    let { company_opt_career } = val?.create_company?.approve;
     let body = {
       ...val,
       create_company: {
-        ...val.create_company,
-        company_opt_career: val?.create_company?.company_opt_career?.map((item) => ({
-          value: item.value,
-          name: item.name,
-          code: item.code,
-        })),
+        approve: {
+          ...val.create_company.approve,
+          company_opt_career: company_opt_career?.map((item) => ({
+            value: item.value,
+            name: item.name,
+            code: item.code,
+          })),
+        },
       },
     };
 
@@ -458,7 +462,8 @@ const UserProductItem = (props) => {
         ...body,
       },
     };
-    saveService(params);
+    console.log(params);
+    // saveService(params);
   };
 
   const handleSaveChangeInfo = () => {

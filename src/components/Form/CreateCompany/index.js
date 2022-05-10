@@ -1,9 +1,10 @@
 import { CaretRightOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Col, Collapse, DatePicker, Form, Input, Row, Select, Space } from "antd";
+import { Alert, Button, Card, Col, Collapse, DatePicker, Form, Input, Row, Select, Space, InputNumber } from "antd";
 import clsx from "clsx";
 import { debounce } from "lodash";
 import moment from "moment";
 import React, { forwardRef, useEffect, useState } from "react";
+
 import axios from "src/config/axios";
 import { FormFieldText } from "src/contants/Common";
 import { FORM_SELECT } from "src/contants/FormConstant";
@@ -11,7 +12,7 @@ import { number_format } from "src/helper/Common";
 import HomepageService from "src/service/GlobalService";
 import CCInput from "../../CCInput";
 import styles from "./CreateCompany.module.scss";
-
+import _ from "lodash";
 const popData = {
   content: (
     <ul style={{ maxWidth: 600, listStyle: "none" }}>
@@ -47,7 +48,6 @@ const popData = {
 
 const CreateCompany = forwardRef((props, formRef) => {
   const [careerData, setCareerData] = useState([]);
-
   const [current, setCurrent] = useState(1);
 
   const [formData, setFormData] = useState({});
@@ -210,8 +210,8 @@ const CreateCompany = forwardRef((props, formRef) => {
         per_type,
         reg_address,
         current_address,
-        doc_type: doc_type == 4 ? 1 : doc_type,
-        doc_code: doc_type == 4 ? "" : doc_code,
+        doc_type,
+        doc_code,
         doc_time_provide,
         doc_place_provide,
       };
@@ -241,9 +241,12 @@ const CreateCompany = forwardRef((props, formRef) => {
 
   const handleChange = (value, opt) => {
     // let val = formRef.current.getFieldsValue();
+    console.log(opt);
     formRef.current.setFieldsValue({
       create_company: {
-        company_opt_career: opt,
+        approve: {
+          company_opt_career: opt,
+        },
       },
     });
   };
@@ -262,9 +265,37 @@ const CreateCompany = forwardRef((props, formRef) => {
     );
   };
 
+  const renderOptions = () => {
+    let val = formRef.current.getFieldsValue();
+    let optionsData = [
+      {
+        value: "Chủ tịch công ty",
+        name: "Chủ tịch công ty",
+        key: "title_1",
+      },
+      {
+        value: "Giám đốc",
+        name: "Giám đốc",
+        key: "title_2",
+      },
+      {
+        value: "Tổng giám đốc",
+        name: "Tổng giám đốc",
+        key: "title_3",
+      },
+    ];
+
+    let { legal_respon } = val.create_company.approve;
+    let matchItem;
+    if (legal_respon) {
+      matchItem = legal_respon.filter((item) => item?.title).map((item) => ({ ...item, value: item?.title }));
+    }
+    return _.differenceBy(optionsData, matchItem, "value");
+  };
+
   return (
     <>
-      <Form layout="vertical" ref={formRef} onFieldsChange={handleFieldsChange}>
+      <Form layout="vertical" ref={formRef} onFieldsChange={handleFieldsChange} autoComplete="off">
         <Row
           className={clsx([
             styles.hide,
@@ -290,14 +321,20 @@ const CreateCompany = forwardRef((props, formRef) => {
           ])}
         >
           <Col lg={12} md={12} sm={24} xs={24}>
-            <CCInput
+            {/* <CCInput
               type="number"
               name={["create_company", "approve", "base_val", "num"]}
               label={FormFieldText["base_val"]["num"]}
               formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               style={{ width: "100%" }}
-              onChange={(e) => formRef?.current.setFieldsValue({ company_value: e })}
-            />
+              // onChange={(e) => formRef?.current.setFieldsValue({ ...formRef.current.getFieldsValue(),  })}
+            /> */}
+            <Form.Item name={["create_company", "approve", "base_val", "num"]} label={FormFieldText["base_val"]["num"]}>
+              <InputNumber
+                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
           </Col>
 
           <Col lg={12} md={12} sm={24} xs={24}>
@@ -337,45 +374,32 @@ const CreateCompany = forwardRef((props, formRef) => {
           ])}
         >
           <Row gutter={[16, 12]}>
-            <Col lg={12} md={12} sm={24} xs={24}>
-              <CCInput
-                type="text"
-                name={["create_company", "approve", "origin_person", "name"]}
-                label={FormFieldText["origin_person"]}
-              />
-            </Col>
-            <Col lg={12} md={12} sm={24} xs={24}>
-              {/* <Form.Item label="Người đại diện" name="present_person">
-                <Select onSelect={(e) => setFormData({ ...formData, present_person: e })}>
-                  <Select.Option
-                    value={1}
-                    // file: 1-A, 2 ,3
-                  >
-                    Người đại diện là cá nhân
-                  </Select.Option>
-                  <Select.Option
-                    value={2}
-                    // file: 1-B, 2 , 3
-                  >
-                 
-                    Người đại diện là tổ chức
-                  </Select.Option>
-                </Select>
-              </Form.Item> */}
+            <Col span={24}>
               <CCInput
                 type="select"
                 label="Người đại diện"
                 name={["create_company", "approve", "present_person"]}
                 onSelect={(e) => setFormData({ ...formData, present_person: e })}
+                defaultValue="personal"
                 options={[
                   { value: "personal", name: "Người đại diện là cá nhân" },
                   { value: "organization", name: "Người đại diện là tổ chức" },
                 ]}
               />
             </Col>
-            {formData?.present_person == 1 ? (
-              <>
-                <Col lg={12} md={12} sm={24} xs={24}>
+            <Col span={24}>
+              {formData?.present_person === "personal" ? (
+                <div className={styles.groupInput}>
+                  <CCInput
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "name"]}
+                    label={FormFieldText["origin_person"]}
+                  />
+                  <CCInput
+                    type="date"
+                    name={["create_company", "approve", "origin_person", "birth_day"]}
+                    label="Ngày sinh"
+                  />
                   <CCInput
                     type="select"
                     name={["create_company", "approve", "origin_person", "gender"]}
@@ -385,118 +409,183 @@ const CreateCompany = forwardRef((props, formRef) => {
                       { value: "Nam", name: "Nam" },
                     ]}
                   />
-                </Col>
-                <Col lg={12} md={12} sm={24} xs={24}>
                   <CCInput
-                    type="date"
-                    name={["create_company", "approve", "origin_person", "birth_day"]}
-                    label="Ngày sinh"
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "per_type"]}
+                    label="Dân tộc"
                   />
-                </Col>
-                <Col lg={12} md={12} sm={24} xs={24}>
-                  <Form.Item name={["create_company", "approve", "origin_person", "per_type"]} label="Dân tộc">
-                    <Input />
-                  </Form.Item>
-                </Col>
-                <Col lg={12} md={12} sm={24} xs={24}>
+
+                  <CCInput
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "national"]}
+                    defaultValue="Việt Nam"
+                    label="Quốc tịch"
+                  />
                   <Form.Item
                     name={["create_company", "approve", "origin_person", "reg_address"]}
                     label="Nơi đăng kí hộ khẩu thường trú"
                   >
                     <Input />
                   </Form.Item>
-                </Col>
-                <Col lg={12} md={12} sm={24} xs={24}>
+
                   <CCInput
                     type="text"
                     name={["create_company", "approve", "origin_person", "current_address"]}
                     label="Chỗ ở hiện tại"
                   />
-                </Col>
-              </>
-            ) : (
-              ""
-            )}
-          </Row>
-
-          <Form.Item label={<h3>Giấy tờ pháp lý</h3>}>
-            <Row gutter={[16, 12]}>
-              <Col lg={12} md={12} sm={24} xs={24}>
-                {/* <Form.Item name={["create_company","approve", "origin_person", "doc_type"]} label="Loại giấy tờ">
-                  <Select>
-                    {formData?.present_person === 1
-                      ? FORM_SELECT.map((item) => {
-                          if (item.value !== 4) {
-                            return (
-                              <Select.Option key={item.name} value={item.name}>
-                                {item.name}
-                              </Select.Option>
-                            );
-                          }
-                        })
-                      : FORM_SELECT.map((item) => {
-                          if (item.value === 4) {
-                            return (
-                              <Select.Option key={item.name} value={item.name}>
-                                {item.name}
-                              </Select.Option>
-                            );
-                          }
-                        })}
-                  </Select>
-                </Form.Item> */}
-                <CCInput
-                  type="select"
-                  name={["create_company", "approve", "origin_person", "doc_type"]}
-                  label="Loại giấy tờ"
-                  options={
-                    formData?.present_person === 1
-                      ? FORM_SELECT.filter((item) => item.value !== "Mã doanh nghiệp")
-                      : FORM_SELECT.filter((item) => item.value === "Mã doanh nghiệp")
-                  }
-                />
-              </Col>
-              <Col lg={12} md={12} sm={24} xs={24}>
-                {formData?.present_person === 1 ? (
+                  <CCInput
+                    type="select"
+                    name={["create_company", "approve", "origin_person", "doc_type"]}
+                    label="Loại giấy tờ"
+                    defaultValue="Chứng minh nhân dân"
+                    options={[
+                      {
+                        name: "Chứng minh nhân dân",
+                        value: "Chứng minh nhân dân",
+                      },
+                      { name: "Căn cước công dân", value: "Căn cước công dân" },
+                      { name: "Hộ chiếu", value: "Hộ chiếu" },
+                    ]}
+                  />
                   <CCInput
                     type="text"
                     label={"Số CMND/ CCCD/ Hộ chiếu"}
                     name={["create_company", "approve", "origin_person", "doc_code"]}
                   />
-                ) : (
+                  <CCInput
+                    type="date"
+                    name={["create_company", "approve", "origin_person", "doc_time_provide"]}
+                    label="Ngày cấp"
+                  />
+
+                  <CCInput
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "doc_place_provide"]}
+                    label="Nơi cấp"
+                  />
+                  <CCInput
+                    type="number"
+                    formatter={(val) => `${number_format(val)}`}
+                    style={{ width: "100%" }}
+                    name={["create_company", "approve", "company_value"]}
+                    label="Giá trị góp vốn"
+                  />
+                  {/* + Tên thành viên
++ Ngày sinh
++ Giới tính
++ Dân tộc
++ Quốc tịch: Luôn hiển thị là “Việt Nam” (có thể chỉnh sửa)
++ Nơi đăng ký hộ khẩu thường trú
++ Chỗ ở hiện tại
++ Loại giấy tờ pháp lý (dropdown 3 options): Chứng minh nhân dân/căn cước công dân/hộ chiếu + field điền số
++ Ngày cấp, nơi cấp
++ Giá trị góp vốn */}
+                </div>
+              ) : (
+                <div className={styles.groupInput}>
+                  {/* + Tên người đại diện
++ Ngày sinh
++ Giới tính
++ Dân tộc
++ Quốc tịch: Luôn hiển thị là “Việt Nam” (có thể chỉnh sửa)
++ Địa chỉ liên lạc
++ Địa chỉ trụ sở chính
++ Loại giấy tờ pháp lý: Mã doanh nghiệp + field điền số
++ Ngày cấp, nơi cấp
++ Giá trị góp vốn */}
+
+                  <CCInput
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "name"]}
+                    label={"Tên người đại diện"}
+                  />
+                  <CCInput
+                    type="date"
+                    name={["create_company", "approve", "origin_person", "birth_day"]}
+                    label="Ngày sinh"
+                  />
+                  <CCInput
+                    type="select"
+                    name={["create_company", "approve", "origin_person", "gender"]}
+                    label="Giới tính"
+                    options={[
+                      { value: "Nữ", name: "Nữ" },
+                      { value: "Nam", name: "Nam" },
+                    ]}
+                  />
+                  <CCInput
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "per_type"]}
+                    label="Dân tộc"
+                  />
+
+                  <CCInput
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "national"]}
+                    label="Quốc tịch"
+                    defaultValue="Việt Nam"
+                  />
+                  <Form.Item
+                    name={["create_company", "approve", "origin_person", "reg_address"]}
+                    label="Địa chỉ liên lạc"
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <CCInput
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "current_address"]}
+                    label="Địa chỉ trụ sở chính"
+                  />
+
+                  <CCInput
+                    type="select"
+                    name={["create_company", "approve", "origin_person", "doc_type"]}
+                    label="Loại giấy tờ"
+                    defaultValue="Mã doanh nghiệp"
+                    disabled
+                    defaultActiveFirstOption
+                    options={[
+                      {
+                        name: "Mã doanh nghiệp",
+                        value: "Mã doanh nghiệp",
+                      },
+                    ]}
+                  />
                   <CCInput
                     type="text"
                     label={"Mã doanh nghiệp"}
                     name={["create_company", "approve", "origin_person", "doc_code"]}
                   />
-                )}
-              </Col>
+                  <CCInput
+                    type="date"
+                    name={["create_company", "approve", "origin_person", "doc_time_provide"]}
+                    label="Ngày cấp"
+                  />
 
-              <Col lg={12} md={12} sm={24} xs={24}>
-                <CCInput
-                  type="date"
-                  name={["create_company", "approve", "origin_person", "doc_time_provide"]}
-                  label="Ngày cấp"
-                />
-              </Col>
-
-              <Col lg={12} md={12} sm={24} xs={24}>
-                <CCInput
-                  type="text"
-                  name={["create_company", "approve", "origin_person", "doc_place_provide"]}
-                  label="Nơi cấp"
-                />
-              </Col>
-            </Row>
-          </Form.Item>
-
-          <CCInput
-            type="number"
-            formatter={(val) => `${number_format(val)}`}
-            style={{ width: "100%" }}
-            name={["create_company", "approve", "company_value"]}
-            label="Giá trị góp vốn"
-          />
+                  <CCInput
+                    type="text"
+                    name={["create_company", "approve", "origin_person", "doc_place_provide"]}
+                    label="Nơi cấp"
+                  />
+                  <CCInput
+                    type="number"
+                    formatter={(val) => `${number_format(val)}`}
+                    style={{ width: "100%" }}
+                    name={["create_company", "approve", "company_value"]}
+                    label="Giá trị góp vốn"
+                  />
+                  <CCInput
+                    type="number"
+                    formatter={(val) => `${number_format(val)}`}
+                    style={{ width: "100%" }}
+                    name={["create_company", "approve", "company_value"]}
+                    label="Giá trị góp vốn"
+                  />
+                </div>
+              )}
+            </Col>
+          </Row>
         </Form.Item>
 
         <Form.Item
@@ -518,41 +607,15 @@ const CreateCompany = forwardRef((props, formRef) => {
                         <Form.Item {...field} name={[field.name, "name"]} label="Họ và tên">
                           <Input />
                         </Form.Item>
-                        {/* <Form.Item {...field} name={[field.name, "title"]} label="Chức danh">
-                          <Select>
-                            <Select.Option value={1}>Chủ tịch công ty</Select.Option>
-
-                            <Select.Option value={2}>Giám đốc</Select.Option>
-
-                            <Select.Option value={3}>Tổng giám đốc</Select.Option>
-                          </Select>
-                        </Form.Item> */}
                         <CCInput
                           type="select"
                           {...field}
                           name={[field.name, "title"]}
                           label="Chức danh"
-                          options={[
-                            {
-                              value: "Chủ tịch công ty",
-                              name: "Chủ tịch công ty",
-                            },
-                            {
-                              value: "Giám đốc",
-                              name: "Giám đốc",
-                            },
-                            {
-                              value: "Tổng giám đốc",
-                              name: "Tổng giám đốc",
-                            },
-                          ]}
+                          options={renderOptions}
+                          onDropdownVisibleChange={renderOptions}
                         />
-                        {/* <Form.Item {...field} name={[field.name, "gender"]} label="Giới tính">
-                          <Select>
-                            <Select.Option value={0}>Nữ</Select.Option>
-                            <Select.Option value={1}>Nam</Select.Option>
-                          </Select>
-                        </Form.Item> */}
+
                         <CCInput
                           type="select"
                           {...field}
@@ -577,7 +640,7 @@ const CreateCompany = forwardRef((props, formRef) => {
                           <Input />
                         </Form.Item>
                         <Form.Item {...field} name={[field.name, "national"]} label="Quốc tịch">
-                          <Input />
+                          <Input defaultValue="Việt Nam" />
                         </Form.Item>
                         <Form.Item {...field} name={[field.name, "reg_address"]} label="Nơi đăng kí hộ khẩu thường trú">
                           <Input />
@@ -594,7 +657,14 @@ const CreateCompany = forwardRef((props, formRef) => {
                                 type="select"
                                 name={[field.name, "doc_type"]}
                                 label="Loại giấy tờ"
-                                options={FORM_SELECT.filter((item) => item.value !== "Mã doanh nghiệp")}
+                                options={[
+                                  {
+                                    name: "Chứng minh nhân dân",
+                                    value: "Chứng minh nhân dân",
+                                  },
+                                  { name: "Căn cước công dân", value: "Căn cước công dân" },
+                                  { name: "Hộ chiếu", value: "Hộ chiếu" },
+                                ]}
                               />
                             </Col>
                             <Col lg={24} md={24} sm={24} xs={24}>
@@ -657,11 +727,23 @@ const CreateCompany = forwardRef((props, formRef) => {
             <Col span={24}>
               <Button
                 onClick={() => {
-                  let { origin_person } = formRef.current.getFieldsValue();
+                  let { create_company } = formRef.current.getFieldsValue();
+                  let { name, gender, birth_day, per_type, reg_address, current_address } =
+                    create_company.approve.origin_person;
                   formRef.current.setFieldsValue({
-                    per_main: {
-                      ...origin_person,
-                      // birth_day: moment(origin_person?.birth_day).format("YYYY-MM-DD"),
+                    ...create_company,
+                    create_company: {
+                      approve: {
+                        ...create_company.approve,
+                        per_main: {
+                          name,
+                          gender,
+                          birth_day,
+                          per_type,
+                          reg_address,
+                          current_address,
+                        },
+                      },
                     },
                   });
                 }}
@@ -670,8 +752,22 @@ const CreateCompany = forwardRef((props, formRef) => {
               </Button>
               <Button
                 onClick={() => {
+                  let { create_company } = formRef.current.getFieldsValue();
                   formRef.current.setFieldsValue({
-                    per_main: [],
+                    ...create_company,
+                    create_company: {
+                      approve: {
+                        ...create_company.approve,
+                        per_main: {
+                          name: undefined,
+                          gender: undefined,
+                          birth_day: undefined,
+                          per_type: undefined,
+                          reg_address: undefined,
+                          current_address: undefined,
+                        },
+                      },
+                    },
                   });
                 }}
               >

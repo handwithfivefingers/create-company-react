@@ -14,27 +14,19 @@ const Section1 = (props) => {
     Aos.init({ duration: 600 });
   }, []);
   return (
-    <div
-      className={styles.sectionItems}
-      style={{ backgroundImage: `url(${Banner.src})` }}
-    >
+    <div className={styles.sectionItems} style={{ backgroundImage: `url(${Banner.src})` }}>
       <div className={clsx(["container", styles.container])}>
         <div className={[styles.sectionItem1, styles.sectionItem].join(" ")}>
           <div className={styles.itemContent}>
-            <Typography.Title
-              level="h1"
-              className={styles.title}
-              data-aos="fade-up"
-            >
+            <Typography.Title level="h1" className={styles.title} data-aos="fade-up">
               Giải pháp toàn diện cho doanh nghiệp
             </Typography.Title>
             <p className={clsx([styles.p, "h"])} data-aos="fade-up">
-              Chúng tôi cam kết bảo mật thông tin. Quy trình đơn giản, nhanh
-              chóng với đội ngũ hỗ trợ chuyên nghiệp.
+              Chúng tôi cam kết bảo mật thông tin. Quy trình đơn giản, nhanh chóng với đội ngũ hỗ trợ chuyên nghiệp.
             </p>
-            <Link href="#san-pham" passHref  data-aos="fade-up">
+            <Link href="#san-pham" passHref data-aos="fade-up">
               <CCButton type="upper" link style={{ fontWeight: "bold" }}>
-                <a>Bắt đầu ngay</a>
+                Bắt đầu ngay
               </CCButton>
             </Link>
           </div>

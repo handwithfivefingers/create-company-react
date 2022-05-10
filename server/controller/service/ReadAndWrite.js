@@ -1,5 +1,5 @@
 const { removeFile } = require("../../response");
-const { Order } = require("../../model");
+const { Order, Setting } = require("../../model");
 
 const docxConverter = require("docx-pdf");
 const PizZip = require("pizzip");
@@ -50,17 +50,31 @@ const convertFile = async (order, req, res) => {
             error: err,
           });
         }
-
         // Here in done you have pdf file which you can save or transfer in another stream
       }
-      return await sendmailWithAttachments(req, res, {
-        email: "handgod1995@gmail.com",
-        subject: "Testing auto generate files",
-        content: "Testing auto generate files",
-        filesPath: attachments,
-        removeFiles: true,
-        type: "path",
-      });
+      let _setting = await Setting.find().populate("mailRegister mailPayment");
+      if (_setting) {
+        let { mailPayment } = _setting[0];
+        let { subject, content } = mailPayment;
+        return await sendmailWithAttachments(req, res, {
+          email: "handgod1995@gmail.com",
+          subject,
+          content,
+          filesPath: attachments,
+          removeFiles: true,
+          type: "path",
+        });
+      } else {
+        return await sendmailWithAttachments(req, res, {
+          email: "handgod1995@gmail.com",
+          subject: "Testing auto generate files",
+          content: "Testing auto generate files",
+          filesPath: attachments,
+          removeFiles: true,
+          type: "path",
+        });
+      }
+
       // return res.status(200).json({ message: "ok" });
     }
 

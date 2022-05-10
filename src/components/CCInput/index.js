@@ -1,14 +1,24 @@
-import React from "react";
-import { Form, Input, InputNumber, DatePicker, Select } from "antd";
+import React, { useState } from "react";
+import { Form, Input, InputNumber, DatePicker, Select, disabled } from "antd";
 
 export default function CCInput(props) {
-  const { name, label } = props;
-
+  const { name, label, value, onChange, style, placeholder, defaultValue, ...rest } = props;
+  const [optional, setOptional] = useState([]);
+  const handleOptions = () => {
+    let option;
+    if (typeof props?.options !== "object") {
+      // function
+      option = props?.options();
+    } else {
+      option = props?.options;
+    }
+    setOptional(option);
+  };
   switch (props.type) {
     case "text":
       return (
-        <Form.Item value={props?.value} name={props.name} label={props?.label || " "}>
-          <Input onChange={props?.onChange} style={props.style} placeholder={props?.placeholder} />
+        <Form.Item value={value} name={name} label={label || " "}>
+          <Input onChange={onChange} style={style} placeholder={placeholder} disabled={props?.disabled} autocomplete="off"/>
         </Form.Item>
       );
     case "number":
@@ -19,6 +29,8 @@ export default function CCInput(props) {
             style={props.style}
             formatter={props?.formatter}
             placeholder={props?.placeholder}
+            {...rest}
+            autocomplete="off"
           />
         </Form.Item>
       );
@@ -29,18 +41,30 @@ export default function CCInput(props) {
             style={{ ...props.style, width: "100%" }}
             format="YYYY-MM-DD"
             placeholder={props?.placeholder}
+            {...rest}
+            autocomplete="off"
           />
         </Form.Item>
       );
     case "select":
+      let option;
+      if (props?.onDropdownVisibleChange) {
+        option = props.options();
+      }
+
       return (
-        <Form.Item name={props.name} label={props?.label || " "}>
-          <Select onSelect={props?.onSelect}>
-            {/* <Select.Option value={1}>Người đại diện là cá nhân</Select.Option> */}
-            {/* <Select.Option value={2}>Người đại diện là tổ chức</Select.Option> */}
-            {props?.options.map((item, i) => {
+        <Form.Item name={name} label={label || " "}>
+          <Select
+            onSelect={props?.onSelect}
+            disabled={props?.disabled}
+            defaultValue={defaultValue}
+            defaultActiveFirstOption={props?.defaultActiveFirstOption}
+            onDropdownVisibleChange={handleOptions}
+            autocomplete="off"
+          >
+            {optional?.map((item, i) => {
               return (
-                <Select.Option value={item.value} key={[props?.name, i, item.value]}>
+                <Select.Option value={item.value} key={item.key ? item.key : [name, i, item.value]}>
                   {item.name}
                 </Select.Option>
               );

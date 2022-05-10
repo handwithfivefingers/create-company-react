@@ -21,6 +21,7 @@ const OrderRoute = require("./server/route/order");
 const ServiceRoute = require("./server/route/service");
 const UserRoute = require("./server/route/user");
 const MailRoute = require("./server/route/template");
+const SettingRoute = require("./server/route/setting");
 
 // DB
 mongoose
@@ -67,6 +68,7 @@ app.use("/api", OrderRoute);
 app.use("/api", ServiceRoute);
 app.use("/api", UserRoute);
 app.use("/api", MailRoute);
+app.use("/api", SettingRoute);
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
@@ -88,7 +90,7 @@ app.use((err, req, res, next) => {
 // });
 
 // Cron running ;
-task.start();
+// task.start();
 
 app.listen(3001, () => {
   console.log("Server is runnign in port 3001");

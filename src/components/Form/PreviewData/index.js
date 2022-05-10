@@ -39,14 +39,9 @@ const PreviewData = ({ data }) => {
 
   const checkData = (newData, label) => {
     let xhtml = [];
-    // for (let property in LABEL[pathName]) {
-    //   let label = LABEL[pathName][property].fields;
-    //   let newData = data[pathName][property];
-    //   console.log(2);
     if (newData) {
       xhtml.push(getDataFromObj(newData, label));
     }
-    // }
     return xhtml;
   };
 
@@ -63,7 +58,7 @@ const PreviewData = ({ data }) => {
     } else return typeof val;
   };
 
-  const getDataFromObj = (objData, label, ind = null) => {
+  const getDataFromObj = (objData, label) => {
     let xhtml = [];
     // console.log("getDataFromObj", objData, label);
     xhtml.push(
@@ -79,16 +74,28 @@ const PreviewData = ({ data }) => {
     return xhtml;
   };
 
+  const checkTitle = (keys, index) => {
+    if (keys === "legal_respon") {
+      return `Người Đại Diện Pháp Luật ${index + 1}`;
+    } else if (keys === "company_opt_career") {
+      return `Ngành nghề phụ ${index + 1}`;
+    }
+    return "";
+  };
   /**
    *
-   * @param {Obj Data} currentPath
-   * @param {Loop Array Item} item
-   * @param { current Label } label
+   * @param {current Obj || Array || String} item
+   * @param {current Label Path} label
+   * @param {*} keys
+   * @param {*} index1
+   * @param {*} index2
    * @returns
    */
   const renderDescription = (item, label, keys = null, index1 = null, index2 = null) => {
-    // console.log(item, label);
     let itemVariable = checkVariable(item);
+    // {name, key , value}
+    console.log(item, label, keys, index1, index2);
+
     if (itemVariable === "String") {
       return (
         <CCDescription.DescItem
@@ -99,20 +106,20 @@ const PreviewData = ({ data }) => {
         </CCDescription.DescItem>
       );
     } else if (itemVariable === "Array") {
-      return item.map((val, i) => {
-        return (
-          <CCDescription.DescListItem
-            title={
-              keys && keys === "legal_respon"
-                ? `Người Đại Diện Pháp Luật ${i + 1}`
-                : keys === "company_opt_career"
-                ? `Ngành nghề phụ ${i + 1}`
-                : ""
-            }
-          >
-            {renderDescription(val, label, index1, i)}
-          </CCDescription.DescListItem>
-        );
+      return item.map((arrayItem, arrayIndex) => {
+        if (keys === "company_opt_career") {
+          let careerObj = [arrayItem.name];
+          return (
+            <CCDescription.DescListItem title={checkTitle(keys, arrayIndex)}>
+              {renderDescription(careerObj, label, index1, arrayIndex)}
+            </CCDescription.DescListItem>
+          );
+        } else
+          return (
+            <CCDescription.DescListItem title={checkTitle(keys, arrayIndex)}>
+              {renderDescription(arrayItem, label, index1, arrayIndex)}
+            </CCDescription.DescListItem>
+          );
       });
     } else if (itemVariable === "Moment") {
       return (
@@ -121,37 +128,37 @@ const PreviewData = ({ data }) => {
         </CCDescription.DescItem>
       );
     } else if (itemVariable === "Object") {
-      return getDataFromObj(item, label, index2 + 1);
+      return getDataFromObj(item, label);
     } else {
       console.log("item", item);
       return null;
     }
   };
 
-  const renderFormByArray = (array, name = "") => {
-    let xhtml = null;
-    xhtml = array?.map((item, index) => {
-      if (Object.keys(item).length > 0) {
-        return Object.keys(item).map((key) => {
-          if (key.includes("time") || key.includes("birth")) {
-            return (
-              <Descriptions.Item label={[name, " ", index + 1]}>
-                {moment(item[key]).format("YYYY-MM-DD")}
-              </Descriptions.Item>
-            );
-          }
-          if (name === "Ngành nghề phụ") {
-            if (["code", "key", "value", "name"].includes(key)) return "";
-            return <Descriptions.Item label={[name, " ", index + 1]}>{item["children"]}</Descriptions.Item>;
-          }
-          return <Descriptions.Item label={[name, " ", key, " ", index + 1]}>{item[key]}</Descriptions.Item>;
-        });
-      }
-      return item;
-    });
+  // const renderFormByArray = (array, name = "") => {
+  //   let xhtml = null;
+  //   xhtml = array?.map((item, index) => {
+  //     if (Object.keys(item).length > 0) {
+  //       return Object.keys(item).map((key) => {
+  //         if (key.includes("time") || key.includes("birth")) {
+  //           return (
+  //             <Descriptions.Item label={[name, " ", index + 1]}>
+  //               {moment(item[key]).format("YYYY-MM-DD")}
+  //             </Descriptions.Item>
+  //           );
+  //         }
+  //         if (name === "Ngành nghề phụ") {
+  //           if (["code", "key", "value", "name"].includes(key)) return "";
+  //           return <Descriptions.Item label={[name, " ", index + 1]}>{item["children"]}</Descriptions.Item>;
+  //         }
+  //         return <Descriptions.Item label={[name, " ", key, " ", index + 1]}>{item[key]}</Descriptions.Item>;
+  //       });
+  //     }
+  //     return item;
+  //   });
 
-    return xhtml;
-  };
+  //   return xhtml;
+  // };
 
   if (data) {
     let xhtml = [];
@@ -159,7 +166,6 @@ const PreviewData = ({ data }) => {
       for (let props in LABEL[property]) {
         let label = LABEL[property][props].fields;
         let newData = data[property][props];
-        // console.log(1, label);
         xhtml.push(
           newData && (
             <CCDescription.Desc layout="vertical" bordered title={renderTitle(newData, LABEL[property][props])}>

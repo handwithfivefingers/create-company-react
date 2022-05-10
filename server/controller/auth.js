@@ -1,5 +1,5 @@
 // import User from "./../model/user";
-const { User } = require("./../model");
+const { User, Setting } = require("./../model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { loginFailed, createdHandler, errHandler, existHandler } = require("../response");
@@ -35,20 +35,47 @@ exports.registerUser = async (req, res) => {
 
     await generateToken(_tokenObj, res);
 
-    const params = {
-      phone,
-      // password,
-      email: _email,
-      role,
-      callbackUrl: `/${role}`,
-      subject: "Create user Successfully",
-      content: `Chào ${name}, <br/>Tên đăng nhập của bạn là: ${phone}<br/>Mật khẩu của bạn là : ${password}`,
-      type: "any",
-    };
+    let _setting = await Setting.find().populate("mailRegister mailPayment");
 
-    // await handleMailer(user);  Handling sendmail
-    return sendmailWithAttachments(req, res, params);
-    // return createdHandler(user, res);
+    // const params = {
+    //   phone,
+    //   // password,
+    //   email: _email,
+    //   role,
+    //   callbackUrl: `/${role}`,
+    //   subject: "Create user Successfully",
+    //   content: `Chào ${name}, <br/>Tên đăng nhập của bạn là: ${phone}<br/>Mật khẩu của bạn là : ${password}`,
+    //   type: "any",
+    // };
+
+    if (_setting) {
+      let { mailPayment } = _setting[0];
+      let { subject, content } = mailPayment;
+
+      content.replace("{name}", name);
+      content.replace("{phone}", phone);
+      content.replace("{password}", password);
+
+      return await sendmailWithAttachments(req, res, {
+        phone,
+        email: _email,
+        role,
+        callbackUrl: `/${role}`,
+        subject: subject,
+        content: content,
+        type: "any",
+      });
+    } else {
+      return await sendmailWithAttachments(req, res, {
+        phone,
+        email: _email,
+        role,
+        callbackUrl: `/${role}`,
+        subject: "Create user Successfully",
+        content: `Chào ${name}, <br/>Tên đăng nhập của bạn là: ${phone}<br/>Mật khẩu của bạn là : ${password}`,
+        type: "any",
+      });
+    }
   } catch (err) {
     return errHandler(err, res);
   }

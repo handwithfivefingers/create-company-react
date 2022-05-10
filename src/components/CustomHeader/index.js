@@ -60,13 +60,13 @@ const MobileMenu = (props) => {
           {!props.permis ? (
             <>
               <Menu.Item>
-                <Link to={"/login"} key="1">
-                  <a className={styles.linkItem}>Login</a>
+                <Link to={"/login"} key="1" className={styles.linkItem}>
+                  Login
                 </Link>
               </Menu.Item>
               <Menu.Item key="2">
-                <Link to={"/register"}>
-                  <a className={styles.linkItem}>Register</a>
+                <Link to={"/register"} className={styles.linkItem}>
+                  Register
                 </Link>
               </Menu.Item>
             </>
@@ -100,15 +100,14 @@ const DesktopMenu = (props) => {
         <Link to={"/"}>
           <Image width={58} src={Logo} alt="logo" preview={false} style={{ cursor: "pointer" }} />
         </Link>
-        <Link to={"/career"}>
-          <a
-            className={styles.linkItem}
-            style={{
-              color: props.path === "/" ? "" : "var(--text3)",
-            }}
-          >
-            Ngành nghề
-          </a>
+        <Link
+          to={"/career"}
+          className={styles.linkItem}
+          style={{
+            color: props.path === "/" ? "" : "var(--text3)",
+          }}
+        >
+          Ngành nghề
         </Link>
       </ul>
       <Dropdown
@@ -117,13 +116,13 @@ const DesktopMenu = (props) => {
             {!props.permis ? (
               <>
                 <Menu.Item>
-                  <Link to={"/login"} key="1">
-                    <a className={styles.linkItem}>Login</a>
+                  <Link to={"/login"} key="1" className={styles.linkItem}>
+                    Login
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="2">
-                  <Link to={"/register"}>
-                    <a className={styles.linkItem}>Register</a>
+                  <Link to={"/register"} className={styles.linkItem}>
+                    Register
                   </Link>
                 </Menu.Item>
               </>

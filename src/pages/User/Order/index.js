@@ -22,19 +22,21 @@ const UserOrder = () => {
     getScreenData();
   }, []);
 
-  const getScreenData = () => {
-    setLoading(true);
-    axios
-      .get("/order")
-      .then((res) => {
-        if (res.data.status === 200) {
-          setData(res.data.data);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setLoading(false);
-      });
+  const getScreenData = async () => {
+    try {
+      setLoading(true);
+      let res = await axios.get("/order");
+
+      if (res.data.status === 200) {
+        setData(res.data.data);
+      } else {
+        console.log(res);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // const handleTracking = () => {
@@ -75,7 +77,7 @@ const UserOrder = () => {
   };
   return (
     <div>
-      <Table dataSource={data} loading={loading}>
+      <Table dataSource={data} loading={loading} rowKey={(record) => record._id}>
         <Table.Column
           align="center"
           title="Đơn hàng"
@@ -141,7 +143,9 @@ const UserOrder = () => {
 
         <Table.Column
           align="center"
-          render={(v, record, i) =>  record?.payment === "0" ? (<Button onClick={() => handlePurchase(record)}>Thanh toán</Button>) : ''}
+          render={(v, record, i) =>
+            record?.payment === "0" ? <Button onClick={() => handlePurchase(record)}>Thanh toán</Button> : ""
+          }
         />
       </Table>
 

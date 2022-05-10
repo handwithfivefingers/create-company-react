@@ -36,7 +36,7 @@ export default function TemplateMail(props) {
     // Add new
     if (props.type === 1) {
       try {
-        let res = await AdminMailService.addTemplate({ name, content: newContent });
+        let res = await AdminMailService.addTemplate({ name, subject, content: newContent });
         if (res.data.status === 201) {
           message.success(res.data.message);
         } else message.error(res.data.message);

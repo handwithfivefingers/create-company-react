@@ -1,6 +1,7 @@
-import { SIDEBAR_COLLAPSE } from "../type/common.type";
+import { SIDEBAR_COLLAPSE, TITLE } from "../type/common.type";
 const initState = {
   collapsed: false,
+  title: "",
 };
 
 export default function commonReducer(state = initState, action) {
@@ -9,6 +10,11 @@ export default function commonReducer(state = initState, action) {
       return { ...state, collapsed: true };
     case SIDEBAR_COLLAPSE.EXPANDED:
       return { ...state, collapsed: false };
+    case TITLE.TITLE_CHANGE:
+      return {
+        ...state,
+        title: action.payload.title,
+      };
     default:
       return state;
   }

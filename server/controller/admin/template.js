@@ -60,7 +60,6 @@ exports.createTemplate = async (req, res) => {
 
 exports.editTemplate = async (req, res) => {
   let { id } = req.params;
-  console.log(id);
   let _update = {
     name: req.body.name,
     content: req.body.content,

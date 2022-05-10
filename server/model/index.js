@@ -1,10 +1,11 @@
 const user = require("./user");
-const company = require("./company");
+// const company = require("./company");
 const order = require("./order");
 const category = require("./category");
 const career = require("./career");
 const product = require("./product");
 const template = require("./template");
+const setting = require("./setting");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { Schema } = mongoose;
@@ -12,11 +13,12 @@ const { Schema } = mongoose;
 // // Step 1 : Create Schema
 
 const userSchema = new Schema({ ...user }, { timestamps: true });
-const companySchema = new Schema({ ...company }, { timestamps: true });
+// const companySchema = new Schema({ ...company }, { timestamps: true });
 const orderSchema = new Schema({ ...order }, { timestamps: true });
 const categorySchema = new Schema({ ...category }, { timestamps: true });
 const careerSchema = new Schema({ ...career }, { timestamps: true });
 const productSchema = new Schema({ ...product }, { timestamps: true });
+const settingSchema = new Schema({ ...setting }, { timestamps: true });
 const templateSchema = new Schema({ ...template }, { timestamps: true, collation: { locale: "en_US", strength: 1 } });
 
 // // Step 2 : Create Methods - Function
@@ -32,18 +34,13 @@ userSchema.method({
 
 const User = mongoose.model("User", userSchema);
 
-const Company = mongoose.model("Company", companySchema);
-// //  mongoose.models.Company || mongoose.model("Company", companySchema);
+// const Company = mongoose.model("Company", companySchema);
 const Order = mongoose.model("Order", orderSchema);
-// //  mongoose.models.Order || mongoose.model("Order", orderSchema);
 const Category = mongoose.model("Category", categorySchema);
-// //  mongoose.models.Category || mongoose.model("Category", categorySchema);
 const Career = mongoose.model("Career", careerSchema);
-// //  mongoose.models.Career || mongoose.model("Career", careerSchema);
 const Product = mongoose.model("Product", productSchema);
-// //  mongoose.models.Product || mongoose.model("Product", productSchema);
 const TemplateMail = mongoose.model("TemplateMail", templateSchema);
-// //  mongoose.models.TemplateMail || mongoose.model("TemplateMail", templateSchema);
+const Setting = mongoose.model("Setting", settingSchema);
 
 // // Step 4 : Create Virtual Field - Reference
 
@@ -71,4 +68,4 @@ orderSchema.virtual("data.create_company.opt_career", {
   foreignField: "_id",
 });
 
-module.exports = { User, Company, Career, Order, Product, Category, TemplateMail };
+module.exports = { User, Career, Order, Product, Category, TemplateMail, Setting };

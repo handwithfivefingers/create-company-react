@@ -1,13 +1,12 @@
 import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
-import { Button, Card, Divider, Form, message, Modal, Space, Table, Tag, Tooltip } from "antd";
+import { Button, Card, Divider, Form, message, Modal, Space, Table, Tag, Tooltip, Input } from "antd";
 import { Link } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
-import CCInput from "src/components/CCInput";
 import Tracking from "src/components/Tracking";
 import axios from "src/config/axios";
 import { number_format } from "src/helper/Common";
 import AdminOrderService from "src/service/AdminService/AdminOrderService";
-
+import styles from "./styles.module.scss";
 const AdminOrder = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -97,7 +96,6 @@ const AdminOrder = () => {
       component: (
         <Tracking
           data={record}
-          // handleSendMailWithAttach={(output) => handleSendMailWithAttach(output)}
           onFinishScreen={(attachments, content, email) => {
             handleSendMailWithAttach(attachments, content, email);
             onClose();
@@ -139,14 +137,18 @@ const AdminOrder = () => {
         className="cc-card"
         title="Quản lý đơn hàng"
         extra={[
-          <Form key="filter" layout="vertical" ref={formRef} onFinish={onFilter}>
-            <Space>
-              <CCInput type="text" name="company" placeholder="Tên công ty" />
-              <CCInput type="text" name="user" placeholder="Người dùng" />
-              <Form.Item label=" ">
+          <Form key="filter" ref={formRef} onFinish={onFilter}>
+            <div className={styles.searchForm}>
+              <Form.Item name="company">
+                <Input placeholder="Tên công ty" />
+              </Form.Item>
+              <Form.Item name="user">
+                <Input placeholder="Người dùng" />
+              </Form.Item>
+              <Form.Item>
                 <Button htmlType="submit">Tìm kiếm</Button>
               </Form.Item>
-            </Space>
+            </div>
           </Form>,
         ]}
       >

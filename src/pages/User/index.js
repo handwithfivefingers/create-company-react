@@ -1,15 +1,9 @@
 import React from "react";
-import { DatePicker } from "antd";
-import WithAuth from "src/components/HOC/WithAuth";
 import { Outlet } from "react-router-dom";
+import WithAuth from "src/components/HOC/WithAuth";
 
 const UserDashboard = () => {
-  return (
-    <>
-      {new Date().toString("HHmmss")}
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 };
 
 export default WithAuth(UserDashboard, "user");

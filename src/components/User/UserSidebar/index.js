@@ -5,8 +5,7 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import { LAYOUT_ROUTER, UserRouter } from "../../../contants/Route";
 import styles from "./styles.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthAction } from "src/store/actions";
-import { CommonAction } from "src/store/actions";
+import { AuthAction, CommonAction } from "src/store/actions";
 
 const { Sider } = Layout;
 
@@ -27,12 +26,16 @@ const UserSidebar = (props) => {
     if (location.pathname.includes("/user/san-pham")) setCurrent("/user/san-pham");
     else setCurrent(location.pathname);
   }, [location]);
+  
+  const changeTitle = (item) => {
+    dispatch(CommonAction.titleChange(item.title));
+  };
 
   const renderSidebar = useCallback((route) => {
     let xhtml = null;
     xhtml = route.map((item, i) => {
       return (
-        <Menu.Item key={item.path} icon={item?.icon || <PieChartOutlined />}>
+        <Menu.Item key={item.path} icon={item?.icon || <PieChartOutlined />} onClick={() => changeTitle(item)}>
           <Link to={item.path}>{item.title}</Link>
         </Menu.Item>
       );
@@ -61,8 +64,7 @@ const UserSidebar = (props) => {
           <Menu.Item key={"/"} icon={<PieChartOutlined />}>
             <Link to={"/"}>Trang chủ</Link>
           </Menu.Item>
-          {/* {renderSidebar(LAYOUT_ROUTER(authReducer))} */}
-          {/* <Menu.Item>Đổi mật khẩu</Menu.Item> */}
+
           {renderSidebar(UserRouter)}
           <Menu.Item onClick={() => signOut()} icon={<DesktopOutlined />}>
             Đăng xuất

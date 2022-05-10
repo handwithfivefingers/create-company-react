@@ -1,4 +1,4 @@
-import { SIDEBAR_COLLAPSE } from "../type/common.type";
+import { SIDEBAR_COLLAPSE, TITLE } from "../type/common.type";
 
 export const sideCollapsed = (type) => {
   return async (dispatch) => {
@@ -13,5 +13,16 @@ export const sideCollapsed = (type) => {
         type: SIDEBAR_COLLAPSE.EXPANDED,
       });
     }
+  };
+};
+
+export const titleChange = (name, type = null) => {
+  return async (dispatch) => {
+    dispatch({
+      type: TITLE.TITLE_CHANGE,
+      payload: {
+        title: name,
+      },
+    });
   };
 };
