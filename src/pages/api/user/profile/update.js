@@ -22,7 +22,7 @@ const changePassword = authenticated(async (req, res) => {
   }
 
 
-  let _new = await User.findOneAndUpdate({ _id: req.user }, { email, phone, name }, { new: true }).select(
+  let _new = await User.updateOne({ _id: req.user }, { email, phone, name }, { new: true }).select(
     "name email phone",
   );
   

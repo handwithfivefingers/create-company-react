@@ -21,26 +21,26 @@ const ChangeInforForm = forwardRef((props, ref) => {
   const [productSelect, setProductSelect] = useState("");
   const [selectType, setSelectType] = useState([]);
 
-  const checkType = (type, i) => {
+  const checkType = (type, i, ref) => {
     switch (type) {
       case "2":
-        return <DaiDienPhapLuat current={props.current} index={i + 1} />;
+        return <DaiDienPhapLuat current={props.current} index={i + 1} ref={ref} />;
       case "3":
-        return <TenDoanhNghiep current={props.current} index={i + 1} />;
+        return <TenDoanhNghiep current={props.current} index={i + 1} ref={ref} />;
       case "4":
-        return <GiamVonDieuLe current={props.current} index={i + 1} />;
+        return <GiamVonDieuLe current={props.current} index={i + 1} ref={ref} />;
       case "5":
-        return <TangVonDieuLe current={props.current} index={i + 1} />;
+        return <TangVonDieuLe current={props.current} index={i + 1} ref={ref} />;
       case "7":
-        return <NganhNgheKinhDoanh current={props.current} index={i + 1} />;
+        return <NganhNgheKinhDoanh current={props.current} index={i + 1} ref={ref} />;
       case "1":
-        return <DiaChiTruSoChinh current={props.current} index={i + 1} />;
+        return <DiaChiTruSoChinh current={props.current} index={i + 1} ref={ref} />;
       case "6":
-        return <HopDongChuyenNhuong current={props.current} index={i + 1} />;
+        return <HopDongChuyenNhuong current={props.current} index={i + 1} ref={ref} />;
       case "8":
-        return <DaiDienToChuc current={props.current} index={i + 1} />;
+        return <DaiDienToChuc current={props.current} index={i + 1} ref={ref} />;
       case "9":
-        return <ThongTinDangKyThue current={props.current} index={i + 1} />;
+        return <ThongTinDangKyThue current={props.current} index={i + 1} ref={ref} />;
       default:
         return null;
     }
@@ -112,7 +112,7 @@ const ChangeInforForm = forwardRef((props, ref) => {
             })}
         </Select>
       </Form.Item>
-      {selectType?.map((item, i) => checkType(item.type, i))}
+      {selectType?.map((item, i) => checkType(item.type, i, ref))}
     </Form>
   );
 });

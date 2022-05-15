@@ -1,5 +1,5 @@
 import { DeleteOutlined, FormOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Drawer, message, Row, Table, Tooltip } from "antd";
+import { Button, Card, Col, Drawer, message, Row, Table, Tooltip, Popover } from "antd";
 import parser from "html-react-parser";
 import React, { useEffect, useState } from "react";
 import AdminMailService from "src/service/AdminService/AdminMailService";
@@ -89,7 +89,7 @@ function ListTemplateMail(props) {
 
   return (
     <Card
-      style={{ marginTop: 10 }}
+      // style={{ marginTop: 10 }}
       className="cc-card"
       title="Template Mail"
       extra={[
@@ -128,9 +128,17 @@ function ListTemplateMail(props) {
           width="300px"
           render={(val, record, i) => (
             <div className={styles.tableContent}>
-              <Tooltip title={parser(record?.content || "")} color={"#108ee9"} key={"#108ee9"}>
+              <Popover
+                content={<div className={styles.popover}>{parser(record?.content || "")}</div>}
+                color={"#108ee9"}
+                key={"#108ee9"}
+                title={record.name || ''}
+                placement="top"
+              >
+                {/* <Button type="primary">Hover me</Button> */}
                 {parser(record?.content || "")}{" "}
-              </Tooltip>
+              </Popover>
+              {/* <Tooltip title={parser(record?.content || "")} color={"#108ee9"} key={"#108ee9"}></Tooltip> */}
             </div>
           )}
         />

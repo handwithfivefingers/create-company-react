@@ -28,7 +28,7 @@ const updatedProduct = authenticated(async (req, res) => {
 	}
 
 	res.send(200);
-	const product = await Product.findOneAndUpdate(
+	const product = await Product.updateOne(
 		{
 			_id: id,
 		},

@@ -2,7 +2,7 @@ const file_contants = {
   // create_company
   create_company_uyquyen: {
     name: "Ủy quyền",
-    path: "/files/create_company/create_company_uyquyen.doc",
+    path: "/files/create_company/create_company_uyquyen.docx",
   },
   create_company_dieuleA: {
     name: "Điều lệ cá nhân",
@@ -38,10 +38,14 @@ const file_contants = {
     name: "Danh sách người đại diện",
     path: "/files/change_info/change_info_File_4_PhuLuc_I_10_DanhSachNguoiDaiDien.docx",
   },
+  change_info_phu_luc_2_4: {
+    name: "Danh sách người đại diện",
+    path: "/files/change_info/change_info_File_3_PhuLuc_II_4_ChuSoHuu.docx",
+  },
   change_info_uyquyen: {
     // ??
     name: "Ủy quyền",
-    path: "/files/change_info/change_info_uyquyen.doc",
+    path: "/files/change_info/change_info_uyquyen.docx",
   },
 
   // pending
@@ -51,7 +55,7 @@ const file_contants = {
   }, // uy quyen
   pending_uyquyen: {
     name: "Ủy quyền",
-    path: "/files/pending/pending_uyquyen.doc",
+    path: "/files/pending/pending_uyquyen.docx",
   }, // uy quyen
   pending_a_b: {
     name: "Phụ lục II - 19",
@@ -73,7 +77,7 @@ const file_contants = {
   },
   giai_the_uy_quyen: {
     name: "Ủy quyền",
-    path: "/files/dissolution/dissolution_uyquyen.doc",
+    path: "/files/dissolution/dissolution_uyquyen.docx",
   },
 };
 
@@ -102,44 +106,52 @@ exports.list_files = {
     ],
 
     // Người đại diện theo ủy quyền của chủ sở hữu là tổ chức: "Phụ lục II-1","File_3_UyQuyen.doc",
-    present_change: [file_contants.phu_luc_1, file_contants.change_info_uyquyen],
+    present_change: [file_contants.change_info_phu_luc_2, file_contants.change_info_uyquyen],
 
     // Địa chỉ trụ sở chính: "Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-    location: [file_contants.change_info_quyetdinh, file_contants.phu_luc_1, file_contants.change_info_uyquyen],
+    location: [
+      file_contants.change_info_quyetdinh,
+      file_contants.change_info_phu_luc_2,
+      file_contants.change_info_uyquyen,
+    ],
 
     // Giảm vốn điều lệ: "Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
     down_authorized_capital: [
       file_contants.change_info_quyetdinh,
-      file_contants.phu_luc_1,
+      file_contants.change_info_phu_luc_2_4,
       file_contants.change_info_uyquyen,
     ],
 
     // Chủ sở hữu: "Hợp đồng chuyển nhượng", "Phụ lục II-4","File_3_UyQuyen.doc",
     transfer_contract: [
       file_contants.change_info_hop_dong_chuyen_nhuong,
-      file_contants.phu_luc_3,
+      file_contants.change_info_phu_luc_2_4,
       file_contants.change_info_uyquyen,
     ],
 
     // Ngành nghề kinh doanh:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-    company_career: [file_contants.change_info_quyetdinh, file_contants.phu_luc_1, file_contants.change_info_uyquyen],
+    company_career: [
+      file_contants.change_info_quyetdinh,
+      file_contants.change_info_phu_luc_2,
+      file_contants.change_info_uyquyen,
+    ],
 
     // Tăng vốn điều lệ:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
     up_authorized_capital: [
       file_contants.change_info_quyetdinh,
-      file_contants.phu_luc_1,
+      file_contants.change_info_phu_luc_2,
       file_contants.change_info_uyquyen,
     ],
 
     // Tên doanh nghiệp:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-    name: [file_contants.change_info_quyetdinh, file_contants.phu_luc_1, file_contants.change_info_uyquyen],
+    name: [file_contants.change_info_quyetdinh, file_contants.change_info_phu_luc_2, file_contants.change_info_uyquyen],
 
     // Nội dung đăng ký thuế: "Phụ lục II-1","File_3_UyQuyen.doc",
-    tax: [file_contants.phu_luc_1, file_contants.change_info_uyquyen],
+    tax: [file_contants.change_info_phu_luc_2, file_contants.change_info_uyquyen],
   },
   pending: {
-    approve: {},
-    cancel: {},
+    approve: [file_contants.pending_uyquyen, file_contants.pending_quyetdinh, file_contants.pending_a_b],
+    cancel: [file_contants.pending_uyquyen, file_contants.pending_a_b],
   },
   dissolution: {
     approve: [file_contants.giai_the_1, file_contants.giai_the_A, file_contants.giai_the_uy_quyen],

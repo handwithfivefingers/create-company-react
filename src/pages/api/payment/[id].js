@@ -32,7 +32,7 @@ const createPayment = authenticated(async (req, res) => {
 });
 
 const handleSetOrderId = async (req, res, params) => {
-  const _com = await Company.findOneAndUpdate(
+  const _com = await Company.findOnupdateOneeAndUpdate(
     { _id: params._id },
     {
       orderId: params.orderId,

@@ -256,7 +256,7 @@ exports.getUrlReturn = async (req, res) => {
         payment: Number(1),
       };
 
-      await Order.findOneAndUpdate({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
+      await Order.updateOne({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
 
       console.log("updated Success");
       let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate("orderOwner", "_id name email");

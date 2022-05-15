@@ -480,6 +480,7 @@ const UserProductItem = (props) => {
         ...uy_quyen,
       },
     };
+    // console.log(params);
     saveService(params);
   };
 
@@ -498,7 +499,7 @@ const UserProductItem = (props) => {
         ...uy_quyen,
       },
     };
-
+    // console.log(params);
     saveService(params);
   };
 

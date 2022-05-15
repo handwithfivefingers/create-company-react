@@ -24,7 +24,7 @@ const UyQuyen = forwardRef((props, ref) => {
       <CCInput type="text" name={["uy_quyen", "approve", "per_type"]} label={"Dân tộc"} />
       <CCInput type="text" name={["uy_quyen", "approve", "national"]} label={"Quốc tịch"} />
       <CCInput type="text" name={["uy_quyen", "approve", "doc_code"]} label={"CMND/CCCD/Hộ chiếu số"} />
-      <CCInput type="text" name={["uy_quyen", "approve", "doc_time_provide"]} label={"Cấp ngày"} />
+      <CCInput type="date" name={["uy_quyen", "approve", "doc_time_provide"]} label={"Cấp ngày"} />
       <CCInput type="text" name={["uy_quyen", "approve", "doc_place_provide"]} label={"Nơi cấp"} />
       <CCInput type="text" name={["uy_quyen", "approve", "reg_address"]} label={"Nơi đăng ký hộ khẩu thường trú"} />
     </Form>

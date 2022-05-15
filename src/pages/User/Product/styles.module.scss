@@ -2,9 +2,16 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  @media (max-width: 768px) {
+  $w: 100%;
+  @media (min-width: 990px) and (max-width:1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 990px) {
     grid-template-columns: repeat(2, 1fr);
   }
+  // @media (max-width: 768px) {
+  //   grid-template-columns: repeat(2, 1fr);
+  // }
   @media (max-width: 525px) {
     grid-template-columns: 1fr;
   }

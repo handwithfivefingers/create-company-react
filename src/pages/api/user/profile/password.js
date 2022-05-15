@@ -28,7 +28,7 @@ const changePassword = authenticated(async (req, res) => {
 
   if (password) {
     const hash_password = await bcrypt.hash(new_password, 10);
-    let _new = await User.findOneAndUpdate({ _id: req.user }, { hash_password }, { new: true }).select(
+    let _new = await User.updateOne({ _id: req.user }, { hash_password }, { new: true }).select(
       "name email phone",
     );
     try {

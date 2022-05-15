@@ -41,6 +41,10 @@ export const LABEL = {
         town: "Xã/Phường/Thị Trấn",
         district: "Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh",
         city: "Tỉnh/Thành phố",
+        contact_reg_address: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
+        contact_town: "Xã/Phường/Thị Trấn",
+        contact_district: "Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh",
+        contact_city: "Tỉnh/Thành phố",
       },
       // Đăng ký thay đổi người đại diện theo pháp luật
     },
@@ -55,7 +59,25 @@ export const LABEL = {
     location: {
       // Đăng ký thay đổi địa chỉ trụ sở chính
       title: "Đăng ký thay đổi địa chỉ trụ sở chính",
-      fields: {},
+      fields: {
+        company_name: "Tên doanh nghiệp",
+        mst: "Mã số doanh nghiệp/ mã số thuế",
+        old: {
+          address: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn cũ",
+          town: "Xã/Phường/Thị Trấn cũ",
+          district: "Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh cũ",
+          city: "Tỉnh/Thành phố cũ",
+        },
+        new_location: {
+          address: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn mới",
+          town: "Xã/Phường/Thị Trấn mới",
+          district: "Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh mới",
+          city: "Tỉnh/Thành phố mới",
+        },
+        phone: "Số điện thoại",
+        inside: "Doanh nghiệp nằm trong",
+        legal_person: "Tên người đại diện pháp luật",
+      },
     },
     down_authorized_capital: {
       title: "Đăng kí thay đổi vốn điều lệ",
@@ -73,9 +95,102 @@ export const LABEL = {
         type: "Hình thức giảm vốn",
       },
     },
-    transfer_contract: { title: "Đăng ký thay đổi hợp đồng chuyển nhượng phần góp vốn", fields: {} },
-    company_career: { title: "Đăng ký thay đổi ngành nghề kinh doanh", fields: {} },
-    up_authorized_capital: { title: "Đăng kí thay đổi vốn điều lệ", fields: {} },
+    up_authorized_capital: {
+      title: "Đăng kí thay đổi vốn điều lệ",
+      fields: {
+        company_name: "Tên doanh nghiệp",
+        mst: "Mã số doanh nghiệp/ mã số thuế",
+        base_val: {
+          num: "Vốn điều lệ đã đăng ký (bằng số)",
+          char: "Vốn điều lệ đã đăng ký (bằng chữ)",
+        },
+        new_base_val: {
+          num: "Vốn điều lệ sau khi tăng (bằng số)",
+          char: "Vốn điều lệ sau khi tăng (bằng chữ)",
+        },
+        type: "Hình thức tăng vốn",
+      },
+    },
+    transfer_contract: {
+      title: "Đăng ký thay đổi hợp đồng chuyển nhượng phần góp vốn",
+      fields: {
+        company_name: "Tên doanh nghiệp",
+        mst: "Mã số doanh nghiệp",
+        A_side: {
+          owner: "Chủ sở hữu",
+          personal: {
+            name: "Họ và tên",
+            birth_day: "Ngày sinh",
+            doc_type: "Loại giấy tờ pháp lý",
+            doc_code: "Số giấy tờ pháp lý",
+            doc_time_provide: "Ngày cấp",
+            doc_place_provide: "Nơi cấp",
+            contact_address: "Địa chỉ liên lạc",
+          },
+          organization: {
+            company_name: "Tên doanh nghiệp",
+            mst: "Mã số doanh nghiệp",
+            company_address: {
+              street: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
+              town: "Xã/Phường/Thị trấn",
+              district: "Quận/Huyện/Thị xã/Thành phố thuộc tỉnh",
+              city: "Tỉnh/Thành phố",
+            },
+            legal_representative: "Người đại diện theo pháp luật của công ty",
+          },
+        },
+        B_side: {
+          owner: "Chủ sở hữu",
+          personal: {
+            name: "Họ và tên",
+            birth_day: "Ngày sinh",
+            doc_type: "Loại giấy tờ pháp lý",
+            doc_code: "Số giấy tờ pháp lý",
+            doc_time_provide: "Ngày cấp",
+            doc_place_provide: "Nơi cấp",
+            reg_address: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
+            town: "Xã/Phường/Thị Trấn",
+            district: "Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh",
+            city: "Tỉnh/Thành phố",
+            contact_reg_address: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
+            contact_town: "Xã/Phường/Thị Trấn",
+            contact_district: "Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh",
+            contact_city: "Tỉnh/Thành phố",
+          },
+          organization: {
+            company_name: "Tên doanh nghiệp",
+            mst: "Mã số doanh nghiệp",
+            company_address: {
+              street: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
+              town: "Xã/Phường/Thị trấn",
+              district: "Quận/Huyện/Thị xã/Thành phố thuộc tỉnh",
+              city: "Tỉnh/Thành phố",
+            },
+            legal_representative: "Người đại diện theo pháp luật của công ty",
+            legal_title: "Chức danh",
+            capital_contribution: {
+              current_value: "Vốn sở hữu",
+              type: "Loại chuyển nhượng",
+              will: "Phần vốn góp bên A muốn chuyển nhượng",
+              transfer_price: "Giá chuyển nhượng",
+              time_end: "Thời điểm hoàn thành việc chuyển nhượng (Chọn Ngày/ tháng/ năm)",
+            },
+          },
+        },
+      },
+    },
+    company_career: {
+      title: "Đăng ký thay đổi ngành nghề kinh doanh",
+      fields: {
+        company_name: "Tên doanh nghiệp",
+        mst: "Mã số doanh nghiệp",
+        include: "Bổ sung ngành, nghề kinh doanh",
+        exclude: "Bỏ ngành, nghề kinh doanh",
+        legal_person: "Tên người Đại diện pháp luật",
+        detail_after: "Sửa đổi chi tiết ngành, nghề kinh doanh sau",
+      },
+    },
+
     name: {
       title: "Đăng ký thay đổi tên doanh nghiệp",
       fields: {
@@ -87,7 +202,23 @@ export const LABEL = {
         legal_person: "Tên người đại diện pháp luật",
       },
     },
-    tax: { title: "Đăng ký thay đổi thông tin đăng ký thuế", fields: {} },
+    tax: {
+      title: "Đăng ký thay đổi thông tin đăng ký thuế",
+      fields: {
+        company_name: "Tên doanh nghiệp",
+        mst: "Mã số doanh nghiệp",
+        address: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
+        town: "Xã/Phường/Thị trấn",
+        district: "Quận/Huyện/Thị xã/Thành phố thuộc tỉnh",
+        city: "Tỉnh/Thành phố",
+        start_active: "Ngày bắt đầu hoạt động",
+        accounting: "Hình thức hạch toán",
+        start_date: "Bắt đầu từ ngày (chọn ngày/ tháng)",
+        end_date: "Đến ngày (chọn ngày/ tháng)",
+        employee: "Tổng số lao động",
+        active_BOT: "Có hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M không",
+      },
+    },
   },
   create_company: {
     // Thành lập công ty
@@ -145,22 +276,54 @@ export const LABEL = {
   pending: {
     cancel: {
       title: "Kinh doanh lại trước thời hạn",
-      fields: {},
+      fields: {
+        company_name: "Tên doanh nghiệp (ghi bằng chữ in hoa)",
+        mst: "Mã số doanh nghiệp/Mã số thuế",
+        obj: "Đối tượng tạm ngưng",
+        branch: {
+          branch_name: "Tên chi nhánh/văn phòng đại diện/địa điểm kinh doanh (ghi bằng chữ in hoa)",
+          resp_office: "Mã số thuế chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
+          branch_name_opt: "Tên chi nhánh (optional)",
+          branch_mst_opt: "Mã số chi nhánh/Mã số thuế của chi nhánh  (optional)",
+        },
+        time_range: {
+          start: "Thời gian đăng ký tạm ngưng từ",
+          end: "Thời gian đăng ký tạm ngưng đến",
+        },
+        // reason: "Lý do tạm ngưng",
+        org_person: "Tên người đại diện pháp luật/người đứng đầu chi nhánh",
+      },
       // Kinh doanh lại trước thời hạn
     },
     approve: {
       // Tạm ngưng kinh doanh
       title: "Tạm ngưng kinh doanh",
-      fields: {},
+      fields: {
+        company_name: "Tên doanh nghiệp (ghi bằng chữ in hoa)",
+        mst: "Mã số doanh nghiệp/Mã số thuế",
+        obj: "Đối tượng tạm ngưng",
+        branch: {
+          branch_name: "Tên chi nhánh/văn phòng đại diện/địa điểm kinh doanh (ghi bằng chữ in hoa)",
+          resp_office: "Mã số thuế chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
+          branch_name_opt: "Tên chi nhánh (optional)",
+          branch_mst_opt: "Mã số chi nhánh/Mã số thuế của chi nhánh  (optional)",
+        },
+        time_range: {
+          start: "Thời gian đăng ký tạm ngưng từ",
+          end: "Thời gian đăng ký tạm ngưng đến",
+        },
+        reason: "Lý do tạm ngưng",
+        org_person: "Tên người đại diện pháp luật/người đứng đầu chi nhánh",
+      },
     },
   },
   dissolution: {
     approve: {
       title: "Giải thể",
       fields: {
-        company_address: "Địa chỉ trụ sở chính",
         company_name: "Tên doanh nghiệp (ghi bằng chữ in hoa)",
         mst: "Mã số doanh nghiệp/Mã số thuế",
+        company_address: "Địa chỉ trụ sở chính",
         reason: "Lý do giải thể",
         representative: "Ông (bà) Chủ sở hữu/đại diện chủ sở hữu",
       },

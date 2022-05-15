@@ -67,7 +67,7 @@ exports.editTemplate = async (req, res) => {
   };
 
   try {
-    let _updated = await TemplateMail.findOneAndUpdate({ _id: id }, _update, { new: true });
+    let _updated = await TemplateMail.updateOne({ _id: id }, _update, { new: true });
 
     return updatedHandler(_updated, res);
   } catch (e) {

@@ -22,7 +22,6 @@ const ServiceRoute = require("./server/route/service");
 const UserRoute = require("./server/route/user");
 const MailRoute = require("./server/route/template");
 const SettingRoute = require("./server/route/setting");
-
 // DB
 mongoose
   .connect(

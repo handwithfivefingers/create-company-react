@@ -1,33 +1,63 @@
-import React, { forwardRef } from "react";
-import { Form, Input, Select, Card, DatePicker } from "antd";
-import styles from "./styles.module.scss";
+import { DatePicker, Form, Input, Button } from "antd";
 import clsx from "clsx";
+import React, { forwardRef, useEffect } from "react";
 import CCInput from "src/components/CCInput";
+import styles from "./styles.module.scss";
+
+const BASE_FORM = ["change_info", "legal_representative"];
 
 const DaiDienPhapLuat = forwardRef((props, ref) => {
   console.log(props);
+  useEffect(() => {
+    ref.current.setFieldsValue({
+      change_info: {
+        legal_representative: {
+          national: "Việt Nam",
+        },
+      },
+    });
+    // }
+  }, [ref]);
+
+  const handleFill = () => {
+    if (!ref) return;
+    let val = ref.current.getFieldsValue();
+    let { reg_address, town, district, city } = val.change_info.legal_representative;
+
+    ref.current.setFieldsValue({
+      change_info: {
+        legal_representative: {
+          contact_reg_address: reg_address,
+          contact_town: town,
+          contact_district: district,
+          contact_city: city,
+        },
+      },
+    });
+  };
+
   return (
     <Form.Item
-      label="Đăng ký thay đổi người đại diện theo pháp luật"
+      label={<h4>Đăng ký thay đổi người đại diện theo pháp luật</h4>}
       className={clsx(styles.current, {
         [styles.active]: props.current === props.index,
       })}
     >
-      <Form.Item label="Tên doanh nghiệp" name={["change_info", "legal_representative", "company_name"]}>
+      <Form.Item label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "legal_representative", "mst"]}>
+      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]}>
         <Input />
       </Form.Item>
 
-      <Form.Item label="Tên người đại diện pháp luật cũ" name={["change_info", "legal_representative", "old_name"]}>
+      <Form.Item label="Tên người đại diện pháp luật cũ" name={[...BASE_FORM, "old_name"]}>
         <Input />
       </Form.Item>
 
       <CCInput
         type="select"
-        name={["change_info", "legal_representative", "old_title"]}
+        name={[...BASE_FORM, "old_title"]}
         label="Chức danh"
         options={[
           {
@@ -46,13 +76,13 @@ const DaiDienPhapLuat = forwardRef((props, ref) => {
       />
 
       <Form.Item label="Thông tin người đại diện theo pháp luật sau khi thay đổi">
-        <Form.Item label="Họ và tên" name={["change_info", "legal_representative", "new_name"]}>
+        <Form.Item label="Họ và tên" name={[...BASE_FORM, "new_name"]}>
           <Input />
         </Form.Item>
 
         <CCInput
           type="select"
-          name={["change_info", "legal_representative", "gender"]}
+          name={[...BASE_FORM, "gender"]}
           label="Giới tính"
           options={[
             { value: "Nữ", name: "Nữ" },
@@ -61,7 +91,7 @@ const DaiDienPhapLuat = forwardRef((props, ref) => {
         />
         <CCInput
           type="select"
-          name={["change_info", "legal_representative", "new_title"]}
+          name={[...BASE_FORM, "new_title"]}
           label="Chức danh"
           options={[
             {
@@ -79,21 +109,21 @@ const DaiDienPhapLuat = forwardRef((props, ref) => {
           ]}
         />
 
-        <Form.Item name={["change_info", "legal_representative", "birth_day"]} label="Sinh ngày">
-          <DatePicker />
+        <Form.Item name={[...BASE_FORM, "birth_day"]} label="Sinh ngày">
+          <DatePicker style={{ width: "100%" }} inputReadOnly />
         </Form.Item>
 
-        <Form.Item name={["change_info", "legal_representative", "per_type"]} label="Dân tộc">
+        <Form.Item name={[...BASE_FORM, "per_type"]} label="Dân tộc">
           <Input />
         </Form.Item>
 
-        <Form.Item name={["change_info", "legal_representative", "national"]} label="Quốc tịch">
+        <Form.Item name={[...BASE_FORM, "national"]} label="Quốc tịch">
           <Input />
         </Form.Item>
 
         <CCInput
           type="select"
-          name={["change_info", "legal_representative", "doc_type"]}
+          name={[...BASE_FORM, "doc_type"]}
           label="Loại giấy tờ pháp lý"
           options={[
             { name: "CMND", value: "CMND" },
@@ -102,34 +132,47 @@ const DaiDienPhapLuat = forwardRef((props, ref) => {
           ]}
         />
 
-        <Form.Item name={["change_info", "legal_representative", "doc_code"]} label="Số CMND/ CCCD/ Hộ chiếu">
+        <Form.Item name={[...BASE_FORM, "doc_code"]} label="Số CMND/ CCCD/ Hộ chiếu">
           <Input />
         </Form.Item>
 
-        <Form.Item name={["change_info", "legal_representative", "doc_time_provide"]} label="Ngày cấp">
-          <DatePicker />
+        <Form.Item name={[...BASE_FORM, "doc_time_provide"]} label="Ngày cấp">
+          <DatePicker style={{ width: "100%" }} inputReadOnly />
         </Form.Item>
 
-        <Form.Item name={["change_info", "legal_representative", "doc_place_provide"]} label="Nơi cấp">
+        <Form.Item name={[...BASE_FORM, "doc_place_provide"]} label="Nơi cấp">
           <Input />
         </Form.Item>
+        
         <Form.Item label="Địa chỉ thường trú">
+          <Form.Item name={[...BASE_FORM, "reg_address"]} label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn">
+            <Input />
+          </Form.Item>
+          <Form.Item name={[...BASE_FORM, "town"]} label="Xã/Phường/Thị Trấn">
+            <Input />
+          </Form.Item>
+          <Form.Item name={[...BASE_FORM, "district"]} label="Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh">
+            <Input />
+          </Form.Item>
+          <Form.Item name={[...BASE_FORM, "city"]} label="Tỉnh/Thành phố">
+            <Input />
+          </Form.Item>
+        </Form.Item>
+        <Form.Item label="Địa chỉ liên lạc">
+          <Button onClick={handleFill}>Tự động điền</Button>
           <Form.Item
-            name={["change_info", "legal_representative", "reg_address"]}
+            name={[...BASE_FORM, "contact_reg_address"]}
             label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn"
           >
             <Input />
           </Form.Item>
-          <Form.Item name={["change_info", "legal_representative", "town"]} label="Xã/Phường/Thị Trấn">
+          <Form.Item name={[...BASE_FORM, "contact_town"]} label="Xã/Phường/Thị Trấn">
             <Input />
           </Form.Item>
-          <Form.Item
-            name={["change_info", "legal_representative", "district"]}
-            label="Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh"
-          >
+          <Form.Item name={[...BASE_FORM, "contact_district"]} label="Quận/Huyện/Thị Xã/Thành phố thuộc tỉnh">
             <Input />
           </Form.Item>
-          <Form.Item name={["change_info", "legal_representative", "city"]} label="Tỉnh/Thành phố">
+          <Form.Item name={[...BASE_FORM, "contact_city"]} label="Tỉnh/Thành phố">
             <Input />
           </Form.Item>
         </Form.Item>

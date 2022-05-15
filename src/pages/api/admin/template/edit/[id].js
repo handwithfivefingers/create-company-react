@@ -31,7 +31,7 @@ const editTemplate = authenticated(async (req, res) => {
     subject: req.body.subject,
   };
 
-  let _updated = await TemplateMail.findOneAndUpdate({ _id: id }, _update, { new: true });
+  let _updated = await TemplateMail.updateOne({ _id: id }, _update, { new: true });
 
   try {
     return updatedHandler(_updated, res);

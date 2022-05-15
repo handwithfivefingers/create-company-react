@@ -45,3 +45,29 @@
     font-size: 14px;
   }
 }
+
+/// Pop over
+
+.popover {
+  // background:red;
+  max-width: 600px;
+  max-height: 500px;
+  overflow: auto;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 18px;
+    color: #eee !important;
+  }
+  p,
+  a {
+    font-size: 14px;
+  }
+  p {
+    margin: 0 0 4px 0;
+    color: #eee;
+  }
+}

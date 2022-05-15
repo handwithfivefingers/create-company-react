@@ -13,10 +13,10 @@ import moment from "moment";
 import "aos/dist/aos.css";
 import "./assets/css/styles.scss";
 
-
 ConfigProvider.config({
   theme: {
     primaryColor: "#cd2027",
+    // primaryColor: "#791314",
   },
 });
 
@@ -64,7 +64,7 @@ function App() {
   const authReducer = useSelector((state) => state.authReducer);
 
   useEffect(() => {
-    moment.defaultFormat = "YYYY-MM-DD";
+    moment.defaultFormat = "DD/MM/YYYY";
   }, []);
 
   return (

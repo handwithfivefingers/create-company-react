@@ -15,7 +15,6 @@ const TamHoanForm = forwardRef((props, ref) => {
       xhtml = <TamNgungKinhDoanh current={props.current} index={1} />;
     }
     if (type === "2") xhtml = <KinhDoanhLaiTruocThoiHan current={props.current} index={1} />;
-
     return xhtml;
   };
   const handleOnChange = (val, opt) => {

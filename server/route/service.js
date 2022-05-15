@@ -10,6 +10,6 @@ router.post("/sendmail", upload.array("attachments", 5), sendmailWithAttachments
 
 router.post("/payment", upload.none(), handlePayment);
 
-router.get("/service/order", checkingOrder);
+router.post("/service/order", checkingOrder);
 
 module.exports = router;

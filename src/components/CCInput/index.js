@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Form, Input, InputNumber, DatePicker, Select, disabled } from "antd";
 
+const { RangePicker } = DatePicker;
+
 export default function CCInput(props) {
   const { name, label, value, onChange, style, placeholder, defaultValue, ...rest } = props;
   const [optional, setOptional] = useState([]);
@@ -18,7 +20,13 @@ export default function CCInput(props) {
     case "text":
       return (
         <Form.Item value={value} name={name} label={label || " "}>
-          <Input onChange={onChange} style={style} placeholder={placeholder} disabled={props?.disabled} autocomplete="off"/>
+          <Input
+            onChange={onChange}
+            style={style}
+            placeholder={placeholder}
+            disabled={props?.disabled}
+            autocomplete="off"
+          />
         </Form.Item>
       );
     case "number":
@@ -39,10 +47,24 @@ export default function CCInput(props) {
         <Form.Item name={props.name} label={props?.label || " "}>
           <DatePicker
             style={{ ...props.style, width: "100%" }}
-            format="YYYY-MM-DD"
+            format="DD/MM/YYYY"
             placeholder={props?.placeholder}
-            {...rest}
             autocomplete="off"
+            inputReadOnly
+            {...rest}
+          />
+        </Form.Item>
+      );
+    case "date-range":
+      return (
+        <Form.Item name={props.name} label={props?.label || " "}>
+          <RangePicker
+            style={{ ...props.style, width: "100%" }}
+            format="DD/MM/YYYY"
+            placeholder={props?.placeholder}
+            autocomplete="off"
+            inputReadOnly
+            {...rest}
           />
         </Form.Item>
       );
@@ -56,11 +78,13 @@ export default function CCInput(props) {
         <Form.Item name={name} label={label || " "}>
           <Select
             onSelect={props?.onSelect}
+            onChange={props?.onChange}
             disabled={props?.disabled}
             defaultValue={defaultValue}
             defaultActiveFirstOption={props?.defaultActiveFirstOption}
             onDropdownVisibleChange={handleOptions}
             autocomplete="off"
+            style={props?.style}
           >
             {optional?.map((item, i) => {
               return (

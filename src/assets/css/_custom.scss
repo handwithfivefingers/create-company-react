@@ -45,7 +45,7 @@
 // custom ant
 .cc-card {
   display: grid;
-  overflow:auto;
+  overflow: auto;
   max-height: calc(100vh - 70px);
 }
 
@@ -71,3 +71,61 @@ select:focus,
 textarea {
   font-size: 16px;
 }
+
+/// Side bar
+$color: var(--text4);
+$bg: #fff;
+// .ant-layout-sider {
+//   background: $bg;
+//   border-radius: 4px;
+//   box-shadow: 0 10px 20px -10px #ccc;
+
+//   .ant-menu,
+//   .ant-menu-sub {
+//     background: $bg;
+//     .ant-menu-item {
+//       margin: 0;
+//       font-size: 16px;
+//       &:not(:first-child) {
+//         border-top: 1px solid #eee;
+//       }
+//       svg,
+//       span svg {
+//         font-size: 14px;
+//       }
+//       svg,
+//       span svg,
+//       span,
+//       span a {
+//         color: #333;
+//       }
+//       &:hover {
+//         background: var(--ant-primary-color);
+//         svg,
+//         span svg,
+//         span,
+//         span a {
+//           color: #fff;
+//         }
+//       }
+//     }
+//     .ant-menu-item.ant-menu-item-selected {
+//       svg,
+//       span svg,
+//       span,
+//       span a {
+//         color: #fff;
+//       }
+//     }
+//   }
+// }
+
+// .ant-layout-sider-trigger {
+//   background: #fff;
+//   border-radius: 0 0 4px 4px;
+//   span {
+//     svg {
+//       color: var(--dark);
+//     }
+//   }
+// }

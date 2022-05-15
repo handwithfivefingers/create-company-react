@@ -99,7 +99,7 @@ const saveOrder = async (req, res) => {
     var rspCode = vnp_Params["vnp_ResponseCode"];
     // console.log(orderId, rspCode)
     if (orderId) {
-      let _com = await Order.findOneAndUpdate(
+      let _com = await Order.updateOne(
         {
           orderId: orderId,
         },

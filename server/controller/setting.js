@@ -9,7 +9,7 @@ exports.settingTemplateMail = async (req, res) => {
     });
     let data;
     if (_setting) {
-      data = await Setting.findOneAndUpdate({ userOwner: req.id }, { mailRegister, mailPayment }, { new: true });
+      data = await Setting.updateOne({ userOwner: req.id }, { mailRegister, mailPayment }, { new: true });
     } else {
       let _obj = new Setting({
         mailRegister,

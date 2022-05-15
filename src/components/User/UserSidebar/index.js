@@ -58,6 +58,7 @@ const UserSidebar = (props) => {
         breakpoint={"md"}
         reverseArrow={true}
         trigger={<div className={styles.trigger}>{!collapsed ? <CaretLeftOutlined /> : <CaretRightOutlined />}</div>}
+        className={styles.sidebar}
       >
         <div className="logo" style={{ height: 64 }} />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={[current]} selectedKeys={[current]}>
