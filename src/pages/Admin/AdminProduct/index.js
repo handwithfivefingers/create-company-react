@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import CategoryForm from "src/components/Form/CategoryForm";
 import FormProduct from "src/components/Form/Product";
 import axios from "src/config/axios";
-import { number_format } from "src/helper/Common";
+import { number_format, makeid } from "src/helper/Common";
 import AdminProductService from "src/service/AdminService/AdminProductService";
 
 const { TabPane } = Tabs;
@@ -217,15 +217,6 @@ const AdminProduct = (props) => {
       });
   };
 
-  function makeid(length) {
-    var result = "";
-    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
   return (
     <>
       <Card

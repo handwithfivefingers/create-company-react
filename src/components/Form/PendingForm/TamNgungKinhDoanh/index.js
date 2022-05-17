@@ -1,11 +1,10 @@
 import React, { forwardRef, useState } from "react";
-import { Form, Input, Select, DatePicker, Button, Space, Row, Col } from "antd";
+import { Form, Input, Select, Button, Space, Row, Col } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 import clsx from "clsx";
 import styles from "../styles.module.scss";
-
-const { RangePicker } = DatePicker;
+import CCInput from "src/components/CCInput";
 
 const BASE_FORM = ["pending", "approve"];
 
@@ -14,6 +13,20 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
   const handleChange = (val, opt) => {
     setObjective(val);
   };
+
+  const handleDateChange = (date, dateString) => {
+    ref.current.setFieldsValue({
+      pending: {
+        cancel: {
+          time_range: {
+            start: dateString?.[0],
+            end: dateString?.[1],
+          },
+        },
+      },
+    });
+  };
+
   return (
     <Form.Item
       label="Đăng ký tạm ngưng kinh doanh"
@@ -21,20 +34,27 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      <Form.Item name={[...BASE_FORM, "company_name"]} label="Tên doanh nghiệp (ghi bằng chữ in hoa)">
-        <Input />
-      </Form.Item>
-      <Form.Item name={[...BASE_FORM, "mst"]} label="Mã số doanh nghiệp/Mã số thuế">
-        <Input />
-      </Form.Item>
-      <Form.Item name={[...BASE_FORM, "obj"]} label="Đối tượng tạm ngưng">
-        <Select onChange={handleChange}>
-          <Select.Option value={"Toàn bộ công ty"}>Toàn bộ công ty</Select.Option>
-          <Select.Option value={"Chi nhánh/văn phòng đại diện/địa điểm kinh doanh"}>
-            Chi nhánh/văn phòng đại diện/địa điểm kinh doanh
-          </Select.Option>
-        </Select>
-      </Form.Item>
+
+      <CCInput name={[...BASE_FORM, "company_name"]} label="Tên doanh nghiệp (ghi bằng chữ in hoa)" />
+
+      <CCInput name={[...BASE_FORM, "mst"]} label="Mã số doanh nghiệp/Mã số thuế" />
+
+      <CCInput
+        type="select"
+        name={[...BASE_FORM, "obj"]}
+        label="Đối tượng tạm ngưng"
+        onChange={handleChange}
+        options={[
+          {
+            name: "Toàn bộ công ty",
+            value: "Toàn bộ công ty",
+          },
+          {
+            name: "Chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
+            value: "Chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
+          },
+        ]}
+      />
 
       {objective === "Toàn bộ công ty" ? (
         ""
@@ -46,24 +66,14 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
 
       {/** <<<<- Group*/}
 
-      <Form.Item
+      <CCInput
         name={[...BASE_FORM, "time_range"]}
         label="Thời gian đăng ký tạm ngưng (từ ngày/tháng/năm đến ngày/tháng/năm)"
-      >
-        {/* <RangePicker style={{ width: "100%" }} inputReadOnly /> */}
-        <Form.Item name={[...BASE_FORM, "time_range", "start"]}>
-          <DatePicker style={{ width: "100%" }} inputReadOnly />
-        </Form.Item>
-        <Form.Item name={[...BASE_FORM, "time_range", "end"]}>
-          <DatePicker style={{ width: "100%" }} inputReadOnly />
-        </Form.Item>
-      </Form.Item>
-      <Form.Item name={[...BASE_FORM, "reason"]} label="Lý do tạm ngưng">
-        <Input />
-      </Form.Item>
-      <Form.Item name={[...BASE_FORM, "org_person"]} label="Tên người đại diện pháp luật/người đứng đầu chi nhánh">
-        <Input />
-      </Form.Item>
+        onChange={handleDateChange}
+      />
+
+      <CCInput name={[...BASE_FORM, "reason"]} label="Lý do tạm ngưng" />
+      <CCInput name={[...BASE_FORM, "org_person"]} label="Tên người đại diện pháp luật/người đứng đầu chi nhánh" />
     </Form.Item>
   );
 });

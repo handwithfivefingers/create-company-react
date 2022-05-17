@@ -1,5 +1,6 @@
 import { Button, Card, message, Modal, Tabs } from "antd";
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CCSteps from "src/components/CCHeaderSteps";
 import ChangeInforForm from "src/components/Form/ChangeInforForm";
 import CreateCompany from "src/components/Form/CreateCompany";
@@ -25,6 +26,9 @@ const UserProductItem = (props) => {
   const [current, setCurrent] = useState(0);
 
   const [data, setData] = useState();
+  const [loading, setLoading] = useState();
+
+  const navigate = useNavigate();
 
   const [changeInforStep, setChangeInforStep] = useState([
     {
@@ -148,8 +152,8 @@ const UserProductItem = (props) => {
                 {current < 8 ? <Button onClick={Next}>Next</Button> : ""}
                 {current === 8 ? (
                   <>
-                    <Button onClick={handleSave}>Lưu lại</Button>
-                    <Button onClick={handlePurchaseCreateCompany}>Thanh toán</Button>
+                    <Button loading={loading} onClick={handleSave}>Lưu lại</Button>
+                    <Button loading={loading} onClick={handlePurchaseCreateCompany}>Thanh toán</Button>
                   </>
                 ) : (
                   ""
@@ -180,8 +184,8 @@ const UserProductItem = (props) => {
 
               {current === changeInforStep.length - 1 ? (
                 <>
-                  <Button onClick={handleSaveChangeInfo}>Lưu lại</Button>
-                  <Button onClick={handlePurchaseChangeInfo}>Thanh toán</Button>
+                  <Button loading={loading} onClick={handleSaveChangeInfo}>Lưu lại</Button>
+                  <Button loading={loading} onClick={handlePurchaseChangeInfo}>Thanh toán</Button>
                 </>
               ) : (
                 ""
@@ -209,8 +213,8 @@ const UserProductItem = (props) => {
               {current < 3 ? <Button onClick={Next}>Next</Button> : ""}
               {current === 3 ? (
                 <>
-                  <Button onClick={handleSavePending}>Lưu lại</Button>
-                  <Button onClick={handlePurchasePending}>Thanh toán</Button>
+                  <Button loading={loading} onClick={handleSavePending}>Lưu lại</Button>
+                  <Button loading={loading} onClick={handlePurchasePending}>Thanh toán</Button>
                 </>
               ) : (
                 ""
@@ -237,8 +241,8 @@ const UserProductItem = (props) => {
               {current < 3 ? <Button onClick={Next}>Next</Button> : ""}
               {current === 3 ? (
                 <>
-                  <Button onClick={handleSaveDissolution}>Lưu lại</Button>
-                  <Button onClick={handlePurchaseDissolution}>Thanh toán</Button>
+                  <Button loading={loading} onClick={handleSaveDissolution}>Lưu lại</Button>
+                  <Button loading={loading} onClick={handlePurchaseDissolution}>Thanh toán</Button>
                 </>
               ) : (
                 ""
@@ -462,8 +466,8 @@ const UserProductItem = (props) => {
         ...body,
       },
     };
-    console.log(params);
-    // saveService(params);
+    // console.log(params);
+    saveService(params);
   };
 
   const handleSaveChangeInfo = () => {
@@ -523,15 +527,18 @@ const UserProductItem = (props) => {
 
   // Service
   const saveService = (params) => {
+    setLoading(true);
     ProductService.createCompany(params)
       .then((res) => {
         if (res.data.status === 200) {
           message.success(res.data.message);
+          navigate("/user/san-pham");
         }
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const paymentService = (params) => {

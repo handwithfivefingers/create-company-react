@@ -4,6 +4,7 @@ import clsx from "clsx";
 import styles from "./styles.module.scss";
 import TamNgungKinhDoanh from "./TamNgungKinhDoanh";
 import KinhDoanhLaiTruocThoiHan from "./KinhDoanhLaiTruocThoiHan";
+import { makeid } from "src/helper/Common";
 const TamHoanForm = forwardRef((props, ref) => {
   const [productSelect, setProductSelect] = useState("");
 
@@ -12,13 +13,13 @@ const TamHoanForm = forwardRef((props, ref) => {
   const renderFormByType = (type) => {
     let xhtml = null;
     if (type === "1") {
-      xhtml = <TamNgungKinhDoanh current={props.current} index={1} />;
+      xhtml = <TamNgungKinhDoanh ref={ref} current={props.current} index={1} />;
     }
-    if (type === "2") xhtml = <KinhDoanhLaiTruocThoiHan current={props.current} index={1} />;
+    if (type === "2") xhtml = <KinhDoanhLaiTruocThoiHan ref={ref} current={props.current} index={1} />;
     return xhtml;
   };
+
   const handleOnChange = (val, opt) => {
-    console.log("change ???");
     setSelectType(opt);
     if (props.onFinishScreen) {
       props.onFinishScreen(opt);

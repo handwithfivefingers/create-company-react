@@ -19,8 +19,10 @@ ConfigProvider.config({
     // primaryColor: "#791314",
   },
 });
+moment.defaultFormat = "DD/MM/YYYY";
 
 const RouterComponent = (props) => {
+  
   let location = useLocation();
 
   const Route = useRoutes(LAYOUT_ROUTER(props.auth)); // status, role
@@ -64,7 +66,7 @@ function App() {
   const authReducer = useSelector((state) => state.authReducer);
 
   useEffect(() => {
-    moment.defaultFormat = "DD/MM/YYYY";
+   
   }, []);
 
   return (

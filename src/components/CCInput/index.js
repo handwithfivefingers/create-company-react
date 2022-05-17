@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { Form, Input, InputNumber, DatePicker, Select, disabled } from "antd";
-
+import { makeid } from "src/helper/Common";
 const { RangePicker } = DatePicker;
 
-export default function CCInput(props) {
+const CCInput = forwardRef((props, ref) => {
   const { name, label, value, onChange, style, placeholder, defaultValue, ...rest } = props;
   const [optional, setOptional] = useState([]);
   const handleOptions = () => {
@@ -16,6 +16,8 @@ export default function CCInput(props) {
     }
     setOptional(option);
   };
+
+
   switch (props.type) {
     case "text":
       return (
@@ -49,24 +51,32 @@ export default function CCInput(props) {
             style={{ ...props.style, width: "100%" }}
             format="DD/MM/YYYY"
             placeholder={props?.placeholder}
-            autocomplete="off"
-            inputReadOnly
+            autocomplete={props?.autocomplete || "off"}
+            inputReadOnly={props?.inputReadOnly || true}
+            onChange={onChange}
             {...rest}
           />
         </Form.Item>
       );
     case "date-range":
       return (
-        <Form.Item name={props.name} label={props?.label || " "}>
-          <RangePicker
-            style={{ ...props.style, width: "100%" }}
-            format="DD/MM/YYYY"
-            placeholder={props?.placeholder}
-            autocomplete="off"
-            inputReadOnly
-            {...rest}
-          />
-        </Form.Item>
+        <>
+          <Form.Item name={props?.name} style={{ display: "none" }}>
+            <RangePicker inputReadOnly format="MM/DD/YYYY" />
+          </Form.Item>
+
+          <Form.Item name={makeid(9)} label={props?.label || " "}>
+            <RangePicker
+              inputReadOnly={props?.inputReadOnly || true}
+              onChange={onChange}
+              format="MM/DD/YYYY"
+              style={{ ...props.style, width: "100%" }}
+              placeholder={placeholder}
+              autocomplete={props?.autocomplete || "off"}
+              {...rest}
+            />
+          </Form.Item>
+        </>
       );
     case "select":
       let option;
@@ -97,6 +107,18 @@ export default function CCInput(props) {
         </Form.Item>
       );
     default:
-      return null;
+      return (
+        <Form.Item value={value} name={name} label={label || " "}>
+          <Input
+            onChange={onChange}
+            style={style}
+            placeholder={placeholder}
+            disabled={props?.disabled}
+            autocomplete={props?.autocomplete || "off"}
+          />
+        </Form.Item>
+      );
   }
-}
+});
+
+export default CCInput;

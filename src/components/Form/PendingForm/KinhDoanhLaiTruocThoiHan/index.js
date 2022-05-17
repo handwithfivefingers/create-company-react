@@ -4,6 +4,7 @@ import CCInput from "src/components/CCInput";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./../styles.module.scss";
 import clsx from "clsx";
+import { makeid } from "src/helper/Common";
 const { RangePicker } = DatePicker;
 const BASE_FORM = ["pending", "cancel"];
 
@@ -12,9 +13,22 @@ const KinhDoanhLaiTruocThoiHan = forwardRef((props, ref) => {
   // Đăng ký tiếp tục kinh doanh kể từ ngày/tháng/năm
   // Lý do tiếp tục kinh doanh
   const [objective, setObjective] = useState("");
+
   const handleChange = (val) => {
-    setObjective(val);
     console.log(val);
+  };
+  
+  const handleDateChange = (date, dateString) => {
+    ref.current.setFieldsValue({
+      pending: {
+        cancel: {
+          time_range: {
+            start: dateString?.[0],
+            end: dateString?.[1],
+          },
+        },
+      },
+    });
   };
   return (
     <Form.Item
@@ -53,10 +67,13 @@ const KinhDoanhLaiTruocThoiHan = forwardRef((props, ref) => {
         </Row>
       )}
 
-      <Form.Item name={[...BASE_FORM, "time_range"]} label="Đăng ký tiếp tục kinh doanh kể từ ngày/tháng/năm">
-        {/* <Input /> */}
-        <RangePicker inputReadOnly style={{ width: "100%" }} />
-      </Form.Item>
+      <CCInput
+        type="date-range"
+        name={[...BASE_FORM, "time_range"]}
+        label="Đăng ký tiếp tục kinh doanh kể từ ngày/tháng/năm"
+        onChange={handleDateChange}
+      />
+
       <Form.Item name={[...BASE_FORM, "reason"]} label="Lý do tiếp tục kinh doanh">
         <Input />
       </Form.Item>

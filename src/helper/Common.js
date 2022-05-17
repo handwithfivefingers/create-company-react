@@ -157,3 +157,27 @@ export const checkMoment = (date) => {
     console.log("this is a moment object");
   }
 };
+
+export const log = (...rest) => {
+  let stringLog = "";
+  // return rest.map(item => )
+  if (typeof rest !== "string" || typeof rest !== "number") {
+    // return console.log(rest)
+    stringLog = rest;
+  } else {
+    for (let item in rest) {
+      stringLog += `${[item]}, ${rest[item]} <--->`;
+    }
+  }
+  return stringLog;
+};
+
+export const makeid = (length) => {
+  var result = "";
+  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};

@@ -23,6 +23,16 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
     }
   };
 
+  const handleChange = (value, opt, pathName) => {
+    // let val = formRef.current.getFieldsValue();
+    ref.current.setFieldsValue({
+      change_info: {
+        company_career: {
+          [pathName]: opt,
+        },
+      },
+    });
+  };
   return (
     <Form.Item
       label={<h4>Thông báo thay đổi ngành, nghề kinh doanh</h4>}
@@ -50,13 +60,10 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
           mode="multiple"
           optionFilterProp="children"
           filterOption={(input, option) => option.children.join("").toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          onClear={() => {
-            // formRef.current.setFieldsValue({ career_id: "" });
-            onFetchCareer();
-          }}
+          onChange={(val, opt) => handleChange(val, opt, "include")}
         >
           {career.map((item) => (
-            <Select.Option key={item._id} value={item._id}>
+            <Select.Option key={item._id} value={item._id} name={item.name}>
               {item.code}-{item.name}
             </Select.Option>
           ))}
@@ -74,13 +81,15 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
           mode="multiple"
           optionFilterProp="children"
           filterOption={(input, option) => option.children.join("").toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          onClear={() => {
-            // formRef.current.setFieldsValue({ career_id: "" });
-            onFetchCareer();
-          }}
+          onChange={(val, opt) => handleChange(val, opt, "exclude")}
+
+          // onClear={() => {
+          //   // formRef.current.setFieldsValue({ career_id: "" });
+          //   onFetchCareer();
+          // }}
         >
           {career.map((item) => (
-            <Select.Option key={item._id} value={item._id}>
+            <Select.Option key={item._id} value={item._id} name={item.name}>
               {item.code}-{item.name}
             </Select.Option>
           ))}
@@ -105,13 +114,14 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
           mode="multiple"
           optionFilterProp="children"
           filterOption={(input, option) => option.children.join("").toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          onClear={() => {
-            // formRef.current.setFieldsValue({ career_id: "" });
-            onFetchCareer();
-          }}
+          onChange={(val, opt) => handleChange(val, opt, "detail_after")}
+          // onClear={() => {
+          //   // formRef.current.setFieldsValue({ career_id: "" });
+          //   onFetchCareer();
+          // }}
         >
           {career.map((item) => (
-            <Select.Option key={item._id} value={item._id}>
+            <Select.Option key={item._id} value={item._id} name={item.name}>
               {item.code}-{item.name}
             </Select.Option>
           ))}

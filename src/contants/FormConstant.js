@@ -197,6 +197,7 @@ export const LABEL = {
         company_name: "Tên doanh nghiệp",
         mst: "Mã số doanh nghiệp/ mã số thuế",
         base_type: "Doanh nghiệp đăng ký thay đổi tên cơ sở",
+        name_vi: "Tên công ty bằng tiếng Việt",
         name_en: "Tên công ty bằng tiếng nước ngoài",
         name_etc: "Tên công ty viết tắt",
         legal_person: "Tên người đại diện pháp luật",

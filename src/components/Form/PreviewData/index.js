@@ -1,12 +1,11 @@
 import React from "react";
-import { Card, Row, Col, Typography, Descriptions } from "antd";
 import moment from "moment";
-import { FormFieldText, BaseFieldText } from "../../../contants/Common";
-import { number_format, renderField, flattenObject } from "../../../helper/Common";
 import { LABEL } from "src/contants/FormConstant";
 import CCDescription from "src/components/CCDescription";
+
+const listOfFields = ["company_opt_career", "include", "exclude", "detail_after"];
+
 const PreviewData = ({ data }) => {
-  // console.log(data, "data");
 
   const renderTitle = (newData, label) => {
     let xhtml = "";
@@ -15,27 +14,6 @@ const PreviewData = ({ data }) => {
     }
     return xhtml;
   };
-
-  // const checkData = (pathName) => {
-  //   let xhtml = [];
-  //   for (let property in LABEL[pathName]) {
-  //     let label = LABEL[pathName][property].fields;
-  //     xhtml.push(
-  //       Object.keys(label).map((item) => {
-  //         console.log("data valid");
-  //         return data?.[pathName]?.[property]?.[item] ? (
-  //           <Descriptions.Item key={[pathName, item]} label={label?.[item]}>
-  //             {data?.[pathName]?.[property]?.[item]}
-  //           </Descriptions.Item>
-  //         ) : (
-  //           ""
-  //         );
-  //       })
-  //     );
-  //   }
-
-  //   return xhtml;
-  // };
 
   const checkData = (newData, label) => {
     let xhtml = [];
@@ -75,26 +53,36 @@ const PreviewData = ({ data }) => {
   };
 
   const checkTitle = (keys, index) => {
-    if (keys === "legal_respon") {
-      return `Người Đại Diện Pháp Luật ${index + 1}`;
-    } else if (keys === "company_opt_career") {
-      return `Ngành nghề phụ ${index + 1}`;
+    switch (keys) {
+      case "legal_respon":
+        return `Người Đại Diện Pháp Luật ${index + 1}`;
+      case "company_opt_career":
+        return `Ngành nghề phụ ${index + 1}`;
+      case "detail_after":
+        return `Sửa đổi chi tiết ngành, nghề ${index + 1}`;
+      case "exclude":
+        return `Bỏ ngành, nghề ${index + 1}`;
+      case "include":
+        return `Ngành nghề bổ sung ${index + 1}`;
+      default:
+        return "";
     }
-    return "";
+    // return "";
   };
   /**
    *
    * @param {current Obj || Array || String} item
    * @param {current Label Path} label
-   * @param {*} keys
+   * @param {field Name} keys
    * @param {*} index1
    * @param {*} index2
    * @returns
    */
   const renderDescription = (item, label, keys = null, index1 = null, index2 = null) => {
+
     let itemVariable = checkVariable(item);
-    // {name, key , value}
-    console.log(item, label, keys, index1, index2);
+
+    // console.log("item", item, "label", label, "keys", keys, "index1", index1, "index2", index2);
 
     if (itemVariable === "String") {
       return (
@@ -107,11 +95,13 @@ const PreviewData = ({ data }) => {
       );
     } else if (itemVariable === "Array") {
       return item.map((arrayItem, arrayIndex) => {
-        if (keys === "company_opt_career") {
-          let careerObj = [arrayItem.name];
+        // Special Fields ....
+        let isSpecial = handleSpecialFields(keys);
+        if (isSpecial) {
+          let specialObject = [arrayItem.name];
           return (
             <CCDescription.DescListItem title={checkTitle(keys, arrayIndex)}>
-              {renderDescription(careerObj, label, index1, arrayIndex)}
+              {renderDescription(specialObject, label, index1, arrayIndex)}
             </CCDescription.DescListItem>
           );
         } else
@@ -124,7 +114,7 @@ const PreviewData = ({ data }) => {
     } else if (itemVariable === "Moment") {
       return (
         <CCDescription.DescItem key={[label, index1]} label={[label, index2 > 0 ? [" - ", index2 + 1] : ""]}>
-          {moment(item).format("YYYY-MM-DD")}
+          {moment(item).format("DD/MM/YYY")}
         </CCDescription.DescItem>
       );
     } else if (itemVariable === "Object") {
@@ -135,30 +125,9 @@ const PreviewData = ({ data }) => {
     }
   };
 
-  // const renderFormByArray = (array, name = "") => {
-  //   let xhtml = null;
-  //   xhtml = array?.map((item, index) => {
-  //     if (Object.keys(item).length > 0) {
-  //       return Object.keys(item).map((key) => {
-  //         if (key.includes("time") || key.includes("birth")) {
-  //           return (
-  //             <Descriptions.Item label={[name, " ", index + 1]}>
-  //               {moment(item[key]).format("YYYY-MM-DD")}
-  //             </Descriptions.Item>
-  //           );
-  //         }
-  //         if (name === "Ngành nghề phụ") {
-  //           if (["code", "key", "value", "name"].includes(key)) return "";
-  //           return <Descriptions.Item label={[name, " ", index + 1]}>{item["children"]}</Descriptions.Item>;
-  //         }
-  //         return <Descriptions.Item label={[name, " ", key, " ", index + 1]}>{item[key]}</Descriptions.Item>;
-  //       });
-  //     }
-  //     return item;
-  //   });
-
-  //   return xhtml;
-  // };
+  const handleSpecialFields = (field) => {
+    return listOfFields.some((item) => item === field);
+  };
 
   if (data) {
     let xhtml = [];

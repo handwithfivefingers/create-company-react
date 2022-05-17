@@ -535,13 +535,7 @@ const CreateCompany = forwardRef((props, formRef) => {
                     name={[...BASE_FORM, "company_value"]}
                     label="Giá trị góp vốn"
                   />
-                  <CCInput
-                    type="number"
-                    formatter={(val) => `${number_format(val)}`}
-                    style={{ width: "100%" }}
-                    name={[...BASE_FORM, "company_value"]}
-                    label="Giá trị góp vốn"
-                  />
+                  
                 </div>
               )}
             </Col>
@@ -871,10 +865,10 @@ const CreateCompany = forwardRef((props, formRef) => {
                     filterOption={(input, option) =>
                       option.children.join("").toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
-                    onClear={() => {
-                      formRef.current.setFieldsValue({ career_id: "" });
-                      onFetchCareer();
-                    }}
+                    // onClear={() => {
+                    //   formRef.current.setFieldsValue({ career_id: "" });
+                    //   onFetchCareer();
+                    // }}
                   >
                     {careerData.map((item) => (
                       <Select.Option key={item._id} value={item._id}>
