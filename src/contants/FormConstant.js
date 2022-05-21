@@ -232,6 +232,12 @@ export const LABEL = {
         },
         origin_person: {
           name: "Thành viên góp vốn",
+          gender: "Giới tính",
+          birth_day: "Ngày sinh",
+          current_address: "Q7 Tp.HCM",
+          national: "Quốc tịch",
+          per_type: "Dân tộc",
+          reg_address: "TDP 3 Phường An Lạc Buôn Hồ Daklak",
           doc_type: "Loại giấy tờ",
           doc_code: "Mã doanh nghiệp",
           doc_time_provide: "Ngày cấp",
@@ -260,6 +266,10 @@ export const LABEL = {
           per_type: "Dân tộc",
           reg_address: "Nơi đăng kí hộ khẩu thường trú",
           current_address: "Chỗ ở hiện tại",
+          doc_type: "Loại giấy tờ pháp lý",
+          doc_code: "Số giấy tờ pháp lý",
+          doc_time_provide: "Ngày cấp",
+          doc_place_provide: " Nơi cấp",
         },
         company_core: {
           name: "Tên công ty bằng Tiếng Việt",

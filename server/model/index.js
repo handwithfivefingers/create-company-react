@@ -6,6 +6,7 @@ const career = require("./career");
 const product = require("./product");
 const template = require("./template");
 const setting = require("./setting");
+const log = require("./log");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { Schema } = mongoose;
@@ -19,6 +20,7 @@ const categorySchema = new Schema({ ...category }, { timestamps: true });
 const careerSchema = new Schema({ ...career }, { timestamps: true });
 const productSchema = new Schema({ ...product }, { timestamps: true });
 const settingSchema = new Schema({ ...setting }, { timestamps: true });
+const logSchema = new Schema({ ...log }, { timestamps: true });
 const templateSchema = new Schema({ ...template }, { timestamps: true, collation: { locale: "en_US", strength: 1 } });
 
 // // Step 2 : Create Methods - Function
@@ -38,28 +40,29 @@ const User = mongoose.model("User", userSchema);
 const Order = mongoose.model("Order", orderSchema);
 const Category = mongoose.model("Category", categorySchema);
 const Career = mongoose.model("Career", careerSchema);
-const Product = mongoose.model("Product", productSchema);
+// const Product = mongoose.model("Product", productSchema);
 const TemplateMail = mongoose.model("TemplateMail", templateSchema);
 const Setting = mongoose.model("Setting", settingSchema);
+const Log = mongoose.model("Log", logSchema);
 
 // // Step 4 : Create Virtual Field - Reference
 
 orderSchema.virtual("main_career", {
   ref: "Career",
-  localField: "data.create_company.company_main_career",
+  localField: "data.create_company.approve.company_main_career.value",
   foreignField: "_id",
 });
 
 orderSchema.virtual("opt_career", {
   ref: "Career",
-  localField: "data.create_company.company_opt_career",
+  localField: "data.create_company.approve.company_opt_career",
   foreignField: "_id",
 });
 
-orderSchema.virtual("data.create_company.main_career", {
+orderSchema.virtual("data.create_company.approve.main_career", {
   ref: "Career",
-  localField: "data.create_company.company_main_career",
-  foreignField: "_id",
+  localField: "data.create_company.approve.company_main_career",
+  foreignField: "name",
 });
 
 orderSchema.virtual("data.create_company.opt_career", {
@@ -67,5 +70,7 @@ orderSchema.virtual("data.create_company.opt_career", {
   localField: "data.create_company.company_opt_career",
   foreignField: "_id",
 });
+orderSchema.set("toObject", { virtuals: true });
+orderSchema.set("toJSON", { virtuals: true });
 
-module.exports = { User, Career, Order, Product, Category, TemplateMail, Setting };
+module.exports = { User, Career, Order, Category, TemplateMail, Setting, Log };

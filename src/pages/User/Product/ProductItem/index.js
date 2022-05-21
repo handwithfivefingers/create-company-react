@@ -152,8 +152,12 @@ const UserProductItem = (props) => {
                 {current < 8 ? <Button onClick={Next}>Next</Button> : ""}
                 {current === 8 ? (
                   <>
-                    <Button loading={loading} onClick={handleSave}>Lưu lại</Button>
-                    <Button loading={loading} onClick={handlePurchaseCreateCompany}>Thanh toán</Button>
+                    <Button loading={loading} onClick={handleSave}>
+                      Lưu lại
+                    </Button>
+                    <Button loading={loading} onClick={handlePurchaseCreateCompany}>
+                      Thanh toán
+                    </Button>
                   </>
                 ) : (
                   ""
@@ -184,8 +188,12 @@ const UserProductItem = (props) => {
 
               {current === changeInforStep.length - 1 ? (
                 <>
-                  <Button loading={loading} onClick={handleSaveChangeInfo}>Lưu lại</Button>
-                  <Button loading={loading} onClick={handlePurchaseChangeInfo}>Thanh toán</Button>
+                  <Button loading={loading} onClick={handleSaveChangeInfo}>
+                    Lưu lại
+                  </Button>
+                  <Button loading={loading} onClick={handlePurchaseChangeInfo}>
+                    Thanh toán
+                  </Button>
                 </>
               ) : (
                 ""
@@ -213,8 +221,12 @@ const UserProductItem = (props) => {
               {current < 3 ? <Button onClick={Next}>Next</Button> : ""}
               {current === 3 ? (
                 <>
-                  <Button loading={loading} onClick={handleSavePending}>Lưu lại</Button>
-                  <Button loading={loading} onClick={handlePurchasePending}>Thanh toán</Button>
+                  <Button loading={loading} onClick={handleSavePending}>
+                    Lưu lại
+                  </Button>
+                  <Button loading={loading} onClick={handlePurchasePending}>
+                    Thanh toán
+                  </Button>
                 </>
               ) : (
                 ""
@@ -241,8 +253,12 @@ const UserProductItem = (props) => {
               {current < 3 ? <Button onClick={Next}>Next</Button> : ""}
               {current === 3 ? (
                 <>
-                  <Button loading={loading} onClick={handleSaveDissolution}>Lưu lại</Button>
-                  <Button loading={loading} onClick={handlePurchaseDissolution}>Thanh toán</Button>
+                  <Button loading={loading} onClick={handleSaveDissolution}>
+                    Lưu lại
+                  </Button>
+                  <Button loading={loading} onClick={handlePurchaseDissolution}>
+                    Thanh toán
+                  </Button>
                 </>
               ) : (
                 ""
@@ -441,20 +457,6 @@ const UserProductItem = (props) => {
   const handleSave = () => {
     let val = formRef.current.getFieldsValue();
     console.log(val);
-    let { company_opt_career } = val?.create_company?.approve;
-    let body = {
-      ...val,
-      create_company: {
-        approve: {
-          ...val.create_company.approve,
-          company_opt_career: company_opt_career?.map((item) => ({
-            value: item.value,
-            name: item.name,
-            code: item.code,
-          })),
-        },
-      },
-    };
 
     let params = {
       track: {
@@ -463,7 +465,7 @@ const UserProductItem = (props) => {
       },
       payment: 0,
       data: {
-        ...body,
+        ...val,
       },
     };
     // console.log(params);

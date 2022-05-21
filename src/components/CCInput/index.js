@@ -6,6 +6,7 @@ const { RangePicker } = DatePicker;
 const CCInput = forwardRef((props, ref) => {
   const { name, label, value, onChange, style, placeholder, defaultValue, ...rest } = props;
   const [optional, setOptional] = useState([]);
+
   const handleOptions = () => {
     let option;
     if (typeof props?.options !== "object") {
@@ -17,11 +18,10 @@ const CCInput = forwardRef((props, ref) => {
     setOptional(option);
   };
 
-
   switch (props.type) {
     case "text":
       return (
-        <Form.Item value={value} name={name} label={label || " "}>
+        <Form.Item value={value} name={name} label={label || " "} key={props?.key}>
           <Input
             onChange={onChange}
             style={style}
@@ -33,7 +33,7 @@ const CCInput = forwardRef((props, ref) => {
       );
     case "number":
       return (
-        <Form.Item value={props?.value} name={props.name} label={props?.label || " "}>
+        <Form.Item value={props?.value} name={props.name} label={props?.label || " "} key={props?.key}>
           <InputNumber
             onChange={props?.onChange}
             style={props.style}
@@ -46,7 +46,7 @@ const CCInput = forwardRef((props, ref) => {
       );
     case "date":
       return (
-        <Form.Item name={props.name} label={props?.label || " "}>
+        <Form.Item name={props.name} label={props?.label || " "} key={props?.key}>
           <DatePicker
             style={{ ...props.style, width: "100%" }}
             format="DD/MM/YYYY"
@@ -61,11 +61,11 @@ const CCInput = forwardRef((props, ref) => {
     case "date-range":
       return (
         <>
-          <Form.Item name={props?.name} style={{ display: "none" }}>
+          <Form.Item name={props?.name} style={{ display: "none" }} key={props?.key}>
             <RangePicker inputReadOnly format="MM/DD/YYYY" />
           </Form.Item>
 
-          <Form.Item name={makeid(9)} label={props?.label || " "}>
+          <Form.Item name={makeid(9)} label={props?.label || " "} key={props?.key}>
             <RangePicker
               inputReadOnly={props?.inputReadOnly || true}
               onChange={onChange}
@@ -108,7 +108,7 @@ const CCInput = forwardRef((props, ref) => {
       );
     default:
       return (
-        <Form.Item value={value} name={name} label={label || " "}>
+        <Form.Item value={value} name={name} label={label || " "} key={props?.key}>
           <Input
             onChange={onChange}
             style={style}

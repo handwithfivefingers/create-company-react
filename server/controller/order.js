@@ -1,4 +1,3 @@
-const dateFormat = require("date-format");
 const { errHandler, successHandler, permisHandler, existHandler } = require("../response");
 const { Product, Category, Career, User, Order } = require("./../model");
 const { sendmailWithAttachments } = require("./sendmail");
@@ -27,59 +26,59 @@ exports.getOrdersFromUser = async (req, res) => {
 
 // admin
 exports.getOrders = async (req, res) => {
-  const { page, ...condition } = req.body;
-  let current_page = (parseInt(page) - 1) * PAGE_SIZE;
+  try {
+    const { page, ...condition } = req.body;
+    let current_page = (parseInt(page) - 1) * PAGE_SIZE;
 
-  const email = new RegExp(condition?.name, "i");
+    const email = new RegExp(condition?.name, "i");
 
-  let _user = await User.find({
-    $and: [
-      {
-        email: email,
-        // role: "User",
-      },
-    ],
-  }).select("_id");
+    let _user = await User.find({
+      $and: [
+        {
+          email: email,
+          // role: "User",
+        },
+      ],
+    }).select("_id");
 
-  let newCondition = _user.map((item) => ({ orderOwner: item._id }));
+    let newCondition = _user.map((item) => ({ orderOwner: item._id }));
 
-  if (req.role === "admin") {
-    let _order = await Order.find({
-      $or: newCondition.length > 0 ? newCondition : [{}],
-    })
-      .populate("main_career", ["name", "code"])
-      // .populate("opt_career", ["name", "code"])
-      .populate("products", "name")
-      .populate({
-        path: "orderOwner",
-        select: "name email",
+    if (req.role === "admin") {
+      let _order = await Order.find({
+        $or: newCondition.length > 0 ? newCondition : [{}],
       })
-      .skip(current_page)
-      .limit(PAGE_SIZE)
-      .sort("-createdAt");
+        // .populate("main_career", ["name", "code"])
+        // .populate("opt_career", ["name", "code"])
+        .populate("products", "name")
+        .populate({
+          path: "orderOwner",
+          select: "name email",
+        })
+        .skip(current_page)
+        .limit(PAGE_SIZE)
+        .sort("-createdAt");
 
-    const count = await Order.find({
-      $or: newCondition.length > 0 ? newCondition : [{}],
-    }).count();
+      const count = await Order.find({
+        $or: newCondition.length > 0 ? newCondition : [{}],
+      }).count();
 
-    try {
       return successHandler({ _order, count, current_page: page || 1 }, res);
-    } catch (err) {
-      return errHandler(err, res);
     }
+    return getOrder(req, res);
+  } catch (err) {
+    return errHandler(err, res);
   }
-
-  return getOrder(req, res);
 };
 
 const getOrder = async (req, res) => {
-  let _order = await Order.find({ orderOwner: req.id })
-    .populate("products", "name")
-    .populate("main_career", "name")
-    .populate("orderOwner", "name")
-    // .limit(10)
-    .sort("-createdAt");
   try {
+    let _order = await Order.find({ orderOwner: req.id })
+      .populate("products", "name")
+      // .populate("main_career", "name")
+      .populate("orderOwner", "name")
+      // .limit(10)
+      .sort("-createdAt");
+
     return successHandler(_order, res);
   } catch (err) {
     return errHandler(err, res);
@@ -88,20 +87,18 @@ const getOrder = async (req, res) => {
 
 exports.getOrderBySlug = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  if (req.role === "admin") {
-    const _order = await Order.findById(id)
-      .populate("products", "name type")
-      .populate("data.create_company.main_career", ["name", "code"]);
-    // .populate("data.create_company.opt_career", ["name", "code"]);
-    // console.log(_order);
-    try {
+  try {
+    if (req.role === "admin") {
+      const _order = await Order.findById(id).populate("products", "name type");
+      // .populate("data.create_company.main_career", ["name", "code"]);
+      // .populate("data.create_company.opt_career", ["name", "code"]);
+      // console.log(_order);
       return successHandler(_order, res);
-    } catch (err) {
-      return errHandler(err, res);
     }
+    return permisHandler(res);
+  } catch (err) {
+    return errHandler(err, res);
   }
-  return permisHandler(res);
 };
 
 exports.createOrders = async (req, res) => {
@@ -368,10 +365,20 @@ const calcPrice = async (productArray) => {
 const findKeysByObject = (obj, listfiles) => {
   if (!obj) return;
   let files;
+  console.log(files, obj);
   for (let prop in obj) {
+    // prop => create_company || change_info || pending || disolution
     if (listfiles[prop]) {
       files = Object.keys(obj[prop]).map((key) => {
         if (obj[prop][key]) {
+          if (typeof listfiles[prop][key] === "object") {
+            if (obj[prop][key].present_person) {
+              let person = obj[prop][key].present_person;
+              return listfiles[prop][key][person];
+            } else {
+              return listfiles[prop][key].personal;
+            }
+          }
           return listfiles[prop][key];
         }
       });

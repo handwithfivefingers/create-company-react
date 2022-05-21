@@ -33,23 +33,9 @@ export default function HomePage() {
     setLoading(false);
   };
 
-  // const onRegister = async (val) => {
-  //   console.log(val);
-  // };
+
 
   const onRegister = async (val) => {
-    setLoading(true);
-    // let { phone, email, name } = val;
-
-    // const res = await axios.post("/register", { phone, email, name });
-    // console.log(res);
-    // if (res) {
-    //   signIn("credentials", {
-    //     phone,
-    //     password,
-    //     callbackUrl: `${window.location.origin}/`,
-    //   }).finally(() => setLoading(false));
-    // }
     setLoading(true);
     dispatch(AuthAction.AuthRegister(val));
     setLoading(false);

@@ -22,7 +22,6 @@ ConfigProvider.config({
 moment.defaultFormat = "DD/MM/YYYY";
 
 const RouterComponent = (props) => {
-  
   let location = useLocation();
 
   const Route = useRoutes(LAYOUT_ROUTER(props.auth)); // status, role
@@ -65,20 +64,16 @@ function App() {
 
   const authReducer = useSelector((state) => state.authReducer);
 
-  useEffect(() => {
-   
-  }, []);
-
   return (
     <div className="App">
-      <RouterProvider value={{ route, setRoute: (val) => setRoute(val) }}>
-        <ConfigProvider>
+      <ConfigProvider>
+        <RouterProvider value={{ route, setRoute: (val) => setRoute(val) }}>
           {authReducer.authenticating && <LoadingScreen />}
           <BrowserRouter>
             <RouterComponent auth={auth} />
           </BrowserRouter>
-        </ConfigProvider>
-      </RouterProvider>
+        </RouterProvider>
+      </ConfigProvider>
     </div>
   );
 }

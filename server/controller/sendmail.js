@@ -4,14 +4,15 @@ const fs = require("fs");
 const { removeFile, errHandler } = require("../response");
 const { TemplateMail, Order } = require("../model");
 const { path } = require("path");
-const docxConverter = require("docx-pdf");
-const PizZip = require("pizzip");
-const Docxtemplater = require("docxtemplater");
 const { google } = require("googleapis");
+
 const REFRESH_TOKEN =
-  "1//04qCUnDYb-Sp0CgYIARAAGAQSNwF-L9IrCAXsz1miKphMYC3JXNrt8fKsRFHv1Ycpw9SdYShYqr_Fa_jvHmhlJcTU3tyU983ByJo";
+  "1//04cbp0ho-ADoyCgYIARAAGAQSNwF-L9IrQJp9XMDcTUr3lI2Jm2mhveK47WCyTB9zH52B4XFe9FwY0dhUUMIIqquLeOXK519fN4g";
+
 const REFRESH_URI = "https://developers.google.com/oauthplayground";
+
 const CLIENT_ID = process.env.GG_EMAIL_CLIENT_ID;
+
 const CLIENT_SECRET = process.env.GG_EMAIL_CLIENT_SECRET;
 
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REFRESH_URI);
@@ -20,20 +21,11 @@ oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...rest }) => {
   const adminEmail = "tbkimt97@gmail.com";
+  const adminEmail2 = "handgod1995@gmail.com";
   const adminPass = "Net@Kim!21";
   const mailHost = "smtp.gmail.com";
   const mailPort = "587";
 
-  // const transporter = nodeMailer.createTransport({
-  //   host: mailHost,
-  //   port: 465,
-  //   secure: true,
-  //   auth: {
-  //     user: adminEmail, //Tài khoản gmail vừa tạo
-  //     pass: adminPass, //Mật khẩu tài khoản gmail vừa tạo
-  //   },
-  //   forceAuth: true,
-  // });
   try {
     console.log("setting options");
     const accessToken = await oAuth2Client.getAccessToken();
@@ -42,7 +34,7 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
       service: "gmail",
       auth: {
         type: "OAUTH2",
-        user: adminEmail,
+        user: adminEmail2,
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
@@ -85,7 +77,7 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
     }
   } catch (err) {
     console.log("error 1", err);
-    errHandler(err, res);
+    return errHandler(err, res);
   }
 
   // validate file
@@ -186,25 +178,12 @@ const withFilesPath = async (
       });
 
     res.sendStatus(200);
-
-    // .then(async (info) => {
-    //   console.log("send result");
-    //   if (rest.send === 1) {
-    //     await Order.findOneAndUpdate({ _id: rest._id }, { send: 1 });
-    //   }
-    //   console.log("updated");
-    //   return sendSuccess(info, res);
-    // })
-    // .catch((err) => {
-    //   return sendFailed(err, res);
-    // })
   } catch (err) {
     console.log("send mail failed ", err);
 
     return sendFailed(err, res);
   }
 };
-
 
 const sendFailed = (err, res) => {
   return res.status(200).json({

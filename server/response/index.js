@@ -1,5 +1,5 @@
 const fs = require("fs");
-
+const { Log } = require("./../model");
 exports.loginFailed = (res) => {
   return res.status(200).json({
     message: "Sai tài khoản hoặc mật khẩu!",
@@ -16,7 +16,18 @@ exports.authFailedHandler = (res) => {
   });
 };
 
-exports.errHandler = (err, res) => {
+exports.errHandler = async (err, res) => {
+  const obj = {
+    error: {
+      status: 400,
+      error: error,
+    },
+  };
+
+  const _err = new Log(obj);
+
+  await _err.save();
+
   return res.status(400).json({
     error: err,
     message: "Đã có lỗi xảy ra, vui lòng thử lại sau!",
