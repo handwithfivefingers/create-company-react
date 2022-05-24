@@ -174,7 +174,17 @@ exports.flattenObject = (data) => {
 
       delete _template.create_company_approve_legal_respon;
     }
+    /// Handle create_company_approve_origin_person_doc_type
+    // {#doc_type==1}X{/}
+    // doc_type == 1 ? 'CMND'
+    // doc_type == 2 ? 'CCCD'
+    // doc_type == 3 ? Hộ Chiếu
+    // doc_type == 4 ? Loại khác ....
+
   }
+
+
+
   return _template;
 };
 

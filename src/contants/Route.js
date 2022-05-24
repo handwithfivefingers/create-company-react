@@ -12,7 +12,7 @@ import { Layout } from "antd";
 import CustomHeader from "src/components/CustomHeader";
 import Footer from "src/components/Footer";
 
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import HomePage from "src/pages/HomePage";
 import Admin from "src/pages/Admin";
 import AdminDashboard from "src/pages/Admin/Dashboard";
@@ -28,6 +28,8 @@ import UserDashboard from "src/pages/User";
 import UserProductPage from "src/pages/User/Product";
 import UserProductItem from "src/pages/User/Product/ProductItem";
 import UserOrder from "src/pages/User/Order";
+import UserProfile from "src/pages/User/Profile";
+
 import Error from "src/pages/_error";
 const { Content } = Layout;
 export const AdminRouter = [
@@ -103,7 +105,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
   },
   {
     title: "Admin",
-    path: "/admin",
+    path: "admin",
     element: <Admin status={status}  />,
     children:
       status && role === "admin" ? (
@@ -163,7 +165,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
   },
   {
     title: "User",
-    path: "/user",
+    path: "user",
     element: <UserDashboard status={status} />,
     children: status ? (
       [
@@ -188,12 +190,12 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
           icon: <RiChatPollLine />,
           element: <UserOrder />,
         },
-        // {
-        //   path: "setting",
-        //   title: "Đổi mật khẩu",
-        //   icon: <RiAdminFill />,
-        //   element: <AdminSetting />,
-        // },
+        {
+          path: "profile",
+          title: "Tài khoản",
+          icon: <RiAdminFill />,
+          element: <UserProfile />,
+        },
         {
           path: "*",
           element: <Error />,

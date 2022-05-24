@@ -62,9 +62,9 @@ const handleConvertFile = async (order, req, res) => {
     if (files) {
       let _contentOrder = flattenObject(data);
 
-      return res.status(200).json({
-        _contentOrder,
-      });
+      // return res.status(200).json({
+      //   _contentOrder,
+      // });
 
       try {
         for (let file of files) {

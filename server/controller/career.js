@@ -25,7 +25,6 @@ exports.createCareer = async (req, res) => {
     const data = await _career.save();
 
     return createdHandler(data, res);
-    
   } catch (err) {
     return errHandler(err, res);
   }
@@ -263,14 +262,14 @@ let careerData = [
 ];
 
 exports.editCareer = async (req, res) => {
-  let { id } = req.params;
-
-  const _update = {
-    name: req.body.name,
-    code: req.body.code,
-  };
-
   try {
+    let { id } = req.params;
+
+    const _update = {
+      name: req.body.name,
+      code: req.body.code,
+    };
+
     let _updated = await Career.updateOne({ _id: id }, _update, { new: true });
     return updatedHandler(_updated, res);
   } catch (e) {
@@ -279,11 +278,11 @@ exports.editCareer = async (req, res) => {
 };
 
 exports.deleteCareer = async (req, res) => {
-  let { id } = req.params;
-
-  await Career.findOneAndDelete({ _id: id });
-
   try {
+    let { id } = req.params;
+
+    await Career.findOneAndDelete({ _id: id });
+
     return deletedHandler("", res);
   } catch (e) {
     return errHandler(e, res);

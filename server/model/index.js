@@ -40,12 +40,18 @@ const User = mongoose.model("User", userSchema);
 const Order = mongoose.model("Order", orderSchema);
 const Category = mongoose.model("Category", categorySchema);
 const Career = mongoose.model("Career", careerSchema);
-// const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema);
 const TemplateMail = mongoose.model("TemplateMail", templateSchema);
 const Setting = mongoose.model("Setting", settingSchema);
 const Log = mongoose.model("Log", logSchema);
 
 // // Step 4 : Create Virtual Field - Reference
+
+// orderSchema.virtual("products", {
+//   ref: "Product",
+//   localField: "data.create_company.approve.company_main_career.value",
+//   foreignField: "_id",
+// });
 
 orderSchema.virtual("main_career", {
   ref: "Career",
@@ -70,7 +76,8 @@ orderSchema.virtual("data.create_company.opt_career", {
   localField: "data.create_company.company_opt_career",
   foreignField: "_id",
 });
+
 orderSchema.set("toObject", { virtuals: true });
 orderSchema.set("toJSON", { virtuals: true });
 
-module.exports = { User, Career, Order, Category, TemplateMail, Setting, Log };
+module.exports = { User, Career, Order, Category, TemplateMail, Setting, Log, Product };

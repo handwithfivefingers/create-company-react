@@ -20,7 +20,7 @@ exports.errHandler = async (err, res) => {
   const obj = {
     error: {
       status: 400,
-      error: error,
+      error: err,
     },
   };
 

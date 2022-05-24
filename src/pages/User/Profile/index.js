@@ -1,11 +1,11 @@
-import { message, Skeleton, Typography, Card, Form, Input, Row, Col, Button } from "antd";
-import React, { useEffect, useState, useRef } from "react";
-
-import ProfileService from "@/service/UserService/ProfileService";
-import styles from "./styles.module.scss";
+import ProfileService from "src/service/UserService/ProfileService";
+import { Button, Card, Col, Form, Input, message, Row } from "antd";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import React, { useEffect, useRef, useState } from "react";
+import styles from "./styles.module.scss";
+import clsx from "clsx";
 
-const ProfilePage = () => {
+const UserProfile = () => {
   const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState([]);
@@ -17,6 +17,7 @@ const ProfilePage = () => {
   useEffect(() => {
     getScreenData();
   }, []);
+
   useEffect(() => {
     profileRef.current.setFieldsValue({
       name: data.name,
@@ -24,6 +25,7 @@ const ProfilePage = () => {
       phone: data.phone,
     });
   }, [data]);
+
   const getScreenData = () => {
     setLoading(true);
     ProfileService.getProfile()
@@ -71,6 +73,7 @@ const ProfilePage = () => {
         getScreenData();
       });
   };
+
   return (
     <Row gutter={[16, 12]}>
       <Col lg={8} sm={24} xs={24} md={12} order={!screen.md ? 1 : 0}>
@@ -120,4 +123,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default UserProfile;

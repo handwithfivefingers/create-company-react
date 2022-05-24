@@ -11,13 +11,14 @@ const PAGE_SIZE = 10;
 
 // Get getOrdersFromUser
 exports.getOrdersFromUser = async (req, res) => {
-  let _order = await Order.find({ orderOwner: req.id })
-    .populate("products", "name")
-    .populate("main_career", "name")
-    .populate("orderOwner", "name")
-    // .limit(10)
-    .sort("-createdAt");
   try {
+    let _order = await Order.find({ orderOwner: req.id })
+      .populate("products", "name")
+      .populate("orderOwner", "name")
+      // .populate("main_career", "name")
+      // .limit(10)
+      .sort("-createdAt");
+    console.log(_order);
     return successHandler(_order, res);
   } catch (err) {
     return errHandler(err, res);
@@ -47,8 +48,6 @@ exports.getOrders = async (req, res) => {
       let _order = await Order.find({
         $or: newCondition.length > 0 ? newCondition : [{}],
       })
-        // .populate("main_career", ["name", "code"])
-        // .populate("opt_career", ["name", "code"])
         .populate("products", "name")
         .populate({
           path: "orderOwner",
