@@ -72,7 +72,7 @@ const saveFileAsDocx = async (buffer, ext) => {
 
 const specialFields = ["company_main_career", "company_opt_career"];
 
-const dateFields = ["doc_time_provide", "birth_day"];
+const dateFields = ["doc_time_provide", "birth_day", "time_provide"];
 
 const objToKeys = (obj, baseObj, path = null) => {
   const regex = /(?=.*\d[\s\S][-T:.Z])\w+/g;

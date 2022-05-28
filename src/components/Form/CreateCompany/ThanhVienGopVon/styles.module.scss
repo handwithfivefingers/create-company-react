@@ -21,8 +21,6 @@
   width: 100%;
 }
 
-.titleSubForm {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+.newLine {
+  grid-column: 1/3;
 }

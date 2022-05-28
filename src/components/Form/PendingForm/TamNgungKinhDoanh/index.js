@@ -1,15 +1,17 @@
-import React, { forwardRef, useState } from "react";
-import { Form, Input, Select, Button, Space, Row, Col } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-
+import { Button, Col, Form, Row, Space } from "antd";
 import clsx from "clsx";
-import styles from "../styles.module.scss";
+import React, { forwardRef, useState } from "react";
 import CCInput from "src/components/CCInput";
+import { SELECT } from "src/contants/Common";
+import styles from "../styles.module.scss";
+
 
 const BASE_FORM = ["pending", "approve"];
 
 const TamNgungKinhDoanh = forwardRef((props, ref) => {
   const [objective, setObjective] = useState("");
+
   const handleChange = (val, opt) => {
     setObjective(val);
   };
@@ -34,53 +36,66 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-
       <CCInput name={[...BASE_FORM, "company_name"]} label="Tên doanh nghiệp (ghi bằng chữ in hoa)" />
 
       <CCInput name={[...BASE_FORM, "mst"]} label="Mã số doanh nghiệp/Mã số thuế" />
+
+      <CCInput name={[...BASE_FORM, "time_provide"]} label="Ngày cấp" type="date" />
+
+      <CCInput name={[...BASE_FORM, "place_provide"]} label="Nơi cấp" />
+
+      <CCInput
+        name={[...BASE_FORM, "opt_code"]}
+        label="Số Giấy chứng nhận đăng ký kinh doanh (chỉ kê khai nếu không có mã số doanh nghiệp/mã số thuế)"
+      />
 
       <CCInput
         type="select"
         name={[...BASE_FORM, "obj"]}
         label="Đối tượng tạm ngưng"
         onChange={handleChange}
-        options={[
-          {
-            name: "Toàn bộ công ty",
-            value: "Toàn bộ công ty",
-          },
-          {
-            name: "Chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
-            value: "Chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
-          },
-        ]}
+        options={SELECT.BUSINESS_OBJECT}
       />
 
       {objective === "Toàn bộ công ty" ? (
-        ""
+        <>
+          <CCInput
+            name={[...BASE_FORM, "time_range"]}
+            label="Thời gian đăng ký tạm ngưng (từ ngày/tháng/năm đến ngày/tháng/năm)"
+            onChange={handleDateChange}
+          />
+
+          <CCInput name={[...BASE_FORM, "reason"]} label="Lý do tạm ngưng" />
+
+          <CCInput name={[...BASE_FORM, "org_person"]} label="Tên người đại diện pháp luật/người đứng đầu chi nhánh" />
+        </>
       ) : (
         <Row gutter={[12, 16]}>
-          <ChiNhanh />
+          <ChiNhanh ref={ref} />
         </Row>
       )}
 
       {/** <<<<- Group*/}
-
-      <CCInput
-        name={[...BASE_FORM, "time_range"]}
-        label="Thời gian đăng ký tạm ngưng (từ ngày/tháng/năm đến ngày/tháng/năm)"
-        onChange={handleDateChange}
-      />
-
-      <CCInput name={[...BASE_FORM, "reason"]} label="Lý do tạm ngưng" />
-      <CCInput name={[...BASE_FORM, "org_person"]} label="Tên người đại diện pháp luật/người đứng đầu chi nhánh" />
     </Form.Item>
   );
 });
 
 export default TamNgungKinhDoanh;
 
-const ChiNhanh = () => {
+const ChiNhanh = forwardRef((props, ref) => {
+  const handleDateChange = (date, dateString) => {
+    ref.current.setFieldsValue({
+      pending: {
+        cancel: {
+          time_range: {
+            start: dateString?.[0],
+            end: dateString?.[1],
+          },
+        },
+      },
+    });
+  };
+
   return (
     <>
       <Form.List
@@ -99,34 +114,36 @@ const ChiNhanh = () => {
             {fields?.map((field, i) => (
               <>
                 <Col lg={12} md={12} sm={24} xs={24} key={[field, i + 1]}>
-                  <Form.Item
-                    {...field}
+                  <CCInput
                     name={[field.name, "branch_name"]}
                     label="Tên chi nhánh/văn phòng đại diện/địa điểm kinh doanh (ghi bằng chữ in hoa)"
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    {...field}
+                  />
+                  <CCInput
                     name={[field.name, "resp_office"]}
                     label="Mã số thuế chi nhánh/văn phòng đại diện/địa điểm kinh doanh"
-                  >
-                    <Input />
-                  </Form.Item>
+                  />
 
                   {/** Group ->>>> */}
 
                   <Form.Item label="Vui lòng điền thông tin sau đây nếu Địa điểm kinh doanh của bạn trực thuộc chi nhánh">
-                    <Form.Item {...field} name={[field.name, "branch_name_opt"]} label="Tên chi nhánh (nếu có)">
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
+                    <CCInput name={[field.name, "branch_name_opt"]} label="Tên chi nhánh (nếu có)" />
+                    <CCInput
                       name={[field.name, "branch_mst_opt"]}
                       label="Mã số chi nhánh/Mã số thuế của chi nhánh  (nếu có)"
-                    >
-                      <Input />
-                    </Form.Item>
+                    />
+
+                    <CCInput
+                      name={[field.name, "time_range"]}
+                      label="Thời gian đăng ký tạm ngưng (từ ngày/tháng/năm đến ngày/tháng/năm)"
+                      onChange={handleDateChange}
+                    />
+
+                    <CCInput name={[field.name, "reason"]} label="Lý do tạm ngưng" />
+
+                    <CCInput
+                      name={[field.name, "org_person"]}
+                      label="Tên người đại diện pháp luật/người đứng đầu chi nhánh"
+                    />
                   </Form.Item>
 
                   <Space style={{ display: "flex", justifyContent: "center" }}>
@@ -150,4 +167,4 @@ const ChiNhanh = () => {
       </Form.List>
     </>
   );
-};
+});

@@ -1,10 +1,12 @@
-import React, { forwardRef, useState, useEffect } from "react";
-import { Form, Input, Select, Card, Row, Col, DatePicker, InputNumber } from "antd";
-import styles from "../DaiDienPhapLuat/styles.module.scss";
-import HomepageService from "src/service/GlobalService";
+import { Form, Select } from "antd";
 import clsx from "clsx";
+import React, { forwardRef, useEffect, useState } from "react";
+import CCInput from "src/components/CCInput";
+import HomepageService from "src/service/GlobalService";
+import styles from "../DaiDienPhapLuat/styles.module.scss";
 
 const BASE_FORM = ["change_info", "company_career"];
+
 const NganhNgheKinhDoanh = forwardRef((props, ref) => {
   const [career, setCareer] = useState([]);
 
@@ -41,13 +43,9 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      <Form.Item label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]}>
-        <Input />
-      </Form.Item>
+      <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
 
-      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]}>
-        <Input />
-      </Form.Item>
+      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} />
 
       <Form.Item
         label="Bổ sung ngành, nghề kinh doanh"
@@ -82,11 +80,6 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
           optionFilterProp="children"
           filterOption={(input, option) => option.children.join("").toLowerCase().indexOf(input.toLowerCase()) >= 0}
           onChange={(val, opt) => handleChange(val, opt, "exclude")}
-
-          // onClear={() => {
-          //   // formRef.current.setFieldsValue({ career_id: "" });
-          //   onFetchCareer();
-          // }}
         >
           {career.map((item) => (
             <Select.Option key={item._id} value={item._id} name={item.name}>
@@ -96,13 +89,6 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
         </Select>
       </Form.Item>
 
-      {/* <Form.Item label="Bổ sung ngành, nghề kinh doanh" name={[...BASE_FORM, "include"]}>
-        <Input />
-      </Form.Item> */}
-      {/* 
-      <Form.Item label="Bỏ ngành, nghề kinh doanh" name={[...BASE_FORM, "exclude"]}>
-        <Input />
-      </Form.Item> */}
       <Form.Item
         label="Sửa đổi chi tiết ngành, nghề kinh doanh sau"
         name={[...BASE_FORM, "detail_after"]}
@@ -115,10 +101,6 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
           optionFilterProp="children"
           filterOption={(input, option) => option.children.join("").toLowerCase().indexOf(input.toLowerCase()) >= 0}
           onChange={(val, opt) => handleChange(val, opt, "detail_after")}
-          // onClear={() => {
-          //   // formRef.current.setFieldsValue({ career_id: "" });
-          //   onFetchCareer();
-          // }}
         >
           {career.map((item) => (
             <Select.Option key={item._id} value={item._id} name={item.name}>
@@ -128,16 +110,7 @@ const NganhNgheKinhDoanh = forwardRef((props, ref) => {
         </Select>
       </Form.Item>
 
-      {/* <Form.Item label="Sửa đổi chi tiết ngành, nghề kinh doanh sau" name={[""]}>
-        <Select>
-          <Select.Option>....</Select.Option>
-        </Select>
-      </Form.Item> */}
-
-      <Form.Item label="Tên người Đại diện pháp luật" name={[...BASE_FORM, "legal_person"]}>
-        <Input />
-      </Form.Item>
-      {/* </Form> */}
+      <CCInput label="Tên người Đại diện pháp luật" name={[...BASE_FORM, "legal_person"]} />
     </Form.Item>
   );
 });

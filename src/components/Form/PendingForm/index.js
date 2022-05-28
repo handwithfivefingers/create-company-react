@@ -1,10 +1,9 @@
-import React, { forwardRef, useState } from "react";
-import { Card, Form, Select } from "antd";
+import { Form, Select } from "antd";
 import clsx from "clsx";
+import React, { forwardRef, useState } from "react";
+import KinhDoanhLaiTruocThoiHan from "./KinhDoanhLaiTruocThoiHan";
 import styles from "./styles.module.scss";
 import TamNgungKinhDoanh from "./TamNgungKinhDoanh";
-import KinhDoanhLaiTruocThoiHan from "./KinhDoanhLaiTruocThoiHan";
-import { makeid } from "src/helper/Common";
 const TamHoanForm = forwardRef((props, ref) => {
   const [productSelect, setProductSelect] = useState("");
 

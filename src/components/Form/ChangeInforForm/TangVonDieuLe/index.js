@@ -1,8 +1,8 @@
-import { Col, Form, Input, Row } from "antd";
+import { Col, Form, Row } from "antd";
 import clsx from "clsx";
 import React, { forwardRef, useEffect } from "react";
+import CCInput from "src/components/CCInput";
 import styles from "../DaiDienPhapLuat/styles.module.scss";
-
 const BASE_FORM = ["change_info", "up_authorized_capital"];
 const TangVonDieuLe = forwardRef((props, ref) => {
   useEffect(() => {
@@ -26,39 +26,25 @@ const TangVonDieuLe = forwardRef((props, ref) => {
     >
       <Row gutter={[16, 0]}>
         <Col span={24}>
-          <Form.Item label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]}>
-            <Input />
-          </Form.Item>
+          <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
         </Col>
         <Col span={24}>
-          <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]}>
-            <Input />
-          </Form.Item>
+          <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} />
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ đã đăng ký (bằng số)" name={[...BASE_FORM, "base_val", "num"]}>
-            <Input />
-          </Form.Item>
+          <CCInput label="Vốn điều lệ đã đăng ký (bằng số)" name={[...BASE_FORM, "base_val", "num"]} />
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ đã đăng ký (bằng chữ)" name={[...BASE_FORM, "base_val", "char"]}>
-            <Input />
-          </Form.Item>
+          <CCInput label="Vốn điều lệ đã đăng ký (bằng chữ)" name={[...BASE_FORM, "base_val", "char"]} />
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ sau khi tăng (bằng số)" name={[...BASE_FORM, "new_base_val", "num"]}>
-            <Input />
-          </Form.Item>
+          <CCInput label="Vốn điều lệ sau khi tăng (bằng số)" name={[...BASE_FORM, "new_base_val", "num"]} />
         </Col>
         <Col span={12}>
-          <Form.Item label="Vốn điều lệ sau khi tăng (bằng chữ)" name={[...BASE_FORM, "new_base_val", "char"]}>
-            <Input />
-          </Form.Item>
+          <CCInput label="Vốn điều lệ sau khi tăng (bằng chữ)" name={[...BASE_FORM, "new_base_val", "char"]} />
         </Col>
         <Col span={24}>
-          <Form.Item label="Hình thức tăng vốn" name={[...BASE_FORM, "type"]}>
-            <Input />
-          </Form.Item>
+          <CCInput label="Hình thức tăng vốn" name={[...BASE_FORM, "type"]} />
         </Col>
       </Row>
     </Form.Item>

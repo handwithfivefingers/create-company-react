@@ -1,22 +1,18 @@
-import React, { forwardRef, useEffect, useState, useRef } from "react";
-import { Card, Form, Select, Slider } from "antd";
-import ProductForm from "../ProductForm";
-import DaiDienPhapLuat from "./DaiDienPhapLuat";
-import TenDoanhNghiep from "./TenDoanhNghiep";
-import TangVonDieuLe from "./TangVonDieuLe";
-import GiamVonDieuLe from "./GiamVonDieuLe";
-import NganhNgheKinhDoanh from "./NganhNgheKinhDoanh";
-import DiaChiTruSoChinh from "./DiaChiTruSoChinh";
-import HopDongChuyenNhuong from "./HopDongChuyenNhuong";
-import DaiDienToChuc from "./DaiDienToChuc";
-import ThongTinDangKyThue from "./ThongTinDangKyThue";
+import { Form, Select } from "antd";
 import clsx from "clsx";
+import React, { forwardRef, useEffect, useState } from "react";
+import DaiDienPhapLuat from "./DaiDienPhapLuat";
 import styles from "./DaiDienPhapLuat/styles.module.scss";
-/**
- *
- * @returns Form Thay Doi Thong Tin  -> JSX
- *
- */
+import DaiDienToChuc from "./DaiDienToChuc";
+import DiaChiTruSoChinh from "./DiaChiTruSoChinh";
+import GiamVonDieuLe from "./GiamVonDieuLe";
+import HopDongChuyenNhuong from "./HopDongChuyenNhuong";
+import NganhNgheKinhDoanh from "./NganhNgheKinhDoanh";
+import TangVonDieuLe from "./TangVonDieuLe";
+import TenDoanhNghiep from "./TenDoanhNghiep";
+import ThongTinDangKyThue from "./ThongTinDangKyThue";
+
+
 const ChangeInforForm = forwardRef((props, ref) => {
   const [productSelect, setProductSelect] = useState("");
   const [selectType, setSelectType] = useState([]);
@@ -24,23 +20,23 @@ const ChangeInforForm = forwardRef((props, ref) => {
   const checkType = (type, i, ref) => {
     switch (type) {
       case "2":
-        return <DaiDienPhapLuat current={props.current} index={i + 1} ref={ref} />;
+        return <DaiDienPhapLuat key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       case "3":
-        return <TenDoanhNghiep current={props.current} index={i + 1} ref={ref} />;
+        return <TenDoanhNghiep key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       case "4":
-        return <GiamVonDieuLe current={props.current} index={i + 1} ref={ref} />;
+        return <GiamVonDieuLe key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       case "5":
-        return <TangVonDieuLe current={props.current} index={i + 1} ref={ref} />;
+        return <TangVonDieuLe key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       case "7":
-        return <NganhNgheKinhDoanh current={props.current} index={i + 1} ref={ref} />;
+        return <NganhNgheKinhDoanh key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       case "1":
-        return <DiaChiTruSoChinh current={props.current} index={i + 1} ref={ref} />;
+        return <DiaChiTruSoChinh key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       case "6":
-        return <HopDongChuyenNhuong current={props.current} index={i + 1} ref={ref} />;
+        return <HopDongChuyenNhuong key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       case "8":
-        return <DaiDienToChuc current={props.current} index={i + 1} ref={ref} />;
+        return <DaiDienToChuc key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       case "9":
-        return <ThongTinDangKyThue current={props.current} index={i + 1} ref={ref} />;
+        return <ThongTinDangKyThue key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
       default:
         return null;
     }
@@ -55,10 +51,8 @@ const ChangeInforForm = forwardRef((props, ref) => {
   useEffect(() => {
     console.log(ref?.current.getFieldsValue());
   }, []);
-  // console.log("selectType", selectType, props.current);
 
   return (
-    // <Card style={{ minWidth: "350px" }} title="Chọn loại hình doanh nghiệp">    {/* </Card> */}
     <Form ref={ref} layout="vertical" name="change_info">
       <Form.Item
         name={["selectProduct"]}
@@ -92,6 +86,7 @@ const ChangeInforForm = forwardRef((props, ref) => {
           mode="multiple"
           allowClear
           style={{ width: "100%" }}
+          listHeight={300}
           placeholder="Please select"
           optionFilterProp="children"
           onChange={handleOnChange}

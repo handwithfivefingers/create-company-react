@@ -1,7 +1,8 @@
-import React, { forwardRef } from "react";
-import { Form, Input, Select, Card } from "antd";
-import styles from "../DaiDienPhapLuat/styles.module.scss";
+import { Form } from "antd";
 import clsx from "clsx";
+import React, { forwardRef } from "react";
+import CCInput from "src/components/CCInput";
+import styles from "../DaiDienPhapLuat/styles.module.scss";
 
 const DaiDienToChuc = forwardRef((props, ref) => {
   return (
@@ -11,13 +12,9 @@ const DaiDienToChuc = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      <Form.Item label="Tên doanh nghiệp" name={["change_info", "present_change", "company_name"]}>
-        <Input />
-      </Form.Item>
+      <CCInput label="Tên doanh nghiệp" name={["change_info", "present_change", "company_name"]} />
 
-      <Form.Item label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "present_change", "mst"]}>
-        <Input />
-      </Form.Item>
+      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "present_change", "mst"]} />
     </Form.Item>
   );
 });

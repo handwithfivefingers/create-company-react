@@ -1,12 +1,13 @@
+import { Col, Form, InputNumber, Row } from "antd";
+import clsx from "clsx";
 import React, { forwardRef } from "react";
-
-import { Row, Col, Form } from "antd";
-
-import { FormFieldText } from "src/contants/Common";
-
 import CCInput from "src/components/CCInput";
+import { FormFieldText } from "src/contants/Common";
+import styles from "./styles.module.scss";
+
 
 const GiaTriGopVon = forwardRef((props, ref) => {
+  const { current, BASE_FORM } = props;
   return (
     <Row
       gutter={[16, 12]}
@@ -22,7 +23,7 @@ const GiaTriGopVon = forwardRef((props, ref) => {
           <InputNumber
             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
             style={{ width: "100%" }}
-          />
+          /> 
         </Form.Item>
       </Col>
 
@@ -34,14 +35,14 @@ const GiaTriGopVon = forwardRef((props, ref) => {
           onChange={(e) => {
             let pattern = /[1-9]/g;
             if (e.target.value.match(pattern)) {
-              formRef.current.setFields([
+              ref.current.setFields([
                 {
                   name: [...BASE_FORM, "base_val", "char"],
                   errors: ["Vui lòng không nhập kí tự khác ngoài chữ"],
                 },
               ]);
             } else {
-              formRef.current.setFields([
+              ref.current.setFields([
                 {
                   name: [...BASE_FORM, "base_val", "char"],
                   errors: [],

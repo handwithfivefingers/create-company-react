@@ -14,7 +14,7 @@ export const FormControl = [
 ];
 
 export const FormFieldText = {
-  selectProduct: 'Loại hình doanh nghiệp',
+  selectProduct: "Loại hình doanh nghiệp",
   base_val: {
     char: "Vốn điều lệ (bằng chữ)",
     num: "Vốn điều lệ (bằng số)",
@@ -47,4 +47,81 @@ export const BaseFieldText = {
   name: "Họ và tên",
   per_type: "Chức danh",
   reg_address: "Nơi đăng kí hộ khẩu thường trú",
+};
+
+export const SELECT = {
+  GENDER: [
+    {
+      name: "Nữ",
+      value: "Nữ",
+    },
+    {
+      name: "Nam",
+      value: "Nam",
+    },
+  ],
+  DOC_TYPE: [
+    {
+      name: "Chứng minh nhân dân",
+      value: "Chứng minh nhân dân",
+    },
+    { name: "Căn cước công dân", value: "Căn cước công dân" },
+    { name: "Hộ chiếu", value: "Hộ chiếu" },
+  ],
+  CONTRIBUTE: [
+    { name: "Chuyển nhượng toàn bộ phần vốn góp", value: "Chuyển nhượng toàn bộ phần vốn góp" },
+    { name: "Chuyển nhượng một phần vốn góp", value: "Chuyển nhượng một phần vốn góp" },
+  ],
+  OWNER: [
+    {
+      name: "Trường hợp chủ sở hữu là cá nhân",
+      value: "personal",
+    },
+    {
+      name: "Trường hợp chủ sở hữu là tổ chức",
+      value: "organization",
+    },
+  ],
+  BUSINESS_OBJECT: [
+    {
+      name: "Toàn bộ công ty",
+      value: "Toàn bộ công ty",
+    },
+    {
+      name: "Chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
+      value: "Chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
+    },
+  ],
+  BUSINESS_LOCATION: [
+    {
+      name: "Khu Công Nghiệp",
+      value: "Khu Công Nghiệp",
+    },
+    {
+      name: "Khu Chế Xuất",
+      value: "Khu Chế Xuất",
+    },
+    {
+      name: "Khu Kinh Tế",
+      value: "Khu Kinh Tế",
+    },
+    {
+      name: "Khu Công Nghệ Cao",
+      value: "Khu Công Nghệ Cao",
+    },
+  ],
+  TITLE: [
+    {
+      value: "Chủ tịch công ty",
+      name: "Chủ tịch công ty",
+    },
+    {
+      value: "Giám đốc",
+      name: "Giám đốc",
+    },
+    {
+      value: "Tổng giám đốc",
+      name: "Tổng giám đốc",
+    },
+  ],
 };
