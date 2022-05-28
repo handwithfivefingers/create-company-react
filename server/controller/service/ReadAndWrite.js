@@ -11,8 +11,8 @@ libre.convertAsync = require("util").promisify(libre.convert);
 
 exports.checkingOrder = async (req, res) => {
   try {
-    // let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
-    let _order = await Order.findOne({ _id: "62920c38f875c93e70fb510a" }).populate("orderOwner", "email");
+    let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
+    // let _order = await Order.findOne({ _id: "62920c38f875c93e70fb510a" }).populate("orderOwner", "email");
 
     return handleConvertFile(_order, req, res);
   } catch (err) {
@@ -68,7 +68,6 @@ const handleConvertFile = async (order, req, res) => {
 
       try {
         for (let file of files) {
-
           console.log("start");
 
           let pdfFile = await convertFile(file, _contentOrder);
