@@ -22,6 +22,9 @@ const ServiceRoute = require("./server/route/service");
 const UserRoute = require("./server/route/user");
 const MailRoute = require("./server/route/template");
 const SettingRoute = require("./server/route/setting");
+
+// Admin Routes
+const LogsRoute = require("./server/route/admin/logs");
 // DB
 mongoose
   .connect(
@@ -57,7 +60,7 @@ app.use("/public", express.static(path.join(__dirname, "uploads")));
 
 app.use(express.static(path.join(__dirname, "build")));
 
-
+//Default Route
 
 app.use("/api", AuthRoute); // /register
 app.use("/api", ProductRoute);
@@ -68,6 +71,10 @@ app.use("/api", ServiceRoute);
 app.use("/api", UserRoute);
 app.use("/api", MailRoute);
 app.use("/api", SettingRoute);
+
+// Admin route
+
+app.use("/api/admin", LogsRoute);
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));

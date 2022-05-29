@@ -8,7 +8,7 @@ const GiaiThe = (props) => {
   return (
     <Form.Item
       label="Giải thể"
-      className={clsx(styles.current, {
+      className={clsx(styles.current, { 
         [styles.active]: props.current === props.index,
       })}
     >

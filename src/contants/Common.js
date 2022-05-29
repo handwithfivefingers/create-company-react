@@ -124,4 +124,14 @@ export const SELECT = {
       name: "Tổng giám đốc",
     },
   ],
+  COMPANY_MODEL: [
+    {
+      name: "Hội đồng thành viên, Giám đốc hoặc Tổng Giám đốc",
+      value: "Hội đồng thành viên, Giám đốc hoặc Tổng Giám đốc",
+    },
+    {
+      name: "Chủ tịch công ty, Giám đốc hoặc Tổng Giám đốc",
+      value: "Chủ tịch công ty, Giám đốc hoặc Tổng Giám đốc",
+    },
+  ],
 };

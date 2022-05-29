@@ -209,7 +209,7 @@ const HopDongChuyenNhuong = forwardRef((props, ref) => {
             <CCInput name={[...fieldName, "organization", "time_provide"]} label="Ngày cấp" />
           </Col>
           <Col lg={12} md={12} sm={24} xs={24}>
-            <CCInput name={[...fieldName, "organization", "place_proive"]} label="Nơi cấp" />
+            <CCInput name={[...fieldName, "organization", "place_provide"]} label="Nơi cấp" />
           </Col>
           <Col span={24}>
             <Form.Item label="Địa chỉ trụ sở chính">
@@ -231,6 +231,14 @@ const HopDongChuyenNhuong = forwardRef((props, ref) => {
 
           <Col span={24}>
             <CCInput
+              type="select"
+              name={[...fieldName, "organization", "company_model"]}
+              label="Mô hình công ty"
+              options={SELECT.COMPANY_MODEL}
+            />
+          </Col>
+          <Col span={24}>
+            <CCInput
               name={[...fieldName, "organization", "legal_representative"]}
               label="Người đại diện theo pháp luật của công ty"
             />
@@ -241,18 +249,17 @@ const HopDongChuyenNhuong = forwardRef((props, ref) => {
 
           <Col span={24}>
             <Form.Item label="Bên A hiện đang sở hữu phần vốn góp là">
-              <Space align="center">
-                <Form.Item name={[...fieldName, "organization", "capital_contribution", "current_value"]}>
-                  <InputNumber />
-                </Form.Item>
-                <CCInput
-                  type="select"
-                  style={{ width: "100%" }}
-                  name={[...fieldName, "organization", "capital_contribution", "type"]}
-                  onChange={(e) => setType(e)}
-                  options={SELECT.CONTRIBUTE}
-                />
-              </Space>
+              <Form.Item name={[...fieldName, "organization", "capital_contribution", "current_value"]}>
+                <InputNumber />
+              </Form.Item>
+              <CCInput
+                type="select"
+                style={{ width: "100%" }}
+                name={[...fieldName, "organization", "capital_contribution", "type"]}
+                onChange={(e) => setType(e)}
+                options={SELECT.CONTRIBUTE}
+              />
+              <CCInput label="Chiếm tỷ lệ ... %" name={[...fieldName, "organization", "capital_contribution", "current_A_percent"]}/>
             </Form.Item>
           </Col>
 
@@ -310,13 +317,6 @@ const HopDongChuyenNhuong = forwardRef((props, ref) => {
           onChange={(e) => setSohuuA(e)}
           options={SELECT.OWNER}
         />
-        {/* 
-        <Form.Item label="Chủ sở hữu" name={[...BASE_FORM, "A_side", "owner"]}>
-          <Select onChange={(e) => setSohuuA(e)}>
-            <Select.Option value="personal">Trường hợp chủ sở hữu là cá nhân</Select.Option>
-            <Select.Option value="organization">Trường hợp chủ sở hữu là tổ chức</Select.Option>
-          </Select>
-        </Form.Item> */}
 
         {renderFormOnwerA(sohuuA, [...BASE_FORM, "A_side"])}
       </Form.Item>
@@ -329,11 +329,6 @@ const HopDongChuyenNhuong = forwardRef((props, ref) => {
           onChange={(e) => setSohuuB(e)}
           options={SELECT.OWNER}
         />
-        {/* <Select onChange={(e) => setSohuuB(e)}>
-            <Select.Option value="personal">Trường hợp chủ sở hữu là cá nhân</Select.Option>
-            <Select.Option value="organization">Trường hợp chủ sở hữu là tổ chức</Select.Option>
-          </Select>
-        </Form.Item> */}
 
         {renderFormOwnerB(sohuuB, [...BASE_FORM, "B_side"])}
       </Form.Item>

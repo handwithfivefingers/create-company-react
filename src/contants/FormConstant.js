@@ -160,6 +160,8 @@ export const LABEL = {
           organization: {
             company_name: "Tên doanh nghiệp",
             mst: "Mã số doanh nghiệp",
+            time_provide: "Ngày cấp",
+            place_proive: "Nơi cấp",
             company_address: {
               street: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
               town: "Xã/Phường/Thị trấn",
@@ -172,9 +174,11 @@ export const LABEL = {
               current_value: "Vốn sở hữu",
               type: "Loại chuyển nhượng",
               will: "Phần vốn góp bên A muốn chuyển nhượng",
+              current_A_percent: "Chiếm tỉ lệ",
               transfer_price: "Giá chuyển nhượng",
               time_end: "Thời điểm hoàn thành việc chuyển nhượng (Chọn Ngày/ tháng/ năm)",
             },
+            company_model: "Mô hình công ty",
           },
         },
       },
@@ -325,6 +329,9 @@ export const LABEL = {
       fields: {
         company_name: "Tên doanh nghiệp (ghi bằng chữ in hoa)",
         mst: "Mã số doanh nghiệp/Mã số thuế",
+        time_provide: "Ngày cấp",
+        place_provide: "Nơi cấp",
+        opt_code: "Số Giấy chứng nhận đăng ký kinh doanh (chỉ kê khai nếu không có mã số doanh nghiệp/mã số thuế)",
         obj: "Đối tượng tạm ngưng",
         branch: {
           branch_name: "Tên chi nhánh/văn phòng đại diện/địa điểm kinh doanh (ghi bằng chữ in hoa)",

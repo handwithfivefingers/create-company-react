@@ -44,7 +44,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
 
       <CCInput name={[...BASE_FORM, "place_provide"]} label="Nơi cấp" />
 
-      <CCInput
+      <CCInput 
         name={[...BASE_FORM, "opt_code"]}
         label="Số Giấy chứng nhận đăng ký kinh doanh (chỉ kê khai nếu không có mã số doanh nghiệp/mã số thuế)"
       />

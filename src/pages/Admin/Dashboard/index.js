@@ -1,125 +1,98 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, InputNumber, message, Modal, Row, Space, Upload } from "antd";
-import WithAuth from "src/components/HOC/WithAuth";
-import React, { useState, useRef } from "react";
-import { Outlet } from "react-router-dom";
-import axios from "src/config/axios";
-import dateformat from "dateformat";
+import React, { useState, useEffect } from "react";
+import { List, Row, Skeleton, Avatar, Col, Card, message } from "antd";
+import AdminDashboardService from "src/service/AdminService/AdminDashboardService";
 
 const AdminDashboard = () => {
+  const [logs, setLogs] = useState([]);
+  const [orderPayment, setOrderPayment] = useState([]);
+  const [orderLatest, setOrderLatest] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [fileUpload, setFileUpload] = useState([]);
+  useEffect(() => {
+    getScreenData();
+  }, []);
 
-  const formRef = useRef();
-  const onFinish = async (val) => {
-    setLoading(true);
-    const date = new Date();
-    var createDate = dateformat(date, "yyyymmddHHmmss");
-    var orderId = dateformat(date, "HHmmss");
-    let params = {
-      ...val,
-      createDate,
-      orderId,
-    };
-    const res = await axios.post(`/payment`, params);
-    if (res.status === 200) {
-      window.open(res.data.url);
+  const getScreenData = async () => {
+    try {
+      setLoading(true);
+      let { data } = await AdminDashboardService.getLogs();
+      // setLogs(data);
+      console.log(data?.data);
+      if (data) setLogs(data?.data);
+    } catch (err) {
+      let msg = "Đã có lỗi xảy ra, vui lòng thử lại sau";
+      message.error(msg);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
-
-  const handleSendMailWithAttach = () => {
-    let { email, attachments } = formRef.current.getFieldsValue();
-
-    const form = new FormData();
-
-    attachments?.fileList?.map((item) => {
-      form.append("attachments", item.originFileObj);
-    });
-    form.append("email", email);
-
-    setLoading(true);
-
-    axios
-      .post("/sendmail", form)
-      .then((res) => {
-        let msg = res.data.message;
-        message.success(`${msg} -> Email: ${[res.data.info.accepted].join("")}`);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
   };
 
   return (
-    <div>
-      <Form onFinish={onFinish} ref={formRef} layout="vertical" labelCol={{ span: 6 }}>
-        <Row gutter={[16, 12]}>
-          <Col span={24}>
-            <h2>Cloudinary Uploader</h2>
-            <Form.Item name="file">
-              <Upload>
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload>
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Card style={{ margin: 10 }} title="Chức năng thanh toán">
-              <Form.Item name="amount">
-                <InputNumber placeholder="Vui lòng nhập giá tiền" min={1} style={{ width: "100%" }} />
-              </Form.Item>
-
-              <Form.Item name="orderDescription">
-                <Input placeholder="Nội dung thanh toán" style={{ width: "100%" }} />
-              </Form.Item>
-
-              <Space style={{ display: "flex", justifyContent: "center" }}>
-                <Form.Item>
-                  <Button htmlType="submit" loading={loading}>
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Space>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card style={{ margin: 10 }} title="Chức năng gửi mail đính kèm">
-              <Form.Item name="email" rules={[{ type: "email" }]}>
-                <Input placeholder="Nhập email cần gửi" style={{ width: "100%" }} />
-              </Form.Item>
-              <Form.Item name="attachments">
-                <Upload>
-                  <Button icon={<UploadOutlined />}>Upload</Button>
-                </Upload>
-              </Form.Item>
-              <Space style={{ display: "flex", justifyContent: "center" }}>
-                <Form.Item>
-                  <Button loading={loading} onClick={handleSendMailWithAttach}>
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Space>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card style={{ margin: 10 }} title="Chức năng khác ...">
-              <Form.Item name="amount" label="">
-                <InputNumber style={{ width: "100%" }} />
-              </Form.Item>
-              <Form.Item name="orderDescription" label="Nội dung thanh toán">
-                <Input style={{ width: "100%" }} />
-              </Form.Item>
-              <Space style={{ display: "flex", justifyContent: "center" }}>
-                <Form.Item>
-                  <Button disabled loading={loading}>
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Space>
-            </Card>
-          </Col>
-        </Row>
-      </Form>
-    </div>
+    <Row gutter={[16, 12]}>
+      <Col span={16}>
+        <Card title="Logs hệ thống" className="cc-card">
+          <List
+            className="demo-loadmore-list"
+            loading={loading}
+            itemLayout="horizontal"
+            dataSource={logs}
+            renderItem={(item) => (
+              <List.Item actions={[]}>
+                <Skeleton avatar title={false} loading={loading} active>
+                  <List.Item.Meta
+                    avatar={<Avatar src={item?.picture?.large} />}
+                    title={item?.createdAt}
+                    description="Chức năng quản lý request gửi về từ server"
+                  />
+                  <div>Status: {item.error?.status} </div>
+                </Skeleton>
+              </List.Item>
+            )}
+          />
+        </Card>
+      </Col>
+      <Col span={8}>
+        <Card title="Đơn hàng đã thanh toán">
+          <List
+            className="demo-loadmore-list"
+            loading={loading}
+            itemLayout="horizontal"
+            dataSource={orderPayment}
+            renderItem={(item) => (
+              <List.Item actions={[]}>
+                <Skeleton avatar title={false} loading={item.loading} active>
+                  <List.Item.Meta
+                    avatar={<Avatar src={item.picture.large} />}
+                    title={item.name?.last}
+                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                  />
+                  <div>content</div>
+                </Skeleton>
+              </List.Item>
+            )}
+          />
+        </Card>
+        <Card title="Đơn hàng vừa tạo">
+          <List
+            className="demo-loadmore-list"
+            loading={loading}
+            itemLayout="horizontal"
+            dataSource={orderLatest}
+            renderItem={(item) => (
+              <List.Item actions={[]}>
+                <Skeleton avatar title={false} loading={item.loading} active>
+                  <List.Item.Meta
+                    avatar={<Avatar src={item.picture.large} />}
+                    title={item.name?.last}
+                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                  />
+                  <div>content</div>
+                </Skeleton>
+              </List.Item>
+            )}
+          />
+        </Card>
+      </Col>
+    </Row>
   );
 };
 
