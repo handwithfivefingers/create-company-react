@@ -1,53 +1,28 @@
 const { Order, Setting } = require("../../model");
 
-const fs = require("fs");
-
 const libre = require("libreoffice-convert");
+
+const { sendmailWithAttachments } = require("../sendmail");
+
+const { errHandler } = require("../../response");
 
 const { flattenObject, convertFile } = require("./../../common/helper");
 
-const { sendmailWithAttachments } = require("../sendmail");
 libre.convertAsync = require("util").promisify(libre.convert);
 
 exports.checkingOrder = async (req, res) => {
   try {
-    let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
-    // let _order = await Order.findOne({ _id: "62920c38f875c93e70fb510a" }).populate("orderOwner", "email");
+    // let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
+    let _order = await Order.findOne({ _id: "62964a487b774763c605eab8" }).populate("orderOwner", "email");
 
     return handleConvertFile(_order, req, res);
+
   } catch (err) {
-    return res.status(400).json({
-      error: err,
-    });
+    
+    console.log("checkingOrder err");
+
+    return errHandler(err, res);
   }
-};
-const getMailContent = async (order) => {
-  let _setting = await Setting.find().populate("mailRegister mailPayment"); // -> _setting
-  let mailParams;
-  if (_setting) {
-    let { mailPayment } = _setting[0];
-    let { subject, content } = mailPayment;
-    mailParams = {
-      email: order.orderOwner.email,
-      subject,
-      content,
-      removeFiles: true,
-      send: 1,
-      _id: order._id,
-      type: "path",
-    };
-  } else {
-    mailParams = {
-      email: "handgod1995@gmail.com",
-      subject: "Testing auto generate files",
-      content: "Testing auto generate files",
-      removeFiles: true,
-      send: 1,
-      _id: order.orderOwner._id,
-      type: "path",
-    };
-  }
-  return mailParams;
 };
 
 const handleConvertFile = async (order, req, res) => {
@@ -57,7 +32,7 @@ const handleConvertFile = async (order, req, res) => {
 
     let attachments = [];
 
-    let mailParams = getMailContent(order);
+    let mailParams = await getMailContent(order);
 
     if (files) {
       let _contentOrder = flattenObject(data);
@@ -66,36 +41,54 @@ const handleConvertFile = async (order, req, res) => {
       //   _contentOrder,
       // });
 
-      try {
-        for (let file of files) {
-          console.log("start");
+      for (let file of files) {
+        console.log("start");
 
-          let pdfFile = await convertFile(file, _contentOrder);
+        let pdfFile = await convertFile(file, _contentOrder);
 
-          console.log("pdfFile", pdfFile);
+        console.log("pdfFile", pdfFile);
 
-          attachments.push({ pdfFile, name: file.name });
-        }
-      } catch (err) {
-        return res.status(400).json({
-          error: err,
-        });
+        attachments.push({ pdfFile, name: file.name });
       }
 
       mailParams.filesPath = attachments;
 
-      return await sendmailWithAttachments(req, res, mailParams);
+      console.log("mailParams", mailParams);
 
-      // return res.status(200).json({ message: "ok" });
+      await sendmailWithAttachments(req, res, mailParams);
+
+      return res.status(200).json({ message: "ok" });
     }
 
     return res.status(400).json({
       error: "Files not found",
     });
   } catch (err) {
-    console.log("error here");
-    return res.status(400).json({
-      error: err,
-    });
+    console.log("handleConvertFile error");
+
+    return errHandler(err, res);
   }
+};
+
+const getMailContent = async (order) => {
+  let _setting = await Setting.find().populate("mailRegister mailPayment"); // -> _setting
+  let mailParams;
+  mailParams = {
+    email: "handgod1995@gmail.com",
+    removeFiles: true,
+    send: 1,
+    _id: order._id,
+    type: "path",
+  };
+  if (_setting) {
+    let { mailPayment } = _setting[0];
+    let { subject, content } = mailPayment;
+    mailParams.subject = subject;
+    mailParams.content = content;
+    // mailParams.email = order.orderOwner.email;
+  } else {
+    mailParams.subject = "Testing auto generate files";
+    mailParams.content = "Testing auto generate files";
+  }
+  return mailParams;
 };

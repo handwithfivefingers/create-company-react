@@ -21,6 +21,7 @@ exports.getOrdersFromUser = async (req, res) => {
     console.log(_order);
     return successHandler(_order, res);
   } catch (err) {
+    console.log("getOrdersFromUser error");
     return errHandler(err, res);
   }
 };
@@ -29,6 +30,7 @@ exports.getOrdersFromUser = async (req, res) => {
 exports.getOrders = async (req, res) => {
   try {
     const { page, ...condition } = req.body;
+
     let current_page = (parseInt(page) - 1) * PAGE_SIZE;
 
     const email = new RegExp(condition?.name, "i");
@@ -49,10 +51,7 @@ exports.getOrders = async (req, res) => {
         $or: newCondition.length > 0 ? newCondition : [{}],
       })
         .populate("products", "name")
-        .populate({
-          path: "orderOwner",
-          select: "name email",
-        })
+        .populate("orderOwner", "name email")
         .skip(current_page)
         .limit(PAGE_SIZE)
         .sort("-createdAt");
@@ -65,6 +64,7 @@ exports.getOrders = async (req, res) => {
     }
     return getOrder(req, res);
   } catch (err) {
+    console.log("getOrders error");
     return errHandler(err, res);
   }
 };
@@ -73,29 +73,31 @@ const getOrder = async (req, res) => {
   try {
     let _order = await Order.find({ orderOwner: req.id })
       .populate("products", "name")
-      // .populate("main_career", "name")
       .populate("orderOwner", "name")
       // .limit(10)
       .sort("-createdAt");
 
     return successHandler(_order, res);
   } catch (err) {
+    console.log("getOrder error");
     return errHandler(err, res);
   }
 };
 
 exports.getOrderBySlug = async (req, res) => {
   const { id } = req.params;
+
   try {
     if (req.role === "admin") {
       const _order = await Order.findById(id).populate("products", "name type");
-      // .populate("data.create_company.main_career", ["name", "code"]);
-      // .populate("data.create_company.opt_career", ["name", "code"]);
-      // console.log(_order);
+
       return successHandler(_order, res);
     }
+
     return permisHandler(res);
   } catch (err) {
+    console.log("getOrderBySlug error");
+
     return errHandler(err, res);
   }
 };
@@ -117,7 +119,6 @@ exports.createOrders = async (req, res) => {
       products: selectChildProduct ? selectChildProduct : selectProduct,
     };
 
-    // console.log(data);
     let files = findKeysByObject(data, list_files).flat();
 
     newData.files = files;
@@ -143,10 +144,12 @@ exports.createOrders = async (req, res) => {
     newData.slug = newData.name + "-" + shortid.generate();
 
     let _save = new Order({ ...newData });
-    // let _obj = await _save.save().then((t) => t.populate("orderOwner", "_id name email").execPopulate());
+
     let _obj = await _save.save();
+
     return successHandler(_obj, res);
   } catch (err) {
+    console.log("createOrders error");
     return errHandler(err, res);
   }
 };
@@ -185,7 +188,6 @@ exports.orderWithPayment = async (req, res) => {
       // By Category product
       price += await calcPrice(selectProduct);
     }
-    // console.log(data);
 
     let files = findKeysByObject(data, list_files).flat();
 
@@ -202,16 +204,14 @@ exports.orderWithPayment = async (req, res) => {
     // handle Payment Here
     let params = {
       amount: price * 100,
-      // orderInfo: `Thanh toán đơn hàng ${_obj.name} tại app.thanhlapcongtyonline.vn`,
-      // _id: _obj._id,
       orderInfo: _obj._id,
       orderId: req.body.orderId,
       createDate: req.body.createDate,
     };
 
-    // return successHandler(_obj, res);
     return paymentOrder(req, res, params);
   } catch (err) {
+    console.log("orderWithPayment error");
     return errHandler(err, res);
   }
 };
@@ -255,18 +255,20 @@ exports.getUrlReturn = async (req, res) => {
       await Order.updateOne({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
 
       console.log("updated Success");
+
       let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate("orderOwner", "_id name email");
+
       console.log(_order);
+
       let params = {
         filesPath: _order.files,
         email: _order.orderOwner.email,
         subject: "Thông tin giấy tờ từ app.thanhlapdoanhnghieponline.vn",
         content: `Chào ${_order.orderOwner.name},<br /> xin gửi quý khách các loại giấy tờ đăng kí sau.<br /> Vui lòng kiểm tra và phản hồi lại với admin sau khi nhận.<br /> Xin cảm ơn`,
         type: "path",
-        redirect: `${process.env.BASEHOST}/user/order?${query}`,
       };
-
-      return sendmailWithAttachments(req, res, params);
+      await sendmailWithAttachments(req, res, params);
+      return res.redirect(`${process.env.BASEHOST}/user/order?${query}`);
     }
     return res.redirect(`${process.env.BASEHOST}/user/order?` + query);
   } else {
@@ -364,21 +366,21 @@ const calcPrice = async (productArray) => {
 const findKeysByObject = (obj, listfiles) => {
   if (!obj) return;
   let files;
-  console.log(files, obj);
+  console.log("findKeysByObject", files, obj);
   for (let prop in obj) {
     // prop => create_company || change_info || pending || disolution
     if (listfiles[prop]) {
       files = Object.keys(obj[prop]).map((key) => {
         if (obj[prop][key]) {
-          if (typeof listfiles[prop][key] === "object") {
+          if (typeof listfiles[prop][key] === "object" && !Array.isArray(listfiles[prop][key])) {
+            // Check listfiles must be a Object
             if (obj[prop][key].present_person) {
               let person = obj[prop][key].present_person;
               return listfiles[prop][key][person];
             } else {
               return listfiles[prop][key].personal;
             }
-          }
-          return listfiles[prop][key];
+          } else return listfiles[prop][key];
         }
       });
     }

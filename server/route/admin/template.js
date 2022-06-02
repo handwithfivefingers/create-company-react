@@ -1,6 +1,6 @@
 const express = require("express");
-const { upload, requireSignin } = require("./../middleware/index");
-const { fetchTemplate, editTemplate, createTemplate, deleteTemplate } = require("../controller/admin/template");
+const { upload, requireSignin } = require("../../middleware/index");
+const { fetchTemplate, editTemplate, createTemplate, deleteTemplate } = require("../../controller/admin/template");
 const router = express.Router();
 
 router.get("/admin/template", requireSignin, upload.none(), fetchTemplate);

@@ -17,20 +17,14 @@ exports.authFailedHandler = (res) => {
 };
 
 exports.errHandler = async (err, res) => {
-  const obj = {
-    error: {
-      status: 400,
-      error: err,
-    },
-  };
+let message = "Đã có lỗi xảy ra, vui lòng thử lại sau!";
 
-  const _err = new Log(obj);
+let error = {error: err, message}
 
-  await _err.save();
+ await createLog(error)
 
   return res.status(400).json({
-    error: err,
-    message: "Đã có lỗi xảy ra, vui lòng thử lại sau!",
+    ...error,
     status: 400,
     success: false,
   });
@@ -47,6 +41,7 @@ exports.successHandler = (data, res, props = null) => {
 };
 
 exports.updatedHandler = (data, res) => {
+
   return res.status(200).json({
     data,
     message: "Cập nhật thành công",
@@ -56,6 +51,9 @@ exports.updatedHandler = (data, res) => {
 };
 
 exports.createdHandler = (data, res) => {
+
+
+
   return res.status(200).json({
     data,
     message: "Tạo thành công",
@@ -65,6 +63,9 @@ exports.createdHandler = (data, res) => {
 };
 
 exports.deletedHandler = (data, res) => {
+
+
+
   return res.status(200).json({
     // data,
     message: "Xóa thành công",
@@ -73,17 +74,26 @@ exports.deletedHandler = (data, res) => {
   });
 };
 
-exports.existHandler = (res, message = null) => {
+exports.existHandler = async (res, message = null) => {
+
+  let newMessage = ` ${message || 'Data'} đã tồn tại, vui lòng thử lại`;
+
+  await createLog({message: newMessage})
+
   return res.status(200).json({
-    message: `${message ? message : "Data"} đã tồn tại, vui lòng thử lại`,
+    message: newMessage,
     success: false,
     status: 400,
   });
 };
 
-exports.permisHandler = (res) => {
+exports.permisHandler = async (res) => {
+  let message = "Không có quyền truy cập";
+
+  await createLog({message})
+
   return res.status(200).json({
-    message: "Permission Confused",
+    message,
     success: false,
     status: 401,
   });
@@ -100,3 +110,18 @@ exports.removeFile = async (pathName) => {
     });
   });
 };
+
+
+const createLog = async ({error = null, message}) => {
+  const obj = {
+    error: {
+      error,
+      message,
+    },
+  };
+
+  const _err = new Log(obj);
+
+  await _err.save();
+
+}

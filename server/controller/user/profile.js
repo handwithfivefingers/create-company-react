@@ -8,6 +8,7 @@ exports.fetchProfile = async (req, res) => {
 
     return successHandler(_user, res);
   } catch (e) {
+    console.log("fetchProfile error");
     return errHandler(e, res);
   }
 };
@@ -33,8 +34,11 @@ exports.changePassword = async (req, res) => {
     }
 
     return errHandler("Password doesnt correct, please try again !", res);
-    
+
   } catch (err) {
+
+    console.log("changePassword error");
     return errHandler(err, res);
+    
   }
 };

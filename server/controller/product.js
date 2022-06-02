@@ -5,55 +5,63 @@ const { updatedHandler, errHandler, successHandler } = require("../response");
 const lodash = require("lodash");
 const slugify = require("slugify");
 exports.createProduct = async (req, res) => {
-  const obj = {
-    name: req.body.name.toString(),
-    price: Number(req.body.price),
-    slug: slugify(req.body.name),
-    categories: req.body.categories,
-    type: req.body.type,
-  };
+  try {
+    const obj = {
+      name: req.body.name.toString(),
+      price: Number(req.body.price),
+      slug: slugify(req.body.name),
+      categories: req.body.categories,
+      type: req.body.type,
+    };
 
-  if (req.body.parentId) {
-    obj.parentId = req.body.parentId;
+    if (req.body.parentId) {
+      obj.parentId = req.body.parentId;
+    }
+
+    let product = await Product.findOne({
+      name: req.body.name,
+    });
+
+    if (product) return errHandler(product, res);
+
+    const _product = new Product(obj);
+
+    await _product.save();
+
+    return successHandler(data, res);
+  } catch (err) {
+    console.log("createProduct error");
+    return errHandler(err, res);
   }
-
-  let product = await Product.findOne({
-    name: req.body.name,
-  });
-
-  if (product) return errHandler(product, res);
-
-  const _product = new Product(obj);
-
-  await _product.save(async (err, data) => {
-    if (err) return errHandler(err, res);
-    if (data) return successHandler(data, res);
-  });
 };
 
 exports.editProduct = async (req, res) => {
-  const { id } = req.params;
-  const obj = {
-    name: req.body.name,
-    price: req.body.price,
-    type: req.body.type,
-    categories: req.body.categories,
-  };
+  try {
+    const { id } = req.params;
+    const obj = {
+      name: req.body.name,
+      price: req.body.price,
+      type: req.body.type,
+      categories: req.body.categories,
+    };
 
-  if (req.body.parentId) {
-    obj.parentId = req.body.parentId;
+    if (req.body.parentId) {
+      obj.parentId = req.body.parentId;
+    }
+
+    const product = await Product.updateOne(
+      {
+        _id: id,
+      },
+      obj,
+      { new: true }
+    );
+
+    return updatedHandler(product, res);
+  } catch (err) {
+    console.log("editProduct error");
+    return errHandler(err, res);
   }
-
-  //   res.send(200);
-  const product = await Product.updateOne(
-    {
-      _id: id,
-    },
-    obj,
-    { new: true }
-  );
-
-  return updatedHandler(product, res);
 };
 
 exports.fetchProduct = async (req, res) => {
@@ -63,16 +71,22 @@ exports.fetchProduct = async (req, res) => {
     let lastData = filterCaregories(newData);
     return successHandler(lastData, res);
   } catch (err) {
+    console.log("fetchProduct error");
     return errHandler(err, res);
   }
 };
 
 exports.deleteProduct = async (req, res) => {
-  const { id } = req.query;
-  const _product = await Product.findOneAndDelete({
-    slug: id,
-  });
-  return res.status(200).json({ message: "Xóa sản phẩm thành công", status: 200 });
+  try {
+    const { id } = req.query;
+    const _product = await Product.findOneAndDelete({
+      slug: id,
+    });
+    return res.status(200).json({ message: "Xóa sản phẩm thành công", status: 200 });
+  } catch (err) {
+    console.log("deleteProduct error");
+    return errHandler(err, res);
+  }
 };
 
 exports.getProductBySlug = async (req, res) => {
@@ -91,9 +105,10 @@ exports.getProductBySlug = async (req, res) => {
 
     return successHandler(lastData, res, _cate);
   } catch (err) {
+    console.log("getProductBySlug error");
+
     return errHandler(err, res);
   }
-
 };
 
 const filterData = (data = null) => {

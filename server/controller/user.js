@@ -9,7 +9,7 @@ exports.fetchUser = async (req, res) => {
 
     return successHandler({ _user, count }, res);
   } catch (e) {
+    console.log("fetchUser error");
     return errHandler(e, res);
   }
 };
-

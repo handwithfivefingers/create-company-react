@@ -11,6 +11,7 @@ exports.getLogs = async (req, res) => {
       return errHandler(_logs, res);
     }
   } catch (err) {
+    console.log('getLogs error')
     return errHandler(err, res);
   }
 };

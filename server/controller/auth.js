@@ -8,7 +8,7 @@ const { sendmailWithAttachments } = require("./sendmail");
 
 exports.registerUser = async (req, res) => {
   try {
-    let _user = await User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] });
+    let _user = await User.findOne({ $and: [{ email: req.body.email }, { phone: req.body.phone }] });
 
     let message = _user?.phone === req.body.phone ? "Phone" : "Email"; // if have user -> check mail or phone
 
@@ -35,48 +35,14 @@ exports.registerUser = async (req, res) => {
 
     await generateToken(_tokenObj, res);
 
-    let _setting = await Setting.find().populate("mailRegister mailPayment");
+    let mailParams = await getMailParams({ name, phone, password, role }, res);
 
-    // const params = {
-    //   phone,
-    //   // password,
-    //   email: _email,
-    //   role,
-    //   callbackUrl: `/${role}`,
-    //   subject: "Create user Successfully",
-    //   content: `Chào ${name}, <br/>Tên đăng nhập của bạn là: ${phone}<br/>Mật khẩu của bạn là : ${password}`,
-    //   type: "any",
-    // };
+    await sendmailWithAttachments(req, res, mailParams);
 
-    if (_setting) {
-      let { mailPayment } = _setting[0];
-      let { subject, content } = mailPayment;
-
-      content.replace("{name}", name);
-      content.replace("{phone}", phone);
-      content.replace("{password}", password);
-
-      return await sendmailWithAttachments(req, res, {
-        phone,
-        email: _email,
-        role,
-        callbackUrl: `/${role}`,
-        subject: subject,
-        content: content,
-        type: "any",
-      });
-    } else {
-      return await sendmailWithAttachments(req, res, {
-        phone,
-        email: _email,
-        role,
-        callbackUrl: `/${role}`,
-        subject: "Create user Successfully",
-        content: `Chào ${name}, <br/>Tên đăng nhập của bạn là: ${phone}<br/>Mật khẩu của bạn là : ${password}`,
-        type: "any",
-      });
-    }
+    return res.redirect(`/${role}`);
+    
   } catch (err) {
+    console.log("Register Error");
     return errHandler(err, res);
   }
 };
@@ -109,7 +75,8 @@ exports.LoginUser = async (req, res) => {
       }
     }
   } catch (err) {
-    loginFailed(res);
+    console.log("LoginUser error");
+    return loginFailed(res);
   }
 };
 
@@ -139,4 +106,38 @@ const generateToken = async (obj, res) => {
     maxAge: 2 * 24 * hour,
     httpOnly: true,
   });
+};
+
+const getMailParams = async ({ name, phone, password, role }, res) => {
+  try {
+    let _setting = await Setting.find().populate("mailRegister mailPayment");
+
+    let mailParams = {
+      phone,
+      email: _email,
+      role,
+      type: "any",
+    };
+
+    if (_setting) {
+      let { mailPayment } = _setting[0];
+
+      let { subject, content } = mailPayment;
+
+      content.replace("{name}", name);
+      content.replace("{phone}", phone);
+      content.replace("{password}", password);
+
+      mailParams.content = content;
+      mailParams.subject = subject;
+    } else {
+      mailParams.content = `Chào ${name}, <br/>Tên đăng nhập của bạn là: ${phone}<br/>Mật khẩu của bạn là : ${password}`;
+      mailParams.subject = "Create user Successfully";
+    }
+
+    return mailParams;
+  } catch (err) {
+    // throw err;
+    return errHandler(err, res);
+  }
 };

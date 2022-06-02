@@ -1,4 +1,4 @@
-const { permisHandler } = require("../response");
+const { permisHandler, errHandler } = require("../response");
 const { Setting } = require("../model");
 
 exports.settingTemplateMail = async (req, res) => {
@@ -24,24 +24,22 @@ exports.settingTemplateMail = async (req, res) => {
       data,
     });
   } catch (err) {
-    return res.status(400).json({
-      error: err,
-    });
+    console.log("settingTemplateMail error");
+
+    return errHandler(err, res);
   }
 };
 
 exports.getSettingMail = async (req, res) => {
   if (req.role !== "admin") return permisHandler(res);
   try {
-    let _setting = await Setting.findOne({ userOwner: req.id }).populate('mailRegister mailPayment');
+    let _setting = await Setting.findOne({ userOwner: req.id }).populate("mailRegister mailPayment");
     return res.status(200).json({
       message: "ok",
       data: _setting,
     });
   } catch (err) {
-    return res.status(400).json({
-      message: "Something was wrong !",
-      error: err,
-    });
+    console.log("getSettingMail error");
+    return errHandler(err, res);
   }
 };

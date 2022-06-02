@@ -1,14 +1,6 @@
 const express = require("express");
 const { upload, requireSignin } = require("./../middleware/index");
-const {
-//   getOrders,
-  //   getOrderBySlug,
-  createOrders,
-  orderWithPayment,
-  getUrlReturn,
-  getOrdersFromUser,
-} = require("../controller/order");
-const { getOrderBySlug, getOrders } = require("../controller/admin/order");
+const { createOrders, orderWithPayment, getUrlReturn, getOrdersFromUser } = require("../controller/order");
 
 const router = express.Router();
 
@@ -26,10 +18,5 @@ router.post("/order/create/payment", requireSignin, upload.none(), orderWithPaym
 
 // return url -> update db
 router.get("/order/payment/url_return", getUrlReturn);
-
-// Admin Router
-router.get("/admin/order/:id", requireSignin, upload.none(), getOrderBySlug);
-
-router.post("/admin/order", requireSignin, upload.none(), getOrders);
 
 module.exports = router;

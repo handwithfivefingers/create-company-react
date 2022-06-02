@@ -273,6 +273,7 @@ exports.editCareer = async (req, res) => {
     let _updated = await Career.updateOne({ _id: id }, _update, { new: true });
     return updatedHandler(_updated, res);
   } catch (e) {
+    console.log("editCareer error");
     return errHandler(e, res);
   }
 };
@@ -285,6 +286,7 @@ exports.deleteCareer = async (req, res) => {
 
     return deletedHandler("", res);
   } catch (e) {
+    console.log("deleteCareer error");
     return errHandler(e, res);
   }
 };

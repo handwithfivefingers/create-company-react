@@ -1,30 +1,35 @@
 const nodeMailer = require("nodemailer");
-const shortid = require("shortid");
 const fs = require("fs");
 const { removeFile, errHandler } = require("../response");
 const { TemplateMail, Order } = require("../model");
-const { path } = require("path");
 const { google } = require("googleapis");
 
-const REFRESH_TOKEN =
-  "1//04cbp0ho-ADoyCgYIARAAGAQSNwF-L9IrQJp9XMDcTUr3lI2Jm2mhveK47WCyTB9zH52B4XFe9FwY0dhUUMIIqquLeOXK519fN4g";
-
-const REFRESH_URI = "https://developers.google.com/oauthplayground";
-
-const CLIENT_ID = process.env.GG_EMAIL_CLIENT_ID;
-
-const CLIENT_SECRET = process.env.GG_EMAIL_CLIENT_SECRET;
+const {
+  GG_REFRESH_TOKEN: REFRESH_TOKEN,
+  GG_REFRESH_URI: REFRESH_URI,
+  GG_EMAIL_CLIENT_ID: CLIENT_ID,
+  GG_EMAIL_CLIENT_SECRET: CLIENT_SECRET,
+  MAIL_NAME,
+  MAIL_PASSWORD,
+  MAIL_PORT,
+  MAIL_HOST,
+} = process.env;
 
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REFRESH_URI);
 
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...rest }) => {
-  const adminEmail = "tbkimt97@gmail.com";
-  const adminEmail2 = "handgod1995@gmail.com";
-  const adminPass = "Net@Kim!21";
-  const mailHost = "smtp.gmail.com";
-  const mailPort = "587";
+  /**
+   * filesPath
+   * email
+   * removeFiles
+   * send
+   * _id
+   * type
+   * subject
+   * content
+   */
 
   try {
     console.log("setting options");
@@ -34,26 +39,31 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
       service: "gmail",
       auth: {
         type: "OAUTH2",
-        user: adminEmail2,
+        user: MAIL_NAME,
+        pass: MAIL_PASSWORD,
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
-        accessToken: accessToken,
       },
     });
 
-    if (type === "attachments") {
+    console.log("comming transporter", type);
+
+    if (type == "attachments") {
       let params = {
-        adminEmail,
+        adminEmail: MAIL_NAME,
         email: req.body.email,
         subject: req.body.subject,
         content: req.body.content,
         redirect: rest?.redirect,
       };
+
       return withAttachments(req, res, params, transporter);
-    } else if (type === "path") {
+    } else if (type == "path") {
+      console.log("comming transporter with path");
+
       let params = {
-        adminEmail,
+        adminEmail: MAIL_NAME,
         email: rest.email,
         subject: rest.subject,
         content: rest.content,
@@ -62,11 +72,11 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
         ...rest,
       };
       return withFilesPath(req, res, params, transporter);
-    } else if (type === "any") {
+    } else if (type == "any") {
       console.log("match params");
 
       let params = {
-        adminEmail,
+        adminEmail: MAIL_NAME,
         email: rest.email,
         subject: rest.subject,
         content: rest.content,
@@ -77,7 +87,7 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
     }
   } catch (err) {
     console.log("error 1", err);
-    return errHandler(err, res);
+    throw err;
   }
 
   // validate file
@@ -86,23 +96,19 @@ const withAttachments = async (req, res, { adminEmail, email, subject, content, 
   let attachments;
   try {
     let validFiles = req.files.some((item) => item.mimetype !== "application/pdf");
+
     if (validFiles) {
       await req.files.map((file) => removeFile(file.path));
     }
+
     if (!validFiles) {
       attachments = req.files.map((file) => {
         return { filename: file.originalname, path: file.path };
       });
     }
-  } catch (err) {
-    res.status(400).json({
-      err,
-    });
-  }
 
-  //sending
+    //sending
 
-  try {
     const resp = await transporter.sendMail({
       from: adminEmail, // sender address
       attachments,
@@ -110,11 +116,15 @@ const withAttachments = async (req, res, { adminEmail, email, subject, content, 
       subject: subject, // Subject line
       html: content, // html body,
     });
-    if (redirect) {
-      return res.redirect(redirect);
-    } else return sendSuccess(resp, res);
+
+    // if (redirect) {
+    //   return res.redirect(redirect);
+    // } else return sendSuccess(resp, res);
+
   } catch (err) {
-    return sendFailed(err, res);
+    // return sendFailed(err, res);
+    throw err;
+
   } finally {
     attachments?.map((item) => removeFile(item.path));
   }
@@ -133,21 +143,23 @@ const sendMail = async (req, res, { adminEmail, email, subject, content, redirec
       return res.redirect(redirect);
     } else return sendSuccess({ ...resp, role: rest.role }, res);
   } catch (err) {
-    console.log("send failed");
-    return sendFailed(err, res);
+    console.log("sendMail failed");
+
+    // return sendFailed(err, res);
+
+    throw err;
   }
 };
 
-const withFilesPath = async (
-  req,
-  res,
-  { adminEmail, email, subject, content, filesPath, redirect, removeFiles, ...rest },
-  transporter
-) => {
+const withFilesPath = async (req, res, params, transporter) => {
+  let { adminEmail, email, subject, content, filesPath, redirect, removeFiles, ...rest } = params;
+  console.log("sendmail via withFilesPath", params);
+
   let attachments = filesPath.map((file) => {
-    return { path: file.filepath };
+    let ext = file.pdfFile.split(".")[file.pdfFile.split(".").length - 1];
+    return { path: file.pdfFile, filename: `${file.name}.${ext}` };
   });
-  console.log("sendmail via withFilesPath", attachments);
+
   try {
     // kích hoạt gửi mail ->
     // gửi client : trong quá trình , vui check mail
@@ -177,11 +189,11 @@ const withFilesPath = async (
         }
       });
 
-    res.sendStatus(200);
+    // res.sendStatus(200);
   } catch (err) {
     console.log("send mail failed ", err);
-
-    return sendFailed(err, res);
+    throw err;
+    // return sendFailed(err, res);
   }
 };
 
@@ -197,26 +209,4 @@ const sendSuccess = (info, res) => {
     message: "Sent attachments ok",
     info,
   });
-};
-
-const htmlTemplate = async (req) => {
-  let _template = await TemplateMail.findById(req.body.id);
-  if (_template)
-    return {
-      subject: _template.subject,
-      text: _template.text,
-      html: _template.html,
-    };
-
-  return {
-    subject: "Mail from ThanhlapcongtyOnline ",
-    text: "",
-    html: "",
-  };
-};
-
-const saveFileAsDocx = async (buffer) => {
-  let filePath = path.join(global.__basedir, "/uploads", `${shortid.generate()}-output.docx`);
-  fs.writeFileSync(filePath, buffer);
-  return filePath;
 };
