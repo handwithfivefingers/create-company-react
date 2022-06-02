@@ -3,6 +3,10 @@ const fs = require("fs");
 const { removeFile, errHandler } = require("../response");
 const { TemplateMail, Order } = require("../model");
 const { google } = require("googleapis");
+const dotenv = require("dotenv");
+
+// *Useful for getting environment vairables
+dotenv.config();
 
 const {
   GG_REFRESH_TOKEN: REFRESH_TOKEN,
@@ -44,6 +48,7 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
+        accessToken,
       },
     });
 
@@ -116,15 +121,9 @@ const withAttachments = async (req, res, { adminEmail, email, subject, content, 
       subject: subject, // Subject line
       html: content, // html body,
     });
-
-    // if (redirect) {
-    //   return res.redirect(redirect);
-    // } else return sendSuccess(resp, res);
-
   } catch (err) {
     // return sendFailed(err, res);
     throw err;
-
   } finally {
     attachments?.map((item) => removeFile(item.path));
   }
@@ -151,7 +150,7 @@ const sendMail = async (req, res, { adminEmail, email, subject, content, redirec
   }
 };
 
-const withFilesPath = async (req, res, params, transporter) => {
+const withFilesPath = async (params, transporter) => {
   let { adminEmail, email, subject, content, filesPath, redirect, removeFiles, ...rest } = params;
   console.log("sendmail via withFilesPath", params);
 
@@ -165,7 +164,7 @@ const withFilesPath = async (req, res, params, transporter) => {
     // gửi client : trong quá trình , vui check mail
     // Thành công, -> gửi mail
     // Thất bại -> báo lỗi
-
+    console.log("preparefor sendmail");
     transporter
       .sendMail({
         from: adminEmail, // sender address
@@ -188,8 +187,9 @@ const withFilesPath = async (req, res, params, transporter) => {
           fs.unlinkSync(attach.path);
         }
       });
-
     // res.sendStatus(200);
+
+    console.log("sendmail success");
   } catch (err) {
     console.log("send mail failed ", err);
     throw err;
@@ -209,4 +209,37 @@ const sendSuccess = (info, res) => {
     message: "Sent attachments ok",
     info,
   });
+};
+
+exports.cronMail = async ({ ...rest }) => {
+  try {
+    const accessToken = await oAuth2Client.getAccessToken();
+    const transporter = nodeMailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAUTH2",
+        user: MAIL_NAME,
+        pass: MAIL_PASSWORD,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken,
+      },
+    });
+    let params = {
+      adminEmail: MAIL_NAME,
+      email: rest.email,
+      subject: rest.subject,
+      content: rest.content,
+      filesPath: rest.filesPath,
+      redirect: rest?.redirect,
+      ...rest,
+    };
+    console.log("preparefor sendmail");
+
+    return await withFilesPath(params, transporter);
+
+  } catch (err) {
+    console.log("cron failed", err);
+  }
 };

@@ -64,8 +64,9 @@ app.use((err, req, res, next) => {
 });
 
 // Cron running ;
-// task.start();
+task.start();
 
 app.listen(3001, () => {
   console.log("Server is runnign in port 3001");
+
 });
