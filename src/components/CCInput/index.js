@@ -23,7 +23,7 @@ const CCInput = forwardRef((props, ref) => {
       return (
         <Form.Item value={value} name={name} label={label || " "} key={props?.key}>
           <Input
-            onChange={onChange}
+            onChange={props?.onChange}
             style={style}
             placeholder={placeholder}
             disabled={props?.disabled}
@@ -53,7 +53,8 @@ const CCInput = forwardRef((props, ref) => {
             placeholder={props?.placeholder}
             autocomplete={props?.autocomplete || "off"}
             inputReadOnly={props?.inputReadOnly || true}
-            onChange={onChange}
+            onChange={props?.onChange}
+
             {...rest}
           />
         </Form.Item>
@@ -68,7 +69,7 @@ const CCInput = forwardRef((props, ref) => {
           <Form.Item name={makeid(9)} label={props?.label || " "} key={props?.key}>
             <RangePicker
               inputReadOnly={props?.inputReadOnly || true}
-              onChange={onChange}
+              onChange={props?.onChange}
               format="MM/DD/YYYY"
               style={{ ...props.style, width: "100%" }}
               placeholder={placeholder}
@@ -110,7 +111,7 @@ const CCInput = forwardRef((props, ref) => {
       return (
         <Form.Item value={value} name={name} label={label || " "} key={props?.key}>
           <Input
-            onChange={onChange}
+            onChange={props?.onChange}
             style={style}
             placeholder={placeholder}
             disabled={props?.disabled}

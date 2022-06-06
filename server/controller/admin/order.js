@@ -1,7 +1,6 @@
-const { existHandler, successHandler, errHandler, permisHandler } = require("../../response");
+const { existHandler, successHandler, errHandler, permisHandler, deletedHandler } = require("../../response");
 const { Order, Product, User } = require("../../model");
-const shortid = require("shortid");
-const mongoose = require("mongoose");
+const _ = require("lodash");
 
 const PAGE_SIZE = 10;
 
@@ -65,6 +64,19 @@ exports.getOrders = async (req, res) => {
     return permisHandler(res);
   } catch (err) {
     console.log("getOrders error");
+
+    return errHandler(err, res);
+  }
+};
+
+exports.deleteOrder = async (req, res) => {
+  let { id } = req.params;
+  try {
+    await Order.findOneAndDelete({ _id: id });
+
+    return deletedHandler(_, res);
+  } catch (err) {
+    console.log("deleteOrder error");
 
     return errHandler(err, res);
   }

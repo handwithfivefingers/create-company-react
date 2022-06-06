@@ -44,9 +44,9 @@ const DaiDienPhapLuat = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
+      {/* <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
 
-      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} />
+      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} /> */}
 
       <CCInput label="Tên người đại diện pháp luật cũ" name={[...BASE_FORM, "old_name"]} />
 

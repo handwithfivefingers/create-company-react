@@ -65,25 +65,40 @@ const AdminOrder = () => {
     Modal.confirm({
       title: "Xác thực",
       content: "Bạn có muốn xóa ?",
-      onOk() {
-        axios
-          .post(`/api/admin/orders/delete/${record._id}`)
-          .then((res) => {
-            // console.log(res);
-            if (res.data.status === 200) {
-              message.success(res.data.message);
-            } else {
-              message.error(res.data.message);
-            }
-          })
-          .finally(() => {
-            let { current_page } = data;
-            fetchOrders(current_page);
-          });
+      async onOk() {
+        // axios
+        //   .post(`/admin/orders/delete/${record._id}`)
+        //   .then((res) => {
+        //     // console.log(res);
+        //     if (res.data.status === 200) {
+        //       message.success(res.data.message);
+        //     } else {
+        //       message.error(res.data.message);
+        //     }
+        //   })
+        //   .finally(() => {
+        //     let { current_page } = data;
+        //     fetchOrders(current_page);
+        //   });
+        return await handleDeleteOrder(record._id);
       },
     });
   };
-
+  const handleDeleteOrder = async (id) => {
+    try {
+      let res = await AdminOrderService.deleteOrder(id);
+      if (res.data.status === 200) {
+        message.success(res.data.message);
+      } else {
+        message.error(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      let { current_page } = data;
+      fetchOrders(current_page);
+    }
+  };
   const onFilter = (val) => {
     let { current_page } = data;
     fetchOrders(current_page);

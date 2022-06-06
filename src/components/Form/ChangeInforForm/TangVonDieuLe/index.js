@@ -25,12 +25,12 @@ const TangVonDieuLe = forwardRef((props, ref) => {
       })}
     >
       <Row gutter={[16, 0]}>
-        <Col span={24}>
-          <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
+        {/* <Col span={24}>
+         <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
         </Col>
         <Col span={24}>
           <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} />
-        </Col>
+        </Col> */}
         <Col span={12}>
           <CCInput label="Vốn điều lệ đã đăng ký (bằng số)" name={[...BASE_FORM, "base_val", "num"]} />
         </Col>

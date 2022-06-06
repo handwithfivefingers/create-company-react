@@ -37,10 +37,14 @@ const UserProductItem = (props) => {
     },
     {
       title: `Bước 2`,
-      desc: "Ủy quyền",
+      desc: "Thông tin doanh nghiệp",
     },
     {
       title: `Bước 3`,
+      desc: "Ủy quyền",
+    },
+    {
+      title: `Bước 4`,
       desc: "Preview",
     },
   ]);
@@ -293,20 +297,23 @@ const UserProductItem = (props) => {
         title: "Bước 1",
         desc: "Chọn loại hình",
       },
+      {
+        title: `Bước 2`,
+        desc: "Thông tin doanh nghiệp",
+      },
     ];
 
     for (let i = 0; i < val.length; i++) {
-      data.push({ desc: val[i].children, title: `Bước ${i + 2}` });
-      // current = i;
+      data.push({ desc: val[i].children, title: `Bước ${i + 3}` });
     }
 
     data.push(
       {
-        title: `Bước ${val.length > 0 ? val.length + 2 : data.length + 1}`,
+        title: `Bước ${val.length > 0 ? val.length + 3 : data.length + 2}`,
         desc: "Ủy quyền",
       },
       {
-        title: `Bước ${val.length > 0 ? val.length + 3 : data.length + 2}`,
+        title: `Bước ${val.length > 0 ? val.length + 4 : data.length + 3}`,
         desc: "Preview",
       }
     );

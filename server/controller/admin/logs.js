@@ -4,7 +4,7 @@ const { Log } = require("../../model");
 exports.getLogs = async (req, res) => {
   console.log('coming here')
   try {
-    let _logs = await Log.find({});
+    let _logs = await Log.find({}).sort("-createdAt");;
     if (_logs) {
       return successHandler(_logs, res);
     } else {

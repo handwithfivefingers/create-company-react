@@ -48,19 +48,19 @@ const AuthReducer = (state = initState, action) => {
     case AUTH_REGISTER.REQUEST:
       return {
         ...state,
-        // authenticating: true,
+        authenticating: true,
       };
     case AUTH_REGISTER.SUCCESS:
       return {
         ...state,
         status: action.payload.status,
         role: action.payload.role,
-        // authenticating: false,
+        authenticating: false,
       };
     case AUTH_REGISTER.FAILURE:
       return {
         ...state,
-        // authenticating: false,
+        authenticating: false,
       };
 
     case AUTH_LOGOUT.SUCCESS:

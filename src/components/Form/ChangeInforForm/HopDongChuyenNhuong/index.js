@@ -305,9 +305,9 @@ const HopDongChuyenNhuong = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
+      {/* <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
 
-      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} />
+      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} /> */}
 
       <Form.Item label="Bên chuyển nhượng phần góp vốn (bên A)">
         <CCInput

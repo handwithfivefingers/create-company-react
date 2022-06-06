@@ -76,7 +76,7 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
         redirect: rest?.redirect,
         ...rest,
       };
-      return withFilesPath(req, res, params, transporter);
+      return withFilesPath(params, transporter);
     } else if (type == "any") {
       console.log("match params");
 
@@ -114,7 +114,7 @@ const withAttachments = async (req, res, { adminEmail, email, subject, content, 
 
     //sending
 
-    const resp = await transporter.sendMail({
+    await transporter.sendMail({
       from: adminEmail, // sender address
       attachments,
       to: email,
@@ -132,15 +132,15 @@ const withAttachments = async (req, res, { adminEmail, email, subject, content, 
 const sendMail = async (req, res, { adminEmail, email, subject, content, redirect, ...rest }, transporter) => {
   try {
     console.log("send");
-    const resp = await transporter.sendMail({
+    return await transporter.sendMail({
       from: adminEmail, // sender address
       to: email,
       subject: subject, // Subject line
       html: content, // html body,
     });
-    if (redirect) {
-      return res.redirect(redirect);
-    } else return sendSuccess({ ...resp, role: rest.role }, res);
+    // if (redirect) {
+    //   return res.redirect(redirect);
+    // } else return sendSuccess({ ...resp, role: rest.role }, res);
   } catch (err) {
     console.log("sendMail failed");
 
@@ -238,7 +238,6 @@ exports.cronMail = async ({ ...rest }) => {
     console.log("preparefor sendmail");
 
     return await withFilesPath(params, transporter);
-
   } catch (err) {
     console.log("cron failed", err);
   }

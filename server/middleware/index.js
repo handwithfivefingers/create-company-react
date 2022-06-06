@@ -6,7 +6,9 @@ const multer = require("multer");
 const { authFailedHandler, errHandler } = require("../response");
 
 const cloudinary = require("cloudinary").v2;
+
 const apiKey = "oOhO32uMsnxj4biMWhb9bU88SZc";
+
 cloudinary.config({
   cloud_name: "dojswen0t",
   api_key: "776779258413574",

@@ -2,7 +2,7 @@ import axios from "src/config/axios";
 
 const api_path = {
   getOrder: "/admin/order",
- 
+  deleteOrder: "/admin/order/delete/",
 };
 
 const AdminOrderService = {
@@ -12,6 +12,9 @@ const AdminOrderService = {
 
   getOrderBySlug: (params) => {
     return axios.get(`${api_path.getOrder}/${params.slug}`);
+  },
+  deleteOrder: (id) => {
+    return axios.post(api_path.deleteOrder + id);
   },
 };
 

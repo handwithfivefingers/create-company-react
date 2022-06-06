@@ -23,9 +23,9 @@ const TenDoanhNghiep = forwardRef((props, ref) => {
       })}
     >
 
-      <CCInput label="Tên doanh nghiệp" name={["change_info", "name", "company_name"]} />
+      {/* <CCInput label="Tên doanh nghiệp" name={["change_info", "name", "company_name"]} />
 
-      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "name", "mst"]} />
+      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "name", "mst"]} /> */}
 
       <CCInput
         type="select"

@@ -11,8 +11,7 @@ import NganhNgheKinhDoanh from "./NganhNgheKinhDoanh";
 import TangVonDieuLe from "./TangVonDieuLe";
 import TenDoanhNghiep from "./TenDoanhNghiep";
 import ThongTinDangKyThue from "./ThongTinDangKyThue";
-
-
+import CCInput from "../../CCInput";
 const ChangeInforForm = forwardRef((props, ref) => {
   const [productSelect, setProductSelect] = useState("");
   const [selectType, setSelectType] = useState([]);
@@ -20,23 +19,23 @@ const ChangeInforForm = forwardRef((props, ref) => {
   const checkType = (type, i, ref) => {
     switch (type) {
       case "2":
-        return <DaiDienPhapLuat key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <DaiDienPhapLuat key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       case "3":
-        return <TenDoanhNghiep key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <TenDoanhNghiep key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       case "4":
-        return <GiamVonDieuLe key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <GiamVonDieuLe key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       case "5":
-        return <TangVonDieuLe key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <TangVonDieuLe key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       case "7":
-        return <NganhNgheKinhDoanh key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <NganhNgheKinhDoanh key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       case "1":
-        return <DiaChiTruSoChinh key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <DiaChiTruSoChinh key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       case "6":
-        return <HopDongChuyenNhuong key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <HopDongChuyenNhuong key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       case "8":
-        return <DaiDienToChuc key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <DaiDienToChuc key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       case "9":
-        return <ThongTinDangKyThue key={[type, i]} current={props.current} index={i + 1} ref={ref} />;
+        return <ThongTinDangKyThue key={[type, i]} current={props.current} index={i + 2} ref={ref} />;
       default:
         return null;
     }
@@ -72,7 +71,6 @@ const ChangeInforForm = forwardRef((props, ref) => {
           })}
         </Select>
       </Form.Item>
-
       <Form.Item
         name={["selectChildProduct"]}
         label="Chọn thông tin thay đổi"
@@ -108,6 +106,20 @@ const ChangeInforForm = forwardRef((props, ref) => {
         </Select>
       </Form.Item>
       {selectType?.map((item, i) => checkType(item.type, i, ref))}
+      <div
+        className={clsx(styles.current, {
+          [styles.active]: props.current === 1,
+        })}
+      >
+        <CCInput label="Tên doanh nghiệp" name={["change_info", "base_inform", "company_name"]} />
+
+        <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={["change_info", "base_inform", "mst"]} />
+
+        <CCInput label="Ngày cấp" name={["change_info", "base_inform", "time_provide"]} type="date" />
+
+        <CCInput label="Nơi cấp" name={["change_info", "base_inform", "place_provide"]} />
+      </div>
+      {/* Ngày cấp …/…/…… Nơi cấp: ……… kế bên field Mã số doanh nghiệp/ mã số thuế */}
     </Form>
   );
 });

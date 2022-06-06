@@ -31,6 +31,7 @@ import UserOrder from "src/pages/User/Order";
 import UserProfile from "src/pages/User/Profile";
 
 import Error from "src/pages/_error";
+import CCResult from "src/pages/User/Result";
 const { Content } = Layout;
 export const AdminRouter = [
   {
@@ -106,7 +107,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
   {
     title: "Admin",
     path: "admin",
-    element: <Admin status={status}  />,
+    element: <Admin status={status} />,
     children:
       status && role === "admin" ? (
         [
@@ -154,6 +155,7 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
             icon: <RiAdminFill />,
             element: <AdminSetting />,
           },
+
           {
             path: "*",
             element: <Error />,
@@ -189,6 +191,11 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
           title: "Orders",
           icon: <RiChatPollLine />,
           element: <UserOrder />,
+        },
+        {
+          path: "result",
+          title: "Kết quả",
+          element: <CCResult />,
         },
         {
           path: "profile",

@@ -35,12 +35,16 @@ exports.registerUser = async (req, res) => {
 
     await generateToken(_tokenObj, res);
 
-    let mailParams = await getMailParams({ name, phone, password, role }, res);
+    let mailParams = await getMailParams({ name, phone, password, role, email: _email }, res);
+
+    console.log("mailParams", mailParams);
 
     await sendmailWithAttachments(req, res, mailParams);
 
-    return res.redirect(`/${role}`);
-    
+    return res.status(201).json({
+      role,
+      message: "Đăng kí thành công",
+    });
   } catch (err) {
     console.log("Register Error");
     return errHandler(err, res);
@@ -74,9 +78,10 @@ exports.LoginUser = async (req, res) => {
         });
       }
     }
+    return loginFailed(res);
   } catch (err) {
     console.log("LoginUser error");
-    return loginFailed(res);
+    return errHandler(err, res);
   }
 };
 
@@ -108,13 +113,13 @@ const generateToken = async (obj, res) => {
   });
 };
 
-const getMailParams = async ({ name, phone, password, role }, res) => {
+const getMailParams = async ({ name, phone, password, role, email }, res) => {
   try {
     let _setting = await Setting.find().populate("mailRegister mailPayment");
 
     let mailParams = {
       phone,
-      email: _email,
+      email,
       role,
       type: "any",
     };

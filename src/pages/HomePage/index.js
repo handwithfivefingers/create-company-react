@@ -33,11 +33,9 @@ export default function HomePage() {
     setLoading(false);
   };
 
-
-
   const onRegister = async (val) => {
     setLoading(true);
-    dispatch(AuthAction.AuthRegister(val));
+    await dispatch(AuthAction.AuthRegister(val));
     setLoading(false);
   };
 

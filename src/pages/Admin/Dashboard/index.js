@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { List, Row, Skeleton, Avatar, Col, Card, message } from "antd";
+import { List, Row, Skeleton, Avatar, Col, Card, message, Button } from "antd";
 import AdminDashboardService from "src/service/AdminService/AdminDashboardService";
 
 const AdminDashboard = () => {
@@ -26,8 +26,32 @@ const AdminDashboard = () => {
     }
   };
 
+  const testPayment = () => {
+    const date = new Date();
+    var createDate = Date.parse(date).toString("yyyyMMddHHmmss");
+    var orderId = Date.parse(date).toString("HHmmss");
+    let params = {};
+    params.createDate = createDate;
+    params.orderId = orderId;
+    params.amount = 100000*100;
+    params.orderInfo = "Test payment";
+    AdminDashboardService.testPayment(params)
+      .then((res) => {
+        if (res.data.status === 200) {
+          console.log(res.data);
+          return (window.location.href = res.data.url);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <Row gutter={[16, 12]}>
+      <Col span={24}>
+        <Button onClick={testPayment}>Test payment</Button>
+      </Col>
       <Col span={16}>
         <Card title="Logs hệ thống" className="cc-card">
           <List

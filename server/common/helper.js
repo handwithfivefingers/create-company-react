@@ -26,10 +26,19 @@ expressions.filters.upper = function (input) {
   return input.toUpperCase();
 };
 
+function nullGetter(tag, props) {
+  if (props.tag === "simple") {
+    return "undefined";
+  }
+  if (props.tag === "raw") {
+    return "";
+  }
+  return "";
+}
 function angularParser(tag) {
   tag = tag.replace(/^\.$/, "this").replace(/(’|‘)/g, "'").replace(/(“|”)/g, '"');
   const expr = expressions.compile(tag);
-
+  // expr = expressions.compile(tag);
   return {
     get: function (scope, context) {
       let obj = {};
@@ -54,7 +63,10 @@ const applyContent = async (file = null, data = null) => {
 
   const zip = new PizZip(content);
 
-  const doc = new Docxtemplater(zip, { parser: angularParser });
+  const doc = new Docxtemplater(zip, {
+    parser: angularParser,
+    nullGetter,
+  });
 
   doc.render(data);
 
@@ -180,10 +192,7 @@ exports.flattenObject = (data) => {
     // doc_type == 2 ? 'CCCD'
     // doc_type == 3 ? Hộ Chiếu
     // doc_type == 4 ? Loại khác ....
-
   }
-
-
 
   return _template;
 };

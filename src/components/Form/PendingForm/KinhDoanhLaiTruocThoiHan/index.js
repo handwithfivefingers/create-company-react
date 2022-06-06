@@ -38,7 +38,16 @@ const KinhDoanhLaiTruocThoiHan = forwardRef((props, ref) => {
       })}
     >
       <CCInput name={[...BASE_FORM, "company_name"]} label="Tên doanh nghiệp (ghi bằng chữ in hoa)" />
+
       <CCInput name={[...BASE_FORM, "mst"]} label="Mã số doanh nghiệp/Mã số thuế" />
+
+      <CCInput name={[...BASE_FORM, "opt_code"]} label="Số Giấy chứng nhận đăng ký kinh doanh (chỉ kê khai nếu không có mã số doanh nghiệp/mã số thuế)" />
+
+      <CCInput name={[...BASE_FORM, "time_provide"]} label="Ngày cấp" type="date" />
+
+      <CCInput name={[...BASE_FORM, "place_provide"]} label="Nơi cấp" />
+
+
       <CCInput
         type="select"
         name={[...BASE_FORM, "obj"]}

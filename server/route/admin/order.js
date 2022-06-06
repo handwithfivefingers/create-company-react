@@ -2,7 +2,7 @@ const express = require("express");
 
 const { upload, requireSignin } = require("../../middleware/index");
 
-const { getOrderBySlug, getOrders } = require("../../controller/admin/order");
+const { getOrderBySlug, getOrders , deleteOrder} = require("../../controller/admin/order");
 
 const router = express.Router();
 
@@ -10,5 +10,7 @@ const router = express.Router();
 router.get("/order/:id", requireSignin, upload.none(), getOrderBySlug);
 
 router.post("/order", requireSignin, upload.none(), getOrders);
+
+router.post("/order/delete/:id", requireSignin, upload.none(), deleteOrder);
 
 module.exports = router;

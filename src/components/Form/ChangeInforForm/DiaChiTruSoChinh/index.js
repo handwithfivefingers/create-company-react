@@ -15,9 +15,9 @@ const DiaChiTruSoChinh = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
+      {/* <CCInput label="Tên doanh nghiệp" name={[...BASE_FORM, "company_name"]} />
 
-      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} />
+      <CCInput label="Mã số doanh nghiệp/ mã số thuế" name={[...BASE_FORM, "mst"]} /> */}
 
       <Form.Item label={<h4>Địa chỉ trụ sở hiện tại</h4>}>
         <CCInput name={[...BASE_FORM, "old", "address"]} label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn" />

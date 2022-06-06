@@ -20,6 +20,15 @@ export const FORM_SELECT = [
 export const LABEL = {
   change_info: {
     // Thay đổi thông tin
+    base_inform: {
+      title: "Thông tin doanh nghiệp",
+      fields: {
+        company_name: "Tên doanh nghiệp",
+        mst: "Mã số doanh nghiệp/ mã số thuế",
+        time_provide: "Ngày cấp",
+        place_provide: "Nơi cấp",
+      },
+    },
     legal_representative: {
       title: "Đăng ký thay đổi người đại diện theo pháp luật",
       fields: {
@@ -307,6 +316,10 @@ export const LABEL = {
       fields: {
         company_name: "Tên doanh nghiệp (ghi bằng chữ in hoa)",
         mst: "Mã số doanh nghiệp/Mã số thuế",
+        opt_code: "Số Giấy chứng nhận đăng ký kinh doanh (chỉ kê khai nếu không có mã số doanh nghiệp/mã số thuế)",
+        time_provide: "Ngày cấp",
+
+        place_provide: "Nơi cấp",
         obj: "Đối tượng tạm ngưng",
         branch: {
           branch_name: "Tên chi nhánh/văn phòng đại diện/địa điểm kinh doanh (ghi bằng chữ in hoa)",
@@ -318,7 +331,7 @@ export const LABEL = {
           start: "Thời gian đăng ký tạm ngưng từ",
           end: "Thời gian đăng ký tạm ngưng đến",
         },
-        // reason: "Lý do tạm ngưng",
+        reason: "Lý do tạm ngưng",
         org_person: "Tên người đại diện pháp luật/người đứng đầu chi nhánh",
       },
       // Kinh doanh lại trước thời hạn

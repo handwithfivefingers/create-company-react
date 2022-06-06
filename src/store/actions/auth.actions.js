@@ -59,16 +59,13 @@ export const AuthRegister = (form) => {
     });
 
     let resp = await AuthService.onRegister(form);
-
-    if (resp.data.message === "Sent attachments ok") {
-      // console.log(role);
-      message.success("Tạo tài khoản thành công");
-      let { role } = resp.data.info;
+    if (resp.status === 201) {
+      message.success(resp.data.message);
       dispatch({
         type: AUTH_REGISTER.SUCCESS,
         payload: {
           status: true,
-          role,
+          role: resp.data.role,
         },
       });
     } else {
