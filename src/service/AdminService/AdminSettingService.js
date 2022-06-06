@@ -1,8 +1,8 @@
 import axios from "src/config/axios";
 
 const api_path = {
-  getSetting: "/email/setting",
-  updateSetting: "/email/setting",
+  getSetting: "/admin/email/setting",
+  updateSetting: "/admin/email/setting",
 };
 
 const AdminSettingService = {

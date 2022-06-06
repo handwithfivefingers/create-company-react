@@ -261,21 +261,21 @@ exports.getUrlReturn = async (req, res) => {
       console.log(_order);
 
       let params = {
-        filesPath: _order.files,
         email: _order.orderOwner.email,
-        subject: "Thông tin giấy tờ từ app.thanhlapdoanhnghieponline.vn",
-        content: `Chào ${_order.orderOwner.name},<br /> xin gửi quý khách các loại giấy tờ đăng kí sau.<br /> Vui lòng kiểm tra và phản hồi lại với admin sau khi nhận.<br /> Xin cảm ơn`,
-        type: "path",
+        subject: "Thanh toán thành công",
+        // content: `Chào ${_order.orderOwner.name},<br /> xin gửi quý khách các loại giấy tờ đăng kí sau.<br /> Vui lòng kiểm tra và phản hồi lại với admin sau khi nhận.<br /> Xin cảm ơn`,
+        content: `Chào ${_order?.orderOwner?.name},<br /> Quý khách đã thanh toán thành công. Thông tin giấy tờ sẽ được gửi sớm nhất có thể, quý khách vui lòng đợi trong giây lát.<br/> Xin cảm ơn`,
+        type: "any",
       };
       await sendmailWithAttachments(req, res, params);
-      return res.redirect(`${process.env.BASEHOST}/user/order?${query}`);
+      return res.redirect(`${process.env.REACT_APP_BASEHOST}/user/order?${query}`);
     }
-    return res.redirect(`${process.env.BASEHOST}/user/order?` + query);
+    return res.redirect(`${process.env.REACT_APP_BASEHOST}/user/order?` + query);
   } else {
     const query = qs.stringify({
       code: ResponseCode[97],
     });
-    return res.redirect(`${process.env.BASEHOST}/user/order?` + query);
+    return res.redirect(`${process.env.REACT_APP_BASEHOST}/user/order?` + query);
   }
 };
 

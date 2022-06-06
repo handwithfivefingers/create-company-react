@@ -125,15 +125,11 @@ const getMailParams = async ({ name, phone, password, role, email }, res) => {
     };
 
     if (_setting) {
-      let { mailPayment } = _setting[0];
+      let { mailRegister } = _setting[0];
 
-      let { subject, content } = mailPayment;
+      let { subject, content } = mailRegister;
 
-      content.replace("{name}", name);
-      content.replace("{phone}", phone);
-      content.replace("{password}", password);
-
-      mailParams.content = content;
+      mailParams.content = content.replace("{name}", name).replace("{phone}", phone).replace("{password}", password);
       mailParams.subject = subject;
     } else {
       mailParams.content = `Chào ${name}, <br/>Tên đăng nhập của bạn là: ${phone}<br/>Mật khẩu của bạn là : ${password}`;

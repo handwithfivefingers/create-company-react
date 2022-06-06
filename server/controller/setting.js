@@ -34,6 +34,7 @@ exports.getSettingMail = async (req, res) => {
   if (req.role !== "admin") return permisHandler(res);
   try {
     let _setting = await Setting.findOne({ userOwner: req.id }).populate("mailRegister mailPayment");
+    console.log(_setting);
     return res.status(200).json({
       message: "ok",
       data: _setting,

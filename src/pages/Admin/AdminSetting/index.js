@@ -31,7 +31,7 @@ const ChangePassword = forwardRef((props, ref) => {
 const SettingMail = forwardRef((props, ref) => {
   
   useEffect(() => {
-    let { mailRegister, mailPayment } = props.settingMail;
+    let { mailRegister, mailPayment } = props?.settingMail;
     if (mailRegister) {
       ref.current.setFieldsValue({
         mailRegister: mailRegister._id,

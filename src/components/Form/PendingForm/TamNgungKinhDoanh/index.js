@@ -6,7 +6,6 @@ import CCInput from "src/components/CCInput";
 import { SELECT } from "src/contants/Common";
 import styles from "../styles.module.scss";
 
-
 const BASE_FORM = ["pending", "approve"];
 
 const TamNgungKinhDoanh = forwardRef((props, ref) => {
@@ -19,7 +18,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
   const handleDateChange = (date, dateString) => {
     ref.current.setFieldsValue({
       pending: {
-        cancel: {
+        approve: {
           time_range: {
             start: dateString?.[0],
             end: dateString?.[1],
@@ -44,7 +43,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
 
       <CCInput name={[...BASE_FORM, "place_provide"]} label="Nơi cấp" />
 
-      <CCInput 
+      <CCInput
         name={[...BASE_FORM, "opt_code"]}
         label="Số Giấy chứng nhận đăng ký kinh doanh (chỉ kê khai nếu không có mã số doanh nghiệp/mã số thuế)"
       />
@@ -63,6 +62,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
             name={[...BASE_FORM, "time_range"]}
             label="Thời gian đăng ký tạm ngưng (từ ngày/tháng/năm đến ngày/tháng/năm)"
             onChange={handleDateChange}
+            type="date-range"
           />
 
           <CCInput name={[...BASE_FORM, "reason"]} label="Lý do tạm ngưng" />
@@ -83,18 +83,44 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
 export default TamNgungKinhDoanh;
 
 const ChiNhanh = forwardRef((props, ref) => {
-  const handleDateChange = (date, dateString) => {
-    ref.current.setFieldsValue({
-      pending: {
-        cancel: {
-          time_range: {
-            start: dateString?.[0],
-            end: dateString?.[1],
-          },
-        },
-      },
-    });
-  };
+  // const handleDateChange = (date, dateString, index) => {
+  //   let val = ref.current.getFieldsValue();
+  //   let { branch } = val.pending.approve;
+  //   console.log(val);
+  //   // let newVal = branch.map((item, i) => {
+  //   //   if (i == +index) {
+  //   //     let obj = {
+  //   //       ...item,
+  //   //       time_range: {
+  //   //         start: dateString?.[0],
+  //   //         end: dateString?.[1],
+  //   //       },
+  //   //     };
+  //   //     console.log(obj, item);
+  //   //     return { ...obj };
+  //   //   }
+  //   //   return { ...item };
+  //   // });
+  //   let newVal;
+  //   for (let br of branch) {
+  //     newVal.push(br);
+  //   }
+  //   branch[index] = {
+  //     time_range: {
+  //       start: dateString?.[0],
+  //       end: dateString?.[1],
+  //     },
+  //   };
+
+  //   ref.current.setFieldsValue({
+  //     pending: {
+  //       approve: {
+  //         ...val.pending.approve,
+  //         branch: [...branch],
+  //       },
+  //     },
+  //   });
+  // };
 
   return (
     <>
@@ -133,11 +159,15 @@ const ChiNhanh = forwardRef((props, ref) => {
                     />
 
                     <CCInput
-                      name={[field.name, "time_range"]}
-                      label="Thời gian đăng ký tạm ngưng (từ ngày/tháng/năm đến ngày/tháng/năm)"
-                      onChange={handleDateChange}
+                      name={[field.name, "time_range", "start"]}
+                      label="Thời gian đăng ký tạm ngưng (từ ngày/tháng/năm"
+                      type="date"
                     />
-
+                    <CCInput
+                      name={[field.name, "time_range", "end"]}
+                      label="Thời gian đăng ký tạm ngưng ( đến ngày/tháng/năm)"
+                      type="date"
+                    />
                     <CCInput name={[field.name, "reason"]} label="Lý do tạm ngưng" />
 
                     <CCInput
@@ -157,7 +187,7 @@ const ChiNhanh = forwardRef((props, ref) => {
               ""
             ) : (
               <Form.Item label="">
-                <Button type="dashed" onClick={add} block icon={<PlusOutlined />}>
+                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                   Thêm chi nhánh
                 </Button>
               </Form.Item>

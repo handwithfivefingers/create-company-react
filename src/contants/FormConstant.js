@@ -351,6 +351,10 @@ export const LABEL = {
           resp_office: "Mã số thuế chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
           branch_name_opt: "Tên chi nhánh (optional)",
           branch_mst_opt: "Mã số chi nhánh/Mã số thuế của chi nhánh  (optional)",
+          time_range: {
+            start: "Thời gian đăng ký tạm ngưng từ",
+            end: "Thời gian đăng ký tạm ngưng đến",
+          },
         },
         time_range: {
           start: "Thời gian đăng ký tạm ngưng từ",
