@@ -7,9 +7,16 @@ const qs = require("query-string");
 const crypto = require("crypto");
 const { ResponseCode } = require("../common/ResponseCode");
 const { list_files } = require("../contants/File");
+const { uniqBy } = require("lodash");
 const PAGE_SIZE = 10;
 
 // Get getOrdersFromUser
+
+const url =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3001/user/result?"
+    : "https://app.thanhlapcongtyonline.vn/user/result?";
+
 exports.getOrdersFromUser = async (req, res) => {
   try {
     let _order = await Order.find({ orderOwner: req.id })
@@ -121,7 +128,7 @@ exports.createOrders = async (req, res) => {
 
     let files = findKeysByObject(data, list_files).flat();
 
-    newData.files = files;
+    newData.files =  uniqBy(files, "name").filter((item) => item);;
 
     // Handle Calculate Price with multi Product
 
@@ -131,7 +138,7 @@ exports.createOrders = async (req, res) => {
 
     if (selectChildProduct) {
       // By child product
-      price += await calcPrice(selectChildProduct);
+      // price += await calcPrice(selectChildProduct);
     }
 
     if (selectProduct) {
@@ -181,7 +188,7 @@ exports.orderWithPayment = async (req, res) => {
 
     if (selectChildProduct) {
       // By child product
-      price += await calcPrice(selectChildProduct);
+      // price += await calcPrice(selectChildProduct);
     }
 
     if (selectProduct) {
@@ -191,7 +198,7 @@ exports.orderWithPayment = async (req, res) => {
 
     let files = findKeysByObject(data, list_files).flat();
 
-    newData.files = files;
+    newData.files = uniqBy(files, "name").filter((item) => item);
 
     newData.price = price;
 
@@ -263,19 +270,19 @@ exports.getUrlReturn = async (req, res) => {
       let params = {
         email: _order.orderOwner.email,
         subject: "Thanh toán thành công",
-        // content: `Chào ${_order.orderOwner.name},<br /> xin gửi quý khách các loại giấy tờ đăng kí sau.<br /> Vui lòng kiểm tra và phản hồi lại với admin sau khi nhận.<br /> Xin cảm ơn`,
         content: `Chào ${_order?.orderOwner?.name},<br /> Quý khách đã thanh toán thành công. Thông tin giấy tờ sẽ được gửi sớm nhất có thể, quý khách vui lòng đợi trong giây lát.<br/> Xin cảm ơn`,
         type: "any",
       };
       await sendmailWithAttachments(req, res, params);
-      return res.redirect(`${process.env.REACT_APP_BASEHOST}/user/order?${query}`);
+
+      return res.redirect(url + query);
     }
-    return res.redirect(`${process.env.REACT_APP_BASEHOST}/user/order?` + query);
+    return res.redirect(url + query);
   } else {
     const query = qs.stringify({
       code: ResponseCode[97],
     });
-    return res.redirect(`${process.env.REACT_APP_BASEHOST}/user/order?` + query);
+    return res.redirect(url + query);
   }
 };
 
@@ -366,7 +373,7 @@ const calcPrice = async (productArray) => {
 const findKeysByObject = (obj, listfiles) => {
   if (!obj) return;
   let files;
-  console.log("findKeysByObject", files, obj);
+  // console.log("findKeysByObject", files, obj);
   for (let prop in obj) {
     // prop => create_company || change_info || pending || disolution
     if (listfiles[prop]) {

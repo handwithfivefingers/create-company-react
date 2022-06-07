@@ -4,6 +4,7 @@ const { removeFile, errHandler } = require("../response");
 const { TemplateMail, Order } = require("../model");
 const { google } = require("googleapis");
 const dotenv = require("dotenv");
+const { removeListFiles } = require("../common/helper");
 
 // *Useful for getting environment vairables
 dotenv.config();
@@ -36,7 +37,6 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
    */
 
   try {
-    console.log("setting options");
     const accessToken = await oAuth2Client.getAccessToken();
 
     const transporter = nodeMailer.createTransport({
@@ -52,7 +52,7 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
       },
     });
 
-    console.log("comming transporter", type);
+    // console.log("comming transporter", type);
 
     if (type == "attachments") {
       let params = {
@@ -65,7 +65,8 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
 
       return withAttachments(req, res, params, transporter);
     } else if (type == "path") {
-      console.log("comming transporter with path");
+
+      // console.log("comming transporter with path");
 
       let params = {
         adminEmail: MAIL_NAME,
@@ -78,8 +79,6 @@ exports.sendmailWithAttachments = async (req, res, { type = "attachments", ...re
       };
       return withFilesPath(params, transporter);
     } else if (type == "any") {
-      console.log("match params");
-
       let params = {
         adminEmail: MAIL_NAME,
         email: rest.email,
@@ -125,34 +124,30 @@ const withAttachments = async (req, res, { adminEmail, email, subject, content, 
     // return sendFailed(err, res);
     throw err;
   } finally {
-    attachments?.map((item) => removeFile(item.path));
+    // attachments?.map((item) => removeFile(item.path));
+    await removeListFiles(attachments, "path");
   }
 };
 
 const sendMail = async (req, res, { adminEmail, email, subject, content, redirect, ...rest }, transporter) => {
   try {
-    console.log("send");
+    // console.log("send");
     return await transporter.sendMail({
       from: adminEmail, // sender address
       to: email,
       subject: subject, // Subject line
       html: content, // html body,
     });
-    // if (redirect) {
-    //   return res.redirect(redirect);
-    // } else return sendSuccess({ ...resp, role: rest.role }, res);
   } catch (err) {
     console.log("sendMail failed");
 
     // return sendFailed(err, res);
-
     throw err;
   }
 };
 
 const withFilesPath = async (params, transporter) => {
   let { adminEmail, email, subject, content, filesPath, redirect, removeFiles, ...rest } = params;
-  console.log("sendmail via withFilesPath", params);
 
   let attachments = filesPath.map((file) => {
     let ext = file.pdfFile.split(".")[file.pdfFile.split(".").length - 1];
@@ -164,7 +159,8 @@ const withFilesPath = async (params, transporter) => {
     // gửi client : trong quá trình , vui check mail
     // Thành công, -> gửi mail
     // Thất bại -> báo lỗi
-    console.log("preparefor sendmail");
+    // console.log("preparefor sendmail");
+
     transporter
       .sendMail({
         from: adminEmail, // sender address
@@ -182,33 +178,16 @@ const withFilesPath = async (params, transporter) => {
       .catch((err) => {
         console.log("Send mail failed", err);
       })
-      .finally(() => {
-        for (let attach of attachments) {
-          fs.unlinkSync(attach.path);
-        }
+      .finally(async () => {
+        await removeListFiles(attachments, "path");
       });
-    // res.sendStatus(200);
 
-    console.log("sendmail success");
+    // console.log("sendmail success");
   } catch (err) {
     console.log("send mail failed ", err);
     throw err;
     // return sendFailed(err, res);
   }
-};
-
-const sendFailed = (err, res) => {
-  return res.status(200).json({
-    message: "Something was wrong",
-    error: err,
-  });
-};
-
-const sendSuccess = (info, res) => {
-  return res.status(200).json({
-    message: "Sent attachments ok",
-    info,
-  });
 };
 
 exports.cronMail = async ({ ...rest }) => {
@@ -233,9 +212,10 @@ exports.cronMail = async ({ ...rest }) => {
       content: rest.content,
       filesPath: rest.filesPath,
       redirect: rest?.redirect,
+      type: "path",
       ...rest,
     };
-    console.log("preparefor sendmail");
+    // console.log("preparefor sendmail");
 
     return await withFilesPath(params, transporter);
   } catch (err) {

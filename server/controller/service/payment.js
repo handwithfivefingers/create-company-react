@@ -12,6 +12,13 @@ exports.testPayment = (req, res) => {
   return paymentOrder(req, res, { createDate, orderId, amount, orderInfo });
 };
 // https://app.thanhlapcongtyonline.vn/api/order/payment/undefined/user/order?
+// `${process.env.REACT_APP_BASEHOST}/user/order?${query}
+
+const url =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3001/api/order/payment/url_return"
+    : "https://app.thanhlapcongtyonline.vn/api/order/payment/url_return";
+    
 const paymentOrder = (req, res, params) => {
   let { createDate, orderId, amount, orderInfo } = params;
   var ipAddr =
@@ -25,6 +32,7 @@ const paymentOrder = (req, res, params) => {
   var secretKey = process.env.SECRET_KEY_VPN;
 
   var vnpUrl = process.env.VNPAY_URL;
+
   var returnUrl = "http://localhost:3001/api/return_vnp";
 
   // var returnUrl = process.env.RETURN_URL;
@@ -124,7 +132,7 @@ exports.getUrlReturn = async (req, res) => {
       console.log(_order);
 
       let params = {
-        email: _order?.orderOwner?.email || 'handgod1995@gmail.com',
+        email: _order?.orderOwner?.email || "handgod1995@gmail.com",
         subject: "Thông tin thanh toán",
         content: `Chào ${_order?.orderOwner?.name},<br /> Quý khách đã thanh toán thành công. Thông tin giấy tờ sẽ được gửi sớm nhất có thể, quý khách vui lòng đợi trong giây lát.<br/> Xin cảm ơn`,
         type: "any",

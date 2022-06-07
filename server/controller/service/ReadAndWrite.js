@@ -6,19 +6,18 @@ const { sendmailWithAttachments } = require("../sendmail");
 
 const { errHandler } = require("../../response");
 
-const { flattenObject, convertFile } = require("./../../common/helper");
+const { flattenObject, convertFile, removeListFiles } = require("./../../common/helper");
+const { uniqBy } = require("lodash");
 
 libre.convertAsync = require("util").promisify(libre.convert);
 
 exports.checkingOrder = async (req, res) => {
   try {
     // let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
-    let _order = await Order.findOne({ _id: "629e0a1d9fbd682c9c59b60e" }).populate("orderOwner", "email");
+    let _order = await Order.findOne({ _id: "629ef4595e01a8570b0b21a9" }).populate("orderOwner", "email");
 
     return handleConvertFile(_order, req, res);
-
   } catch (err) {
-    
     console.log("checkingOrder err");
 
     return errHandler(err, res);
@@ -27,13 +26,12 @@ exports.checkingOrder = async (req, res) => {
 
 const handleConvertFile = async (order, req, res) => {
   // handle Single File
+  let attachments = [];
   try {
     let { files, data } = order;
-
-    let attachments = [];
-
     let mailParams = await getMailContent(order);
-
+    files = uniqBy(files, "name").filter((item) => item);
+    console.log(files);
     if (files) {
       let _contentOrder = flattenObject(data);
 
@@ -65,6 +63,8 @@ const handleConvertFile = async (order, req, res) => {
     });
   } catch (err) {
     console.log("handleConvertFile error");
+
+    attachments.length > 0 && (await removeListFiles(attachments));
 
     return errHandler(err, res);
   }

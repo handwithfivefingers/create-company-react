@@ -2,21 +2,26 @@ const { Order, Setting } = require("../../model");
 
 const { cronMail } = require("../sendmail");
 
-const { flattenObject, convertFile } = require("./../../common/helper");
+const { flattenObject, convertFile, removeListFiles } = require("./../../common/helper");
 const fs = require("fs");
 const cron = require("node-cron");
+const { uniqBy } = require("lodash");
 
 exports.task = cron.schedule(
   "* * * * *",
   async () => {
-    // let _order = await Order.find({ payment: 1 });
-    // console.log("running Task", _order);
-    // ->
-    // return checkingOrder(req, res);
-    // let _order = await Order.findOne({ _id: "62964a487b774763c605eab8" }).populate("orderOwner", "email");
-    let _order = await Order.findOne({ $and: [{ send: 0 }] }).populate("orderOwner", "email");
+    console.log("job is running");
+    let _order;
+    try {
+      // _order = await Order.findOne({ $and: [{ send: 0 }] }).populate("orderOwner", "email");
 
-    return handleConvertFile(_order);
+      let _order = await Order.findOne({ _id: "62964a487b774763c605eab8" }).populate("orderOwner", "email");
+
+      if (_order) return handleConvertFile(_order);
+    } catch (err) {
+      await Order.updateOne({ _id: _order._id }, { send: 1 });
+      console.log("cron error");
+    }
   },
   {
     scheduled: false,
@@ -31,6 +36,8 @@ const handleConvertFile = async (order) => {
     let { files, data } = order;
 
     let mailParams = await getMailContent(order);
+
+    files = uniqBy(files, "name").filter((item) => item);
 
     if (files) {
       let _contentOrder = flattenObject(data);
@@ -55,20 +62,24 @@ const handleConvertFile = async (order) => {
     return console.log("Cronjob error");
   } catch (err) {
     console.log("handleConvertFile error", err);
+
+    //remove files
+    // for (let attach of attachments) {
+    //   if (fs.existsSync(attach.pdfFile)) {
+    //     fs.unlinkSync(attach.pdfFile);
+    //   }
+    // }
+    await removeListFiles(attachments);
+
     throw err;
-  } 
-  // finally {
-  //   // for (let attach of attachments) {
-  //   //   attach && fs.unlinkSync(attach.pdfFile);
-  //   // }
-  // }
+  }
 };
 
 const getMailContent = async (order) => {
   let _setting = await Setting.find().populate("mailRegister mailPayment"); // -> _setting
   let mailParams;
   mailParams = {
-    email: "handgod1995@gmail.com",
+    email: order.orderOwner?.email || "handgod1995@gmail.com",
     removeFiles: true,
     send: 1,
     _id: order._id,

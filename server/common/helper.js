@@ -208,3 +208,16 @@ exports.convertFile = async (file, data) => {
   console.log("saving file");
   return pdfFile;
 };
+
+exports.removeListFiles = (attachments, path = null) => {
+  for (let attach of attachments) {
+    if (fs.existsSync(attach.pdfFile)) {
+      // fs.unlinkSync(attach.pdfFile);
+      if (path) {
+        fs.unlinkSync(attach[path]);
+      } else {
+        fs.unlinkSync(attach.pdfFile);
+      }
+    }
+  }
+};
