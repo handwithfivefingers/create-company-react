@@ -13,7 +13,7 @@ libre.convertAsync = require("util").promisify(libre.convert);
 exports.checkingOrder = async (req, res) => {
   try {
     // let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
-    let _order = await Order.findOne({ _id: "629e0a1d9fbd682c9c59b60e" }).populate("orderOwner", "email");
+    let _order = await Order.findOne({ _id: "629e210411f6092ca092908c" }).populate("orderOwner", "email");
 
     return handleConvertFile(_order, req, res);
 
@@ -33,6 +33,8 @@ const handleConvertFile = async (order, req, res) => {
     let attachments = [];
 
     let mailParams = await getMailContent(order);
+    
+    files = files.filter(item => item);
 
     if (files) {
       let _contentOrder = flattenObject(data);

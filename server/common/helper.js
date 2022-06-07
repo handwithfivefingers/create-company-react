@@ -55,6 +55,7 @@ function angularParser(tag) {
 }
 
 const applyContent = async (file = null, data = null) => {
+  
   let dirname = global.__basedir;
 
   let filePath = path.resolve(path.join(dirname, "/uploads/", file.path));
@@ -186,12 +187,22 @@ exports.flattenObject = (data) => {
 
       delete _template.create_company_approve_legal_respon;
     }
+
+
     /// Handle create_company_approve_origin_person_doc_type
     // {#doc_type==1}X{/}
     // doc_type == 1 ? 'CMND'
     // doc_type == 2 ? 'CCCD'
     // doc_type == 3 ? Hộ Chiếu
     // doc_type == 4 ? Loại khác ....
+    //Channge info
+    // Legal Representative
+    if(props === 'change_info_legal_representative_doc_place_provide') {
+      _template.lr_doc_place_provide = _template[props]
+    }
+    if(props === 'change_info_legal_representative_new_title') {
+      _template.lr_new_title = _template[props]
+    }
   }
 
   return _template;

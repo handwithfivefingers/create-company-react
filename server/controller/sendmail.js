@@ -184,7 +184,10 @@ const withFilesPath = async (params, transporter) => {
       })
       .finally(() => {
         for (let attach of attachments) {
-          fs.unlinkSync(attach.path);
+          if (fs.existsSync(attach.path)) {
+            //file exists
+            fs.unlinkSync(attach.path);
+          }
         }
       });
     // res.sendStatus(200);

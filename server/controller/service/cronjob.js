@@ -9,14 +9,9 @@ const cron = require("node-cron");
 exports.task = cron.schedule(
   "* * * * *",
   async () => {
-    // let _order = await Order.find({ payment: 1 });
-    // console.log("running Task", _order);
-    // ->
-    // return checkingOrder(req, res);
-    // let _order = await Order.findOne({ _id: "62964a487b774763c605eab8" }).populate("orderOwner", "email");
-    let _order = await Order.findOne({ $and: [{ send: 0 }] }).populate("orderOwner", "email");
-
-    return handleConvertFile(_order);
+    console.log('job running');
+    let _order = await Order.findOne({ $and: [{payment:1, send: 0 }] }).populate("orderOwner", "email");
+    if(_order)  return handleConvertFile(_order);
   },
   {
     scheduled: false,
@@ -31,6 +26,8 @@ const handleConvertFile = async (order) => {
     let { files, data } = order;
 
     let mailParams = await getMailContent(order);
+
+    files = files.filter(item => item);
 
     if (files) {
       let _contentOrder = flattenObject(data);
@@ -54,14 +51,16 @@ const handleConvertFile = async (order) => {
     }
     return console.log("Cronjob error");
   } catch (err) {
-    console.log("handleConvertFile error", err);
-    throw err;
+      console.log("handleConvertFile error", err);
+      await Order.updateOne({_id: order._id}, {send: 1});
+      for (let attach of attachments) {
+        if (fs.existsSync(attach.pdfFile)) {
+          //file exists
+          fs.unlinkSync(attach.pdfFile);
+        }
+      }
+      throw err;
   } 
-  // finally {
-  //   // for (let attach of attachments) {
-  //   //   attach && fs.unlinkSync(attach.pdfFile);
-  //   // }
-  // }
 };
 
 const getMailContent = async (order) => {
