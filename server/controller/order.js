@@ -244,6 +244,7 @@ exports.getUrlReturn = async (req, res) => {
   var hmac = crypto.createHmac("sha512", secretKey);
 
   var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
+  let url =  process.env.NODE_ENV === "DEV" ? `http://localhost:3000/user/order?` : `https://app.thanhlapcongtyonline.vn/user/order?`
 
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
@@ -301,7 +302,9 @@ const paymentOrder = (req, res, params) => {
 
   var vnpUrl = process.env.VNPAY_URL;
 
-  var returnUrl = process.env.RETURN_URL;
+
+
+  var returnUrl =process.env.NODE_ENV === 'DEV' ? 'http://localhost:3001/api/order/payment/url_return': process.env.RETURN_URL;
 
   var orderType = req?.body?.orderType || "billpayment";
 

@@ -32,10 +32,9 @@ const paymentOrder = (req, res, params) => {
   var secretKey = process.env.SECRET_KEY_VPN;
 
   var vnpUrl = process.env.VNPAY_URL;
+  // var returnUrl = "http://localhost:3001/api/return_vnp";
 
-  var returnUrl = "http://localhost:3001/api/return_vnp";
-
-  // var returnUrl = process.env.RETURN_URL;
+  var returnUrl = process.env.RETURN_URL;
 
   var orderType = req?.body?.orderType || "billpayment";
 
@@ -108,6 +107,9 @@ exports.getUrlReturn = async (req, res) => {
   var hmac = crypto.createHmac("sha512", secretKey);
 
   var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
+  
+  let url =  process.env.NODE_ENV === "DEV" ? `http://localhost:3000/user/order?` : `https://app.thanhlapcongtyonline.vn/user/order?`
+
 
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
@@ -140,18 +142,17 @@ exports.getUrlReturn = async (req, res) => {
 
       await sendmailWithAttachments(req, res, params);
 
-      console.log(`${process.env.REACT_APP_BASEHOST}/user/order?${query}`);
 
-      return res.redirect(`${process.env.REACT_APP_BASEHOST}/user/order?${query}`);
+      return res.redirect(url + query);
     }
 
-    return res.redirect(`${process.env.BASEHOST}/user/order?` + query);
+    return res.redirect(url + query);
   } else {
     const query = qs.stringify({
       code: ResponseCode[97],
     });
 
-    return res.redirect(`${process.env.BASEHOST}/user/order?` + query);
+    return res.redirect(url + query);
   }
 };
 

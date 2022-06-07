@@ -38,7 +38,6 @@ const AdminDashboard = () => {
     AdminDashboardService.testPayment(params)
       .then((res) => {
         if (res.data.status === 200) {
-          console.log(res.data);
           return (window.location.href = res.data.url);
         }
       })

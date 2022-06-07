@@ -10,18 +10,8 @@ const { uniqBy } = require("lodash");
 exports.task = cron.schedule(
   "* * * * *",
   async () => {
-    console.log("job is running");
-    let _order;
-    try {
-      // _order = await Order.findOne({ $and: [{ send: 0 }] }).populate("orderOwner", "email");
-
-      let _order = await Order.findOne({ _id: "62964a487b774763c605eab8" }).populate("orderOwner", "email");
-
-      if (_order) return handleConvertFile(_order);
-    } catch (err) {
-      await Order.updateOne({ _id: _order._id }, { send: 1 });
-      console.log("cron error");
-    }
+    let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
+    if (_order) return handleConvertFile(_order);
   },
   {
     scheduled: false,
@@ -63,12 +53,8 @@ const handleConvertFile = async (order) => {
   } catch (err) {
     console.log("handleConvertFile error", err);
 
-    //remove files
-    // for (let attach of attachments) {
-    //   if (fs.existsSync(attach.pdfFile)) {
-    //     fs.unlinkSync(attach.pdfFile);
-    //   }
-    // }
+    await Order.updateOne({ _id: order._id }, { send: 1 });
+
     await removeListFiles(attachments);
 
     throw err;

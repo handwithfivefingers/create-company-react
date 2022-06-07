@@ -3,11 +3,9 @@ import store from "src/store";
 import { AuthAction } from "src/store/actions";
 import history from "../helper/history";
 
+
 const instance = axios.create({
-  // baseURL:
-  //   process.env.NODE_ENV == "development" ? `http://localhost:3001/api` : +`${process.env.REACT_APP_BASEHOST_PROD}/api`,
-  baseURL:
-    process.env.NODE_ENV === "development" ? "http://localhost:3001/api" : "https://app.thanhlapcongtyonline.vn/api",
+  baseURL:  process.env.NODE_ENV === "development" ? `http://localhost:3001/api` : `https://app.thanhlapcongtyonline.vn/api`,
   timeout: 1000 * 30, // Wait for 30 seconds
   headers: {
     "Access-Control-Allow-Origin": "*",
