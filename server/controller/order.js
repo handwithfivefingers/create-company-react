@@ -12,10 +12,10 @@ const PAGE_SIZE = 10;
 
 // Get getOrdersFromUser
 
-const url =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3001/user/result?"
-    : "https://app.thanhlapcongtyonline.vn/user/result?";
+// const url =
+//   process.env.NODE_ENV === "development"
+//     ? "http://localhost:3001/user/result?"
+//     : "https://app.thanhlapcongtyonline.vn/user/result?";
 
 exports.getOrdersFromUser = async (req, res) => {
   try {
@@ -224,7 +224,7 @@ exports.orderWithPayment = async (req, res) => {
 };
 
 exports.getUrlReturn = async (req, res) => {
-  console.log(req.query, " Get URL Return");
+  // console.log(req.query, " Get URL Return");
   var vnp_Params = req.query;
 
   var secureHash = vnp_Params["vnp_SecureHash"];
@@ -244,7 +244,7 @@ exports.getUrlReturn = async (req, res) => {
   var hmac = crypto.createHmac("sha512", secretKey);
 
   var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
-  let url =  process.env.NODE_ENV === "DEV" ? `http://localhost:3000/user/order?` : `https://app.thanhlapcongtyonline.vn/user/order?`
+  let url =  process.env.NODE_ENV === "DEV" ? `http://localhost:3000/user/result?` : `https://app.thanhlapcongtyonline.vn/user/result?`
 
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
@@ -262,16 +262,19 @@ exports.getUrlReturn = async (req, res) => {
 
       await Order.updateOne({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
 
-      console.log("updated Success");
+      console.log("getUrlReturn updated Success");
 
       let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate("orderOwner", "_id name email");
 
-      console.log(_order);
+      // console.log(_order);
 
       let params = {
         email: _order.orderOwner.email,
         subject: "Thanh toán thành công",
-        content: `Chào ${_order?.orderOwner?.name},<br /> Quý khách đã thanh toán thành công. Thông tin giấy tờ sẽ được gửi sớm nhất có thể, quý khách vui lòng đợi trong giây lát.<br/> Xin cảm ơn`,
+        content: `Chào ${_order?.orderOwner?.name},<br />
+        Quý khách đã thanh toán thành công.
+        Thông tin giấy tờ sẽ được gửi sớm nhất có thể, quý khách vui lòng đợi trong giây lát.
+        <br/> Xin cảm ơn`,
         type: "any",
       };
       await sendmailWithAttachments(req, res, params);

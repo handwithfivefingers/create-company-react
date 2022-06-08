@@ -125,7 +125,7 @@ const withAttachments = async (req, res, { adminEmail, email, subject, content, 
     throw err;
   } finally {
     // attachments?.map((item) => removeFile(item.path));
-    await removeListFiles(attachments, "path");
+    await removeListFiles(attachments, true);
   }
 };
 
@@ -161,32 +161,27 @@ const withFilesPath = async (params, transporter) => {
     // Thất bại -> báo lỗi
     // console.log("preparefor sendmail");
 
-    transporter
-      .sendMail({
+      return await transporter.sendMail({
         from: adminEmail, // sender address
         to: email,
         attachments,
         subject: subject, // Subject line
         html: content, // html body,
       })
-      .then(async (info) => {
-        if (rest.send === 1) {
-          await Order.updateOne({ _id: rest._id }, { send: 1 });
-          console.log("updated");
-        }
-      })
-      .catch((err) => {
-        console.log("Send mail failed", err);
-      })
-      .finally(async () => {
-        await removeListFiles(attachments, "path");
-      });
-
-    // console.log("sendmail success");
+  
   } catch (err) {
+
     console.log("send mail failed ", err);
+    for (let attach of attachments) {
+      if (fs.existsSync(attach.pdfFile)) {
+        fs.unlinkSync(attach.path);
+      }
+    }
     throw err;
-    // return sendFailed(err, res);
+  }
+  finally {
+    await Order.updateOne({ _id: rest._id }, { send: 1 });
+    console.log("sendmail success");
   }
 };
 
@@ -217,7 +212,8 @@ exports.cronMail = async ({ ...rest }) => {
     };
     // console.log("preparefor sendmail");
 
-    return await withFilesPath(params, transporter);
+    await withFilesPath(params, transporter);
+
   } catch (err) {
     console.log("cron failed", err);
   }

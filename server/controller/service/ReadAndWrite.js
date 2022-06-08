@@ -15,8 +15,8 @@ exports.checkingOrder = async (req, res) => {
   try {
     // let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
     let _order = await Order.findOne({ _id: "629ef4595e01a8570b0b21a9" }).populate("orderOwner", "email");
-
-    return handleConvertFile(_order, req, res);
+    if(_order) return handleConvertFile(_order, req, res);
+    return res.status(200).json({data: []})
   } catch (err) {
     console.log("checkingOrder err");
 
@@ -31,27 +31,24 @@ const handleConvertFile = async (order, req, res) => {
     let { files, data } = order;
     let mailParams = await getMailContent(order);
     files = uniqBy(files, "name").filter((item) => item);
-    console.log(files);
+
     if (files) {
+      
       let _contentOrder = flattenObject(data);
 
-      // return res.status(200).json({
-      //   _contentOrder,
-      // });
-
       for (let file of files) {
-        console.log("start");
+        // console.log("start");
 
         let pdfFile = await convertFile(file, _contentOrder);
 
-        console.log("pdfFile", pdfFile);
+        // console.log("pdfFile", pdfFile);
 
         attachments.push({ pdfFile, name: file.name });
       }
 
       mailParams.filesPath = attachments;
 
-      console.log("mailParams", mailParams);
+      // console.log("mailParams", mailParams);
 
       await sendmailWithAttachments(req, res, mailParams);
 
@@ -64,7 +61,7 @@ const handleConvertFile = async (order, req, res) => {
   } catch (err) {
     console.log("handleConvertFile error");
 
-    attachments.length > 0 && (await removeListFiles(attachments));
+    attachments.length > 0 && (await removeListFiles(attachments, true));
 
     return errHandler(err, res);
   }
@@ -85,7 +82,7 @@ const getMailContent = async (order) => {
     let { subject, content } = mailPayment;
     mailParams.subject = subject;
     mailParams.content = content;
-    // mailParams.email = order.orderOwner.email;
+    mailParams.email = order.orderOwner?.email;
   } else {
     mailParams.subject = "Testing auto generate files";
     mailParams.content = "Testing auto generate files";
