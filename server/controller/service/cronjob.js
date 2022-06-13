@@ -1,17 +1,16 @@
-const { Order, Setting } = require("../../model");
-
-const { cronMail } = require("../sendmail");
-
-const { flattenObject, convertFile, removeListFiles } = require("./../../common/helper");
-const fs = require("fs");
 const cron = require("node-cron");
+const { Order, Setting } = require("../../model");
+const { cronMail } = require("../sendmail");
+const { flattenObject, convertFile, removeListFiles } = require("./../../common/helper");
 const { uniqBy } = require("lodash");
 
 exports.task = cron.schedule(
   "* * * * *",
   async () => {
     let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
+    console.log('cron order', _order);
     if (_order) return handleConvertFile(_order);
+
   },
   {
     scheduled: false,
@@ -76,7 +75,6 @@ const getMailContent = async (order) => {
     let { subject, content } = mailPayment;
     mailParams.subject = subject;
     mailParams.content = content;
-    // mailParams.email = order.orderOwner.email;
   } else {
     mailParams.subject = "Testing auto generate files";
     mailParams.content = "Testing auto generate files";
