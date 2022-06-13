@@ -28,7 +28,7 @@ const UyQuyen = forwardRef((props, ref) => {
         },
       ])}
     >
-      <CCInput name={[...BASE_FORM, "name"]} label={"Họ và tên"} />
+      <CCInput name={[...BASE_FORM, "name"]} label={"Họ và tên bên uỷ quyền (bên A)"} />
       <CCInput type="date" name={[...BASE_FORM, "birth_day"]} label={"Ngày tháng năm sinh"} />
       <CCInput name={[...BASE_FORM, "per_type"]} label={"Dân tộc"} />
       <CCInput name={[...BASE_FORM, "national"]} label={"Quốc tịch"} />

@@ -57,7 +57,7 @@ const ThongTinDangKyThue = forwardRef((props, ref) => {
       <CCInput label="Hình thức hạch toán" name={[...BASE_FORM, "accounting"]} type="select" options={accounting} />
 
       <Form.Item label="Ngày, tháng bắt đầu và kết thúc niên độ kế toán">
-        <CCInput label="Bắt đầu từ ngày (chọn ngày/ tháng)" name={[...BASE_FORM, "start_date"]} />
+        <CCInput label="Bắt đầu từ ngày (chọn ngày/ tháng)" name={[...BASE_FORM, "start_date"]} type="date" />
 
         <CCInput label="Đến ngày (chọn ngày/ tháng)" name={[...BASE_FORM, "end_date"]} type="date" />
 
@@ -66,7 +66,7 @@ const ThongTinDangKyThue = forwardRef((props, ref) => {
 
       <CCInput
         name={[...BASE_FORM, "active_BOT"]}
-        label="Có hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M không"
+        label="Có hoạt động theo dự án BOT/BTO/BT/BOO, BLT, BTL, O&M không?"
         options={active_bot}
         type="select"
       />

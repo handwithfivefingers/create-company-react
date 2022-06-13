@@ -6,7 +6,7 @@ import CCInput from "src/components/CCInput";
 import { SELECT } from "src/contants/Common";
 import styles from "./../styles.module.scss";
 
-const BASE_FORM = ["pending", "cancel"];
+const BASE_FORM = ["pending", "cancel"]; 
 
 const KinhDoanhLaiTruocThoiHan = forwardRef((props, ref) => {
   //   Nếu chọn “Toàn bộ công ty”, thỉ chỉ cần 2 field này (đang nằm cuối trang)
@@ -64,7 +64,7 @@ const KinhDoanhLaiTruocThoiHan = forwardRef((props, ref) => {
       )}
 
       <CCInput
-        type="date-range"
+        type="date"
         name={[...BASE_FORM, "time_range"]}
         label="Đăng ký tiếp tục kinh doanh kể từ ngày/tháng/năm"
         onChange={handleDateChange}

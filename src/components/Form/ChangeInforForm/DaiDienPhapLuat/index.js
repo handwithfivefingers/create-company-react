@@ -59,7 +59,7 @@ const DaiDienPhapLuat = forwardRef((props, ref) => {
 
         <CCInput type="select" name={[...BASE_FORM, "new_title"]} label="Chức danh" options={SELECT.TITLE} />
 
-        <CCInput name={[...BASE_FORM, "birth_day"]} label="Sinh ngày" />
+        <CCInput name={[...BASE_FORM, "birth_day"]} label="Sinh ngày" type="date"  />
 
         <CCInput name={[...BASE_FORM, "per_type"]} label="Dân tộc" />
 
