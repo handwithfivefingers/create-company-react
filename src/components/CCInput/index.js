@@ -27,7 +27,7 @@ const CCInput = forwardRef((props, ref) => {
             style={style}
             placeholder={placeholder}
             disabled={props?.disabled}
-            autocomplete="off"
+            autoComplete="off"
           />
         </Form.Item>
       );
@@ -40,7 +40,7 @@ const CCInput = forwardRef((props, ref) => {
             formatter={props?.formatter}
             placeholder={props?.placeholder}
             {...rest}
-            autocomplete="off"
+            autoComplete="off"
           />
         </Form.Item>
       );
@@ -51,7 +51,7 @@ const CCInput = forwardRef((props, ref) => {
             style={{ ...props.style, width: "100%" }}
             format="DD/MM/YYYY"
             placeholder={props?.placeholder}
-            autocomplete={props?.autocomplete || "off"}
+            autoComplete={props?.autocomplete || "off"}
             inputReadOnly={props?.inputReadOnly || true}
             onChange={props?.onChange}
 
@@ -73,7 +73,7 @@ const CCInput = forwardRef((props, ref) => {
               format="MM/DD/YYYY"
               style={{ ...props.style, width: "100%" }}
               placeholder={placeholder}
-              autocomplete={props?.autocomplete || "off"}
+              autoComplete={props?.autocomplete || "off"}
               {...rest}
             />
           </Form.Item>
@@ -91,10 +91,10 @@ const CCInput = forwardRef((props, ref) => {
             onSelect={props?.onSelect}
             onChange={props?.onChange}
             disabled={props?.disabled}
-            defaultValue={defaultValue}
+            defaultValue={props?.defaultValue || null}
             defaultActiveFirstOption={props?.defaultActiveFirstOption}
             onDropdownVisibleChange={handleOptions}
-            autocomplete="off"
+            autoComplete="off"
             style={props?.style}
           >
             {optional?.map((item, i) => {
@@ -115,7 +115,7 @@ const CCInput = forwardRef((props, ref) => {
             style={style}
             placeholder={placeholder}
             disabled={props?.disabled}
-            autocomplete={props?.autocomplete || "off"}
+            autoComplete={props?.autocomplete || "off"}
           />
         </Form.Item>
       );

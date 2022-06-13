@@ -215,7 +215,9 @@ const ThanhVienGopVon = forwardRef((props, ref) => {
             label="Người đại diện"
             name={[...BASE_FORM, "present_person"]}
             onSelect={(e) => setPresent(e)}
-            defaultValue="personal"
+            // defaultValue="personal"
+            defaultActiveFirstOption
+            // placeholder="Chọn người đại diện"
             options={[
               { value: "personal", name: "Người đại diện là cá nhân" },
               { value: "organization", name: "Người đại diện là tổ chức" },

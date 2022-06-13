@@ -153,6 +153,7 @@ const UserProductItem = (props) => {
               {current === 8 ? renderPrewviewForm(formRef) : ""}
 
               <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
+                {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
                 {current < 8 ? <Button onClick={Next}>Next</Button> : ""}
                 {current === 8 ? (
                   <>
@@ -166,8 +167,6 @@ const UserProductItem = (props) => {
                 ) : (
                   ""
                 )}
-
-                {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
               </div>
             </Card>
           </>
@@ -188,9 +187,11 @@ const UserProductItem = (props) => {
             <UyQuyen ref={uyquyenRef} current={current === changeInforStep.length - 2} />
 
             <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
-              {current < changeInforStep.length - 1 ? <Button onClick={Next}>Next</Button> : ""}
+              {current > 0 && <Button onClick={Prev}>Prev</Button>}
 
-              {current === changeInforStep.length - 1 ? (
+              {current < changeInforStep.length - 1 && <Button onClick={Next}>Next</Button>}
+
+              {current === changeInforStep.length - 1 && (
                 <>
                   <Button loading={loading} onClick={handleSaveChangeInfo}>
                     Lưu lại
@@ -199,10 +200,7 @@ const UserProductItem = (props) => {
                     Thanh toán
                   </Button>
                 </>
-              ) : (
-                ""
               )}
-              {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
             </div>
           </Card>
         );
@@ -222,8 +220,10 @@ const UserProductItem = (props) => {
             {current === 3 ? renderPrewviewForm(formRef) : ""}
 
             <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
-              {current < 3 ? <Button onClick={Next}>Next</Button> : ""}
-              {current === 3 ? (
+              {current > 0 && <Button onClick={Prev}>Prev</Button>}
+
+              {current < 3 && <Button onClick={Next}>Next</Button>}
+              {current === 3 && (
                 <>
                   <Button loading={loading} onClick={handleSavePending}>
                     Lưu lại
@@ -232,10 +232,7 @@ const UserProductItem = (props) => {
                     Thanh toán
                   </Button>
                 </>
-              ) : (
-                ""
               )}
-              {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
             </div>
           </Card>
         );
@@ -254,8 +251,10 @@ const UserProductItem = (props) => {
             {current === 3 ? renderPrewviewForm(formRef) : ""}
 
             <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
-              {current < 3 ? <Button onClick={Next}>Next</Button> : ""}
-              {current === 3 ? (
+              {current > 0 && <Button onClick={Prev}>Prev</Button>}
+
+              {current < 3 && <Button onClick={Next}>Next</Button>}
+              {current === 3 && (
                 <>
                   <Button loading={loading} onClick={handleSaveDissolution}>
                     Lưu lại
@@ -264,10 +263,7 @@ const UserProductItem = (props) => {
                     Thanh toán
                   </Button>
                 </>
-              ) : (
-                ""
               )}
-              {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
             </div>
           </Card>
         );
@@ -457,10 +453,6 @@ const UserProductItem = (props) => {
     paymentService(params);
   };
 
-  const handlePurchase = () => {
-    console.log("purchase");
-  };
-
   const handleSave = () => {
     let val = formRef.current.getFieldsValue();
     console.log(val);
@@ -572,6 +564,7 @@ const UserProductItem = (props) => {
   return (
     <>
       <div className={styles.mainContent}>
+      
         {data && renderHeaderStep(data?.type)}
 
         {data && renderFormByType(data?.type)}

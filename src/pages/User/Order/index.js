@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Tag, Button, Modal } from "antd";
+import { Table, Tag, Button, Modal, Space } from "antd";
 import axios from "../../../config/axios";
 import Tracking from "../../../components/Tracking";
 import { RiLoader4Line } from "react-icons/ri";
@@ -8,8 +8,6 @@ import { useSearchParams } from "react-router-dom";
 import dateformat from "dateformat";
 
 const UserOrder = () => {
-
-  
   const [state, setState] = useState({
     loading: false,
     data: [],
@@ -42,14 +40,6 @@ const UserOrder = () => {
     }
   };
 
-  // const handleTracking = () => {
-  //   setModal({
-  //     ...modal,
-  //     width: "50%",
-  //     visible: true,
-  //     component: <Tracking />,
-  //   });
-  // };
   const handlePurchase = (record) => {
     setLoading(true);
     const date = new Date();
@@ -78,6 +68,7 @@ const UserOrder = () => {
       visible: false,
     });
   };
+
   return (
     <div>
       <Table dataSource={data} loading={loading} rowKey={(record) => record._id}>
@@ -98,17 +89,22 @@ const UserOrder = () => {
         />
 
         <Table.Column
+          width="350px"
           align="center"
           title="Loại hình"
           dataIndex=""
           render={(val, record, i) => {
-            // 2 Case : 22/03/2022
-            if (record.data.create_company) {
-              return "Thành lập doanh nghiệp";
-            }
-            if (record.data.change_info) {
-              return "Thay đổi thông tin";
-            }
+            return (
+              <div key={[val, i]} style={{ display: "flex", justifyContent: "flex-start" }}>
+                <Space wrap size={[8, 16]} align="start">
+                  {record?.products.map((item) => (
+                    <Tag color="#108ee9" key={item.key}>
+                      {item.name}
+                    </Tag>
+                  ))}
+                </Space>
+              </div>
+            );
           }}
         />
 
@@ -119,17 +115,6 @@ const UserOrder = () => {
             return <>{number_format(record?.price)} VND</>;
           }}
         />
-
-        {/* <Table.Column
-          title="Progress"
-          dataIndex=""
-          align="center"
-          render={(val, record, i) => (
-            <Button type="text" onClick={() => handleTracking(record)}>
-              <RiLoader4Line />
-            </Button>
-          )}
-        /> */}
 
         <Table.Column
           align="center"

@@ -117,7 +117,6 @@ const CreateCompany = forwardRef((props, formRef) => {
         initialValues={{
           create_company: {
             approve: {
-              present_person: "personal",
               origin_person: {
                 national: "Việt Nam",
               },
