@@ -83,10 +83,10 @@ exports.deleteOrder = async (req, res) => {
 };
 
 const calcPrice = async (productArray) => {
-  console.log(productArray);
+  // console.log(productArray);
   if (typeof productArray === "string") {
     let _product = await Product.findOne({ _id: productArray }).select("_id price");
-    console.log(_product);
+    // console.log(_product);
     return _product.price;
   }
 

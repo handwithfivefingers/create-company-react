@@ -25,7 +25,7 @@ exports.getOrdersFromUser = async (req, res) => {
       // .populate("main_career", "name")
       // .limit(10)
       .sort("-createdAt");
-    console.log(_order);
+    // console.log(_order);
     return successHandler(_order, res);
   } catch (err) {
     console.log("getOrdersFromUser error");
@@ -262,7 +262,7 @@ exports.getUrlReturn = async (req, res) => {
 
       await Order.updateOne({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
 
-      console.log("getUrlReturn updated Success");
+      // console.log("getUrlReturn updated Success");
 
       let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate("orderOwner", "_id name email");
 

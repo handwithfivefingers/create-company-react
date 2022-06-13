@@ -53,7 +53,7 @@ const FormProduct = (props) => {
     let { name, price, type, parentId, categories } = val;
 
     let params = { name, price, type, categories };
-    console.log(props);
+    // console.log(props);
     if (parentId) {
       params.parentId = parentId;
     }
@@ -70,7 +70,7 @@ const FormProduct = (props) => {
     }
   };
 
-  console.log(props, productData);
+  // console.log(props, productData);
   return (
     <Card title={props.type == "edit" ? "Chỉnh sửa" : "Thêm sản phẩm"} bordered={false}>
       <Form onFinish={onFinish} layout="vertical" ref={formRef}>

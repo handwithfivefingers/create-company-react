@@ -8,7 +8,7 @@ import styles from "./styles.module.scss";
 const BASE_FORM = ["change_info", "legal_representative"];
 
 const DaiDienPhapLuat = forwardRef((props, ref) => {
-  console.log(props);
+  // console.log(props);
   useEffect(() => {
     ref.current.setFieldsValue({
       change_info: {

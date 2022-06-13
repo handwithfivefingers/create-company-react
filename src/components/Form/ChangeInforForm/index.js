@@ -47,9 +47,9 @@ const ChangeInforForm = forwardRef((props, ref) => {
       props.onFinishScreen(opt);
     }
   };
-  useEffect(() => {
-    console.log(ref?.current.getFieldsValue());
-  }, []);
+  // useEffect(() => {
+  //   console.log(ref?.current.getFieldsValue());
+  // }, []);
 
   return (
     <Form ref={ref} layout="vertical" name="change_info">

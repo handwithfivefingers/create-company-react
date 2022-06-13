@@ -6,7 +6,7 @@ import { number_format } from "src/helper/Common";
 import { Link } from "react-router-dom";
 // import Link from 'next/link'
 const ProductCard = (props) => {
-  console.log(props);
+  // console.log(props);
   return (
     <Link href={`/san-pham/${props?.data?.slug}`} passHref>
       <div className={clsx([styles.serviceItem])}>

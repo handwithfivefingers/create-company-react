@@ -48,9 +48,9 @@ const AdminDashboard = () => {
 
   return (
     <Row gutter={[16, 12]}>
-      <Col span={24}>
+      {/* <Col span={24}>
         <Button onClick={testPayment}>Test payment</Button>
-      </Col>
+      </Col> */}
       <Col span={16}>
         <Card title="Logs hệ thống" className="cc-card">
           <List

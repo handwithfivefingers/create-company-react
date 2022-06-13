@@ -8,7 +8,7 @@ exports.task = cron.schedule(
   "* * * * *",
   async () => {
     let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
-    console.log('cron order', _order);
+    // console.log('cron order', _order);
     if (_order) return handleConvertFile(_order);
 
   },
@@ -36,7 +36,7 @@ const handleConvertFile = async (order) => {
 
         let pdfFile = await convertFile(file, _contentOrder);
 
-        console.log("pdfFile", pdfFile);
+        // console.log("pdfFile", pdfFile);
 
         attachments.push({ pdfFile, name: file.name });
       }

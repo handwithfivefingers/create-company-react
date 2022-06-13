@@ -455,7 +455,7 @@ const UserProductItem = (props) => {
 
   const handleSave = () => {
     let val = formRef.current.getFieldsValue();
-    console.log(val);
+    // console.log(val);
 
     let params = {
       track: {

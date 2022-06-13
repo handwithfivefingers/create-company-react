@@ -18,11 +18,14 @@ const { task } = require("./server/controller/service/cronjob");
 
 env.config();
 
+const BASE_PORT = process.env.NODE_ENV !== "development" ? process.env.PORT : 3001;
+
 // DB
 mongoose
   .connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => {
     console.log("DB connected");
@@ -64,9 +67,8 @@ app.use((err, req, res, next) => {
 });
 
 // Cron running ;
-task.start();
+process.env.NODE_ENV !== "development" && task.start();
 
-app.listen(3001, () => {
-  console.log("Server is runnign in port 3001");
-
+app.listen(BASE_PORT, () => {
+  console.log(`Server is runnign in port ${BASE_PORT}`);
 });

@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Table, Tag, Button, Modal, Space } from "antd";
-import axios from "../../../config/axios";
-import Tracking from "../../../components/Tracking";
-import { RiLoader4Line } from "react-icons/ri";
-import { number_format } from "src/helper/Common";
-import { useSearchParams } from "react-router-dom";
+import { Button, message, Modal, Space, Table, Tag } from "antd";
 import dateformat from "dateformat";
-
+import { useEffect, useState } from "react";
+import { TbFreeRights } from "react-icons/tb";
+import { number_format } from "src/helper/Common";
+import axios from "../../../config/axios";
 const UserOrder = () => {
-  const [state, setState] = useState({
-    loading: false,
-    data: [],
-  });
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [modal, setModal] = useState({
@@ -40,24 +33,44 @@ const UserOrder = () => {
     }
   };
 
-  const handlePurchase = (record) => {
-    setLoading(true);
+  const handlePayment = (record) => {
+    // setLoading(true);
     const date = new Date();
     var createDate = dateformat(date, "yyyymmddHHmmss");
     var orderId = dateformat(date, "HHmmss");
+
     let params = {
-      ...record,
       createDate,
       orderId,
+      amount: +record?.price*100,
+      orderInfo: record?._id,
     };
-    paymentService(params);
+    // console.log(record);
+    // params.amount = 100000*100;
+    // params.orderInfo = "Test payment";
+    // AdminDashboardService.testPayment(params)
+    //   .then((res) => {
+    //     if (res.data.status === 200) {
+    //       return (window.location.href = res.data.url);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    return paymentService(params);
   };
 
   const paymentService = async (params) => {
     setLoading(true);
-    const res = await axios.post(`/payment`, params);
-    if (res.status === 200) {
-      window.open(res.data.url);
+    try {
+      const res = await axios.post(`/payment`, params);
+      if (res.status === 200) {
+        window.open(res.data.url);
+      }
+    } catch (err) {
+      console.log(err);
+      message.error("something was wrong");
     }
     setLoading(false);
   };
@@ -71,7 +84,14 @@ const UserOrder = () => {
 
   return (
     <div>
-      <Table dataSource={data} loading={loading} rowKey={(record) => record._id}>
+      <Table
+        size="small"
+        bordered
+        dataSource={data}
+        loading={loading}
+        rowKey={(record) => record._id}
+        scroll={{ x: 1000 }}
+      >
         <Table.Column
           align="center"
           title="Đơn hàng"
@@ -132,7 +152,13 @@ const UserOrder = () => {
         <Table.Column
           align="center"
           render={(v, record, i) =>
-            record?.payment === "0" ? <Button onClick={() => handlePurchase(record)}>Thanh toán</Button> : ""
+            record?.payment === 0 ? (
+              <Button type="primary" onClick={() => handlePayment(record)}>
+                <TbFreeRights />
+              </Button>
+            ) : (
+              ""
+            )
           }
         />
       </Table>

@@ -31,7 +31,7 @@ const AdminOrder = () => {
     };
 
     setLoading(true);
-    console.log(params);
+    // console.log(params);
     AdminOrderService.getOrder(params)
       .then((res) => {
         let { data, status } = res.data;
@@ -128,7 +128,7 @@ const AdminOrder = () => {
     form.append("content", content);
     form.append("email", email);
     setLoading(true);
-    console.log("running sendmail");
+    // console.log("running sendmail");
     axios
       .post("/api/sendmail", form)
       .then((res) => {
@@ -185,7 +185,7 @@ const AdminOrder = () => {
             showSizeChanger: false,
           }}
           rowKey={(record) => record._id}
-          scroll={{ x: 768 }}
+          scroll={{ x: 1280 }}
         >
           <Table.Column
             title="Đơn hàng"
@@ -200,15 +200,21 @@ const AdminOrder = () => {
             }}
           />
           <Table.Column
+            width="350px"
             title="Sản phẩm"
             className="inline"
             render={(val, record, i) => {
-              return record?.products?.map((item) => (
-                <span key={item.name}>
-                  {item.name}
-                  <br />
-                </span>
-              ));
+              return (
+                <div key={[val, i]} style={{ display: "flex", justifyContent: "flex-start" }}>
+                  <Space wrap size={[8, 16]} align="start">
+                    {record?.products.map((item) => (
+                      <Tag color="#108ee9" key={item.key}>
+                        {item.name}
+                      </Tag>
+                    ))}
+                  </Space>
+                </div>
+              );
             }}
           />
           <Table.Column
@@ -249,7 +255,12 @@ const AdminOrder = () => {
           <Table.Column
             title="Ngày tạo"
             render={(val, record, i) => {
-              return record?.createdAt.substring(0, 10);
+              return Date.parse(record?.createdAt).toLocaleDateString("vi-Vi", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              });
             }}
           />
           <Table.Column

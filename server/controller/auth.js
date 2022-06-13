@@ -37,7 +37,7 @@ exports.registerUser = async (req, res) => {
 
     let mailParams = await getMailParams({ name, phone, password, role, email: _email }, res);
 
-    console.log("mailParams", mailParams);
+    // console.log("mailParams", mailParams);
 
     await sendmailWithAttachments(req, res, mailParams);
 
@@ -86,7 +86,7 @@ exports.LoginUser = async (req, res) => {
 };
 
 exports.Logout = async (req, res) => {
-  console.log("running api logout");
+  // console.log("running api logout");
   res.clearCookie("create-company-token");
   res.status(200).json({
     authenticate: false,
@@ -94,7 +94,7 @@ exports.Logout = async (req, res) => {
 };
 
 exports.authenticate = async (req, res) => {
-  console.log(req.role);
+  // console.log(req.role);
   return res.status(200).json({
     authenticate: true,
     role: req.role,

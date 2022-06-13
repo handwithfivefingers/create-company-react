@@ -89,7 +89,7 @@ export default function ClassComponentText(props) {
 
   useEffect(() => {
     getScreenData(slug);
-    console.log(slug);
+    // console.log(slug);
   }, []);
 
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function ClassComponentText(props) {
   };
 
   const filledJson = async (val) => {
-    console.log(val);
+    // console.log(val);
     const { documentViewer } = insRef?.current.Core;
     const doc = documentViewer.getDocument();
     await doc.documentCompletePromise();

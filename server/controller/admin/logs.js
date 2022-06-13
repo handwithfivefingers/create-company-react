@@ -2,7 +2,7 @@ const { errHandler, successHandler } = require("../../response");
 const { Log } = require("../../model");
 
 exports.getLogs = async (req, res) => {
-  console.log('coming here')
+  // console.log('coming here')
   try {
     let _logs = await Log.find({}).sort("-createdAt");;
     if (_logs) {

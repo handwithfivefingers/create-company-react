@@ -1,14 +1,15 @@
 const qs = require("query-string");
-const { errHandler, successHandler, permisHandler, existHandler } = require("../../response");
+const { errHandler } = require("../../response");
 const { Order } = require("../../model");
 const { sendmailWithAttachments } = require("../sendmail");
 const { ResponseCode } = require("../../common/ResponseCode");
 const crypto = require("crypto");
+const { startSession } = require("mongoose");
 
 exports.testPayment = (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   let { createDate, orderId, amount, orderInfo } = req.body;
-  console.log(createDate, orderId, amount, orderInfo);
+  // console.log(createDate, orderId, amount, orderInfo);
   return paymentOrder(req, res, { createDate, orderId, amount, orderInfo });
 };
 // https://app.thanhlapcongtyonline.vn/api/order/payment/undefined/user/order?
@@ -18,56 +19,79 @@ const url =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3001/api/order/payment/url_return"
     : "https://app.thanhlapcongtyonline.vn/api/order/payment/url_return";
-    
-const paymentOrder = (req, res, params) => {
-  let { createDate, orderId, amount, orderInfo } = params;
-  var ipAddr =
-    req.headers["x-forwarded-for"] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress;
 
-  var tmnCode = process.env.TMN_CODE_VPN;
+const paymentOrder = async (req, res, params) => {
+  const session = await startSession();
 
-  var secretKey = process.env.SECRET_KEY_VPN;
+  try {
+    let { createDate, orderId, amount, orderInfo } = params;
 
-  var vnpUrl = process.env.VNPAY_URL;
-  // var returnUrl = "http://localhost:3001/api/return_vnp";
+    let _update = {
+      orderInfo, // _id
+      createDate,
+      orderId,
+      amount,
+    };
 
-  var returnUrl = process.env.RETURN_URL;
+    // Start Transaction
+    session.startTransaction();
 
-  var orderType = req?.body?.orderType || "billpayment";
+    await Order.findOneAndUpdate({ _id: orderInfo }, _update, { session, new: true });
 
-  var locale = "vn";
+    var ipAddr =
+      req.headers["x-forwarded-for"] ||
+      req.connection.remoteAddress ||
+      req.socket.remoteAddress ||
+      req.connection.socket.remoteAddress;
 
-  var vnp_Params = {
-    vnp_Version: "2.1.0",
-    vnp_Command: "pay",
-    vnp_TmnCode: tmnCode,
-    vnp_Locale: locale,
-    vnp_CurrCode: "VND",
-    vnp_TxnRef: orderId,
-    vnp_OrderInfo: orderInfo,
-    vnp_OrderType: orderType,
-    vnp_Amount: amount,
-    vnp_ReturnUrl: returnUrl,
-    vnp_IpAddr: ipAddr,
-    vnp_CreateDate: createDate,
-  };
+    var tmnCode = process.env.TMN_CODE_VPN;
 
-  vnp_Params = sortObject(vnp_Params);
+    var secretKey = process.env.SECRET_KEY_VPN;
 
-  var signData = qs.stringify(vnp_Params, { encode: false });
+    // var vnpUrl = process.env.VNPAY_URL;
+    var vnpUrl = url;
+    // var returnUrl = "http://localhost:3001/api/return_vnp";
 
-  var hmac = crypto.createHmac("sha512", secretKey);
+    var returnUrl = process.env.RETURN_URL;
 
-  var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
+    var orderType = req?.body?.orderType || "billpayment";
 
-  vnp_Params["vnp_SecureHash"] = signed;
+    var locale = "vn";
 
-  vnpUrl += "?" + qs.stringify(vnp_Params, { encode: false });
+    var vnp_Params = {
+      vnp_Version: "2.1.0",
+      vnp_Command: "pay",
+      vnp_TmnCode: tmnCode,
+      vnp_Locale: locale,
+      vnp_CurrCode: "VND",
+      vnp_TxnRef: orderId,
+      vnp_OrderInfo: orderInfo,
+      vnp_OrderType: orderType,
+      vnp_Amount: amount,
+      vnp_ReturnUrl: returnUrl,
+      vnp_IpAddr: ipAddr,
+      vnp_CreateDate: createDate,
+    };
 
-  return res.status(200).json({ status: 200, url: vnpUrl });
+    vnp_Params = sortObject(vnp_Params);
+
+    var signData = qs.stringify(vnp_Params, { encode: false });
+
+    var hmac = crypto.createHmac("sha512", secretKey);
+
+    var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
+
+    vnp_Params["vnp_SecureHash"] = signed;
+
+    vnpUrl += "?" + qs.stringify(vnp_Params, { encode: false });
+
+    return res.status(200).json({ status: 200, url: vnpUrl });
+  } catch (err) {
+    console.log(err);
+    return errHandler(err, res);
+  } finally {
+    session.endSession();
+  }
 };
 
 function sortObject(obj) {
@@ -107,9 +131,11 @@ exports.getUrlReturn = async (req, res) => {
   var hmac = crypto.createHmac("sha512", secretKey);
 
   var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
-  
-  let url =  process.env.NODE_ENV === "DEV" ? `http://localhost:3000/user/order?` : `https://app.thanhlapcongtyonline.vn/user/order?`
 
+  let url =
+    process.env.NODE_ENV === "DEV"
+      ? `http://localhost:3000/user/order?`
+      : `https://app.thanhlapcongtyonline.vn/user/order?`;
 
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
@@ -141,7 +167,6 @@ exports.getUrlReturn = async (req, res) => {
       };
 
       await sendmailWithAttachments(req, res, params);
-
 
       return res.redirect(url + query);
     }

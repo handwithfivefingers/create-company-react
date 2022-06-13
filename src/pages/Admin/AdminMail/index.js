@@ -1,10 +1,9 @@
 import { DeleteOutlined, FormOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Drawer, message, Row, Table, Tooltip, Popover } from "antd";
+import { Button, Card, Col, Drawer, message, Popover, Row, Table, Tooltip } from "antd";
 import parser from "html-react-parser";
-import React, { useEffect, useState } from "react";
-import AdminMailService from "src/service/AdminService/AdminMailService";
+import { useEffect, useState } from "react";
 import TemplateMail from "src/components/Form/TemplateMail";
-import axios from "src/config/axios";
+import AdminMailService from "src/service/AdminService/AdminMailService";
 import styles from "./styles.module.scss";
 function ListTemplateMail(props) {
   // const router = useRouter();
@@ -112,8 +111,10 @@ function ListTemplateMail(props) {
           },
           showSizeChanger: false,
         }}
+        scroll={{ x: 1200 }}
       >
         <Table.Column
+          width={"20%"}
           title="Mẫu Email"
           dataIndex="name"
           render={(val, record, i) => (
@@ -122,30 +123,28 @@ function ListTemplateMail(props) {
             </Tooltip>
           )}
         />
-        <Table.Column title="Subject" dataIndex="subject" render={(val, record, i) => record.subject} />
+        <Table.Column width={"20%"} title="Subject" dataIndex="subject" render={(val, record, i) => record.subject} />
         <Table.Column
           title="Nội dung Email"
-          width="300px"
+          width={"50%"}
           render={(val, record, i) => (
             <div className={styles.tableContent}>
               <Popover
                 content={<div className={styles.popover}>{parser(record?.content || "")}</div>}
                 color={"#108ee9"}
                 key={"#108ee9"}
-                title={record.name || ''}
+                title={record.name || ""}
                 placement="top"
               >
-                {/* <Button type="primary">Hover me</Button> */}
-                {parser(record?.content || "")}{" "}
+                {parser(record?.content || "")}
               </Popover>
-              {/* <Tooltip title={parser(record?.content || "")} color={"#108ee9"} key={"#108ee9"}></Tooltip> */}
             </div>
           )}
         />
 
         <Table.Column
+          width={"10%"}
           title="Action"
-          width={100}
           render={(val, record, i) => (
             <Row>
               <Col span={12}>

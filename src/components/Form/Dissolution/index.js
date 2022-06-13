@@ -26,7 +26,7 @@ const Dissolution = forwardRef((props, ref) => {
     }
   };
   
-  console.log(props);
+  // console.log(props);
   return (
     <Form ref={ref} layout="vertical">
       <Form.Item

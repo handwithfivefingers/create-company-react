@@ -16,7 +16,7 @@ export default function EditMail() {
   const router = useRouter();
 
   const handleSave = () => {
-    console.log(name, content);
+    // console.log(name, content);
     if (!name) return;
     if (!content) return;
 
