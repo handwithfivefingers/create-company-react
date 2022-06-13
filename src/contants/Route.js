@@ -7,6 +7,7 @@ import {
   RiMailSettingsFill,
 } from "react-icons/ri";
 import { BiHomeAlt } from "react-icons/bi";
+import { FcInfo } from "react-icons/fc";
 import React from "react";
 import { Layout } from "antd";
 import CustomHeader from "src/components/CustomHeader";
@@ -32,6 +33,7 @@ import UserProfile from "src/pages/User/Profile";
 
 import Error from "src/pages/_error";
 import CCResult from "src/pages/User/Result";
+import AdminAbout from "src/pages/Admin/AdminAbout";
 const { Content } = Layout;
 export const AdminRouter = [
   {
@@ -154,6 +156,12 @@ export const LAYOUT_ROUTER = ({ status, role }) => [
             title: "Cài đặt",
             icon: <RiAdminFill />,
             element: <AdminSetting />,
+          },
+          {
+            path: "about",
+            title: "Author",
+            icon: <FcInfo />,
+            element: <AdminAbout />,
           },
 
           {

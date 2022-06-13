@@ -53,3 +53,17 @@
 .collapsed {
   width: calc(100vw - 86px);
 }
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  .footerLeft {
+  }
+  .footerRight {
+    display:flex;
+    font-size: 24px !important;
+  }
+}

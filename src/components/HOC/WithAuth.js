@@ -6,14 +6,13 @@ import AdminSidebar from "src/components/Admin/AdminSidebar";
 import UserHeader from "src/components/User/UserHeader";
 import UserSidebar from "src/components/User/UserSidebar";
 import styles from "./styles.module.scss";
-import { BrowserRouter, useRoutes, useLocation, useNavigate } from "react-router-dom";
-
-const { Header, Content, Footer, Sider } = Layout;
+import { FcInfo } from "react-icons/fc";
+import { Link } from "react-router-dom";
+const { Content, Footer } = Layout;
 
 const { SubMenu } = Menu;
 export default function WithAuth(Component, role) {
   return function Authenticated(props) {
-
     if (!props.status) {
       return <Navigate to="/" />;
     }
@@ -28,7 +27,13 @@ export default function WithAuth(Component, role) {
                 <Component {...props} />
               </div>
             </Content>
-            <Footer style={{ textAlign: "center" }}>Truyen Mai ©2019 </Footer>
+            <Footer style={{ textAlign: "center" }} className={styles.footer}>
+              <div className={styles.footerLeft}>Truyen Mai ©2019</div>
+
+              <Link className={styles.footerRight} to="/admin/about">
+                <FcInfo />
+              </Link>
+            </Footer>
           </Layout>
         </Layout>
       );
