@@ -99,6 +99,8 @@ const ThanhVienGopVon = forwardRef((props, ref) => {
             <CCInput label="Tỉnh/Thành phố" name={[...BASE_FORM, "origin_person", "contact", "city"]} />
           </Form.Item>
 
+          <CCInput label="Số điện thoại" name={[...BASE_FORM, "origin_person", "contact", "phone"]} />
+
           <Form.Item name={[...BASE_FORM, "company_value"]} label="Giá trị góp vốn">
             <InputNumber formatter={(val) => `${number_format(val)}`} style={{ width: "100%" }} />
           </Form.Item>
@@ -185,6 +187,8 @@ const ThanhVienGopVon = forwardRef((props, ref) => {
           <CCInput type="date" name={[...BASE_FORM, "origin_person", "doc_time_provide"]} label="Ngày cấp" />
 
           <CCInput name={[...BASE_FORM, "origin_person", "doc_place_provide"]} label="Nơi cấp" />
+
+          <CCInput label="Số điện thoại" name={[...BASE_FORM, "origin_person", "contact", "phone"]} />
 
           <Form.Item name={[...BASE_FORM, "company_value"]} label="Giá trị góp vốn">
             <InputNumber formatter={(val) => `${number_format(val)}`} style={{ width: "100%" }} />

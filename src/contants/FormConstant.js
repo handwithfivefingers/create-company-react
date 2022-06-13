@@ -260,6 +260,7 @@ export const LABEL = {
             town: "Xã/Phường/Thị trấn",
             district: "Quận/Huyện/Thị xã/Thành phố thuộc tỉnh",
             city: "Tỉnh/Thành phố",
+            phone: "Số điện thoại",
           },
           company: {
             address: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
@@ -297,11 +298,16 @@ export const LABEL = {
           doc_time_provide: "Ngày cấp",
           doc_place_provide: " Nơi cấp",
         },
-        company_core: {
+        core: {
           name: "Tên công ty bằng Tiếng Việt",
           name_en: "Tên công ty bằng Tiếng Anh (nếu có)",
           name_vn: "Tên công ty viết tắt (nếu có)",
-          address: "Địa chỉ trụ sở chính",
+          address: {
+            street: "Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn",
+            town: "Xã/Phường/Thị trấn",
+            district: "Quận/Huyện/Thị xã/Thành phố thuộc tỉnh",
+            city: "Tỉnh/Thành phố",
+          },
           address_opt_1: "Địa chỉ chi nhánh (nếu có)",
           address_opt_2: "Địa chỉ văn phòng đại diện (nếu có)",
         },

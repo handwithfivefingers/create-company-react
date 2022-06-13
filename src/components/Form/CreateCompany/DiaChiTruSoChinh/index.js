@@ -4,9 +4,7 @@ import React, { forwardRef } from "react";
 import CCInput from "src/components/CCInput";
 import styles from "../CreateCompany.module.scss";
 
-
 const DiaChiTruSoChinh = forwardRef((props, ref) => {
-
   const { BASE_FORM, current } = props;
 
   return (
@@ -19,11 +17,19 @@ const DiaChiTruSoChinh = forwardRef((props, ref) => {
         },
       ])}
     >
-      <CCInput name={[...BASE_FORM, "company_core", "address"]} label="Địa chỉ trụ sở chính" />
+      <Form.Item label="Địa chỉ trụ sở chính">
+        <CCInput
+          name={[...BASE_FORM, "core", "address", "street"]}
+          label="Số nhà, ngách, hẻm, ngõ, đường phố/tổ/xóm/ấp/thôn"
+        />
+        <CCInput name={[...BASE_FORM, "core", "address", "town"]} label="Xã/Phường/Thị trấn" />
+        <CCInput name={[...BASE_FORM, "core", "address", "district"]} label="Quận/Huyện/Thị xã/Thành phố thuộc tỉnh" />
+        <CCInput name={[...BASE_FORM, "core", "address", "city"]} label="Tỉnh/Thành phố" />
+      </Form.Item>
 
-      <CCInput name={[...BASE_FORM, "company_core", "address_opt_1"]} label="Địa chỉ chi nhánh (nếu có)" />
+      <CCInput name={[...BASE_FORM, "core", "address_opt_1"]} label="Địa chỉ chi nhánh (nếu có)" />
 
-      <CCInput name={[...BASE_FORM, "company_core", "address_opt_2"]} label="Địa chỉ văn phòng đại diện (nếu có)" />
+      <CCInput name={[...BASE_FORM, "core", "address_opt_2"]} label="Địa chỉ văn phòng đại diện (nếu có)" />
     </Form.Item>
   );
 });

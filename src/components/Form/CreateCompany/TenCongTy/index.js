@@ -84,7 +84,7 @@ const TenCongTy = forwardRef((props, ref) => {
           </Collapse>
         </Col>
         <Col lg={12} md={12} sm={24} xs={24}>
-          <Form.Item name={[...BASE_FORM, "company_core", "name"]} label="Tên công ty bằng Tiếng Việt">
+          <Form.Item name={[...BASE_FORM, "core", "name"]} label="Tên công ty bằng Tiếng Việt">
             <Input onChange={debounce((e) => getCompanyByName(e.target.value), 700)} />
           </Form.Item>
           <div style={{ padding: "0 0 10px 0" }}>
@@ -97,9 +97,9 @@ const TenCongTy = forwardRef((props, ref) => {
             )}
           </div>
 
-          <CCInput name={[...BASE_FORM, "company_core", "name_en"]} label="Tên công ty bằng Tiếng Anh (nếu có)" />
+          <CCInput name={[...BASE_FORM, "core", "name_en"]} label="Tên công ty bằng Tiếng Anh (nếu có)" />
 
-          <CCInput name={[...BASE_FORM, "company_core", "name_vn"]} label="Tên công ty viết tắt (nếu có)" />
+          <CCInput name={[...BASE_FORM, "core", "name_vn"]} label="Tên công ty viết tắt (nếu có)" />
         </Col>
       </Row>
     </Form.Item>
