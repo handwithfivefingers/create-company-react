@@ -1,10 +1,21 @@
-import { Button, message, Modal, Space, Table, Tag } from "antd";
-import dateformat from "dateformat";
-import { useEffect, useState } from "react";
-import { TbFreeRights } from "react-icons/tb";
-import { number_format } from "src/helper/Common";
+import React, { useEffect, useState } from "react";
+import { Table, Tag, Button, Modal, Tooltip , Drawer, Form, message} from "antd";
 import axios from "../../../config/axios";
+import Tracking from "../../../components/Tracking";
+import { MdCreditCard } from "react-icons/md";
+import { number_format } from "src/helper/Common";
+import { useSearchParams } from "react-router-dom";
+import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
+import dateformat from "dateformat";
+import styles from './styles.module.scss';
 const UserOrder = () => {
+
+  
+  const [state, setState] = useState({
+    loading: false,
+    data: [],
+  });
+
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [modal, setModal] = useState({
@@ -12,6 +23,11 @@ const UserOrder = () => {
     width: 0,
     component: null,
   });
+  const [drawer,setDrawer] = useState({
+    visible: false,
+    width:0,
+    data: null
+  })
   useEffect(() => {
     getScreenData();
   }, []);
@@ -33,8 +49,17 @@ const UserOrder = () => {
     }
   };
 
-  const handlePayment = (record) => {
-    // setLoading(true);
+  // const handleTracking = () => {
+  //   setModal({
+  //     ...modal,
+  //     width: "50%",
+  //     visible: true,
+  //     component: <Tracking />,
+  //   });
+  // };
+
+  const handlePurchase = (record) => {
+    setLoading(true);
     const date = new Date();
     var createDate = dateformat(date, "yyyymmddHHmmss");
     var orderId = dateformat(date, "HHmmss");
@@ -80,7 +105,24 @@ const UserOrder = () => {
       ...modal,
       visible: false,
     });
+    setDrawer((draw) => ({...draw,visible:false}))
   };
+
+
+  const onEditOrder = (record) => {
+    console.log('order', record);
+    let {data,files } = record;
+    setDrawer((draw) => ({
+      ...draw,
+      visible:true,
+      width:500,
+      data: {
+        data,
+        files,
+      }
+    }))
+
+  }
 
   return (
     <div>
@@ -114,17 +156,16 @@ const UserOrder = () => {
           title="Loại hình"
           dataIndex=""
           render={(val, record, i) => {
-            return (
-              <div key={[val, i]} style={{ display: "flex", justifyContent: "flex-start" }}>
-                <Space wrap size={[8, 16]} align="start">
-                  {record?.products.map((item) => (
-                    <Tag color="#108ee9" key={item.key}>
-                      {item.name}
-                    </Tag>
-                  ))}
-                </Space>
-              </div>
-            );
+            // 2 Case : 22/03/2022
+            if (record.data.create_company) {
+              return "Thành lập doanh nghiệp";
+            } else  if (record.data.change_info) {
+              return "Thay đổi thông tin";
+            }else  if (record.data.pending) {
+              return "Tạm hoãn";
+            }else  if (record.data.dissolution) {
+              return "Giải thể";
+            }
           }}
         />
 
@@ -151,14 +192,18 @@ const UserOrder = () => {
 
         <Table.Column
           align="center"
+          width={88}
           render={(v, record, i) =>
-            record?.payment === 0 ? (
-              <Button type="primary" onClick={() => handlePayment(record)}>
-                <TbFreeRights />
-              </Button>
-            ) : (
-              ""
-            )
+         <div className={styles.btnGroup}>
+            <Tooltip title="Chỉnh sửa" color={'blue'}>
+              <Button size="large" type="primary" shape="circle" onClick={() => onEditOrder(record)}><FormOutlined /></Button>
+            </Tooltip>
+          {/* {!record.payment &&   */}
+            <Tooltip title="Thanh toán" color={'blue'}>
+              <Button size="large"  type="primary" shape="circle" disabled={record.payment} onClick={() => handlePurchase(record)}><MdCreditCard /></Button>
+            </Tooltip>
+          {/* // } */}
+         </div>
           }
         />
       </Table>
@@ -166,7 +211,20 @@ const UserOrder = () => {
       <Modal visible={modal.visible} footer={null} bodyStyle={null} width={modal.width} onCancel={() => closeModal()}>
         {modal.component}
       </Modal>
+      <FormDrawer {...drawer} closeModal={closeModal}/>
     </div>
   );
 };
 export default UserOrder;
+
+
+const FormDrawer = (props) => {
+
+
+
+  return <Drawer visible={props.visible} width={props.width} onClose={props.closeModal} destroyOnClose>
+            <Form>
+              
+            </Form>
+      </Drawer>
+}

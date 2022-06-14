@@ -57,7 +57,7 @@ exports.getOrders = async (req, res) => {
 
       const count = await Order.find({
         $or: newCondition.length > 0 ? newCondition : [{}],
-      }).count();
+      }).countDocuments();
 
       return successHandler({ _order, count, current_page: page || 1 }, res);
     }

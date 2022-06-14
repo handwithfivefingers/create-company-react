@@ -52,6 +52,7 @@ const storage = multer.diskStorage({
 exports.upload = multer({ storage });
 
 exports.requireSignin = async (req, res, next) => {
+  console.log('coming');
   let token = req.cookies["create-company-token"];
 
   if (!token) return res.status(401).json({ message: "Authorization required" });

@@ -15,18 +15,23 @@ const AppRouter = require("./server/route");
 var cookieParser = require("cookie-parser");
 
 const { task } = require("./server/controller/service/cronjob");
-
+const {requireSignin} = require('./server/middleware');
 env.config();
+const { NODE_ENV , PORT , DEV_PORT } = process.env;
+
+const RUNTIME_PORT = NODE_ENV === 'development' ? DEV_PORT : PORT;
+
+const mongoseOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex:true
+}
 
 const BASE_PORT = process.env.NODE_ENV !== "development" ? process.env.PORT : 3001;
 
 // DB
 mongoose
-  .connect(process.env.DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
+  .connect(process.env.DATABASE_URL, mongoseOptions)
   .then(() => {
     console.log("DB connected");
   });
@@ -48,7 +53,7 @@ global.__basedir = __dirname;
 
 // Routes middleware
 
-app.use("/public", express.static(path.join(__dirname, "uploads")));
+app.use("/public",  express.static(path.join(__dirname, "uploads")));
 
 app.use(express.static(path.join(__dirname, "build")));
 
@@ -67,8 +72,10 @@ app.use((err, req, res, next) => {
 });
 
 // Cron running ;
-process.env.NODE_ENV !== "development" && task.start();
+if(process.env.NODE_ENV !== 'development') {
+  task.start()
+}
 
-app.listen(BASE_PORT, () => {
-  console.log(`Server is runnign in port ${BASE_PORT}`);
+app.listen(RUNTIME_PORT, () => {
+  console.log(`Server is running in port ${RUNTIME_PORT}`);
 });

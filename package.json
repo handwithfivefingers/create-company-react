@@ -57,9 +57,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node App.js",
+    "start": "node --trace-deprecation App.js",
     "dev-f": "react-scripts start",
-    "dev-s": "nodemon App.js",
+    "dev-s": "nodemon --trace-deprecation App.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -7,27 +7,8 @@ import { useParams } from "react-router";
 import AdminOrderService from "src/service/AdminService/AdminOrderService";
 import axios from "src/config/axios";
 import WebViewer from "@pdftron/webviewer";
+import PDFViewer from "src/components/PDFViewer";
 const allFiles = {
-  // {
-  //   name: "File_1A_DieuLeCaNhan",
-  //   path:"/files/File_1A_DieuLeCaNhan.docx"
-  // },
-  // {
-  //   name: "File_1B_DieuLeCaNhan",
-  //   path:"/files/File_1B_DieuLeCaNhan.docx"
-  // },
-  // {
-  //   name: "File_2_PhuLucI_2_GiayDeNghiDangKiMTV",
-  //   path:"/files/File_2_PhuLucI_2_GiayDeNghiDangKiMTV.docx"
-  // },
-  // {
-  //   name: "File_3_UyQuyen",
-  //   path:"/files/File_3_UyQuyen.docx"
-  // },
-  // {
-  //   name: "File_4_PhuLucI_10_DanhSachNguoiDaiDien",
-  //   path:"/files/File_4_PhuLucI_10_DanhSachNguoiDaiDien.docx"
-  // },
   create_company: {
     personal: [
       {
@@ -92,9 +73,9 @@ export default function ClassComponentText(props) {
     // console.log(slug);
   }, []);
 
-  useEffect(() => {
-    renderPDF(refViewer, initialDoc);
-  }, [initialDoc]);
+  // useEffect(() => {
+  //   renderPDF(refViewer, initialDoc);
+  // }, [initialDoc]);
 
   const showDrawer = () => {
     setVisible(true);
@@ -124,6 +105,7 @@ export default function ClassComponentText(props) {
     documentViewer.updateView();
     await doc.applyTemplateValues(val);
   };
+
   const handleCheckFile = () => {
     // console.log("handle check file");
     Modal.confirm({
@@ -183,7 +165,7 @@ export default function ClassComponentText(props) {
   };
 
   const renderPDF = async (ref, initialDoc = null) => {
-    if (!ref?.current.hasChildNodes()) {
+    if (!ref?.current?.hasChildNodes()) {
       let params = {
         path: "/lib",
         initialDoc,
@@ -219,8 +201,8 @@ export default function ClassComponentText(props) {
         });
 
         const iframeDoc = instance.UI.iframeWindow.document;
-        const btn = iframeDoc.querySelector(".list-btn");
-        btn.innerHTML = ReactDOMServer.renderToString(<RiPlayList2Fill style={{ fontSize: "16px" }} />);
+        const btn = iframeDoc.querySelectorAll(".list-btn");
+        btn.forEach(item => item.innerHTML = ReactDOMServer.renderToString(<RiPlayList2Fill style={{ fontSize: "16px" }} />)) 
         // Handle Plugin
         handlePluginPDFTron(instance);
       });
@@ -244,7 +226,8 @@ export default function ClassComponentText(props) {
         Edit
       </Button>
 
-      <div className="webviewer" ref={refViewer} style={{ height: "calc(100vh - 100px)" }} />
+      {/* <div className="webviewer" ref={refViewer} style={{ height: "calc(100vh - 100px)" }} /> */}
+      <PDFViewer />
       {/* {data && <UserEditDrawer onClose={onClose} visible={visible} data={data} filledJson={(val) => filledJson(val)} />} */}
     </>
   );

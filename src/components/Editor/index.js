@@ -1,30 +1,20 @@
-import React, { useEffect, useState, useImperativeHandle, forwardRef } from "react";
-import { Button, Space, Row, Col, Input } from "antd";
-import { useEditor, EditorContent } from "@tiptap/react";
-import { Editor } from "@tiptap/core";
-import StarterKit from "@tiptap/starter-kit";
-import styles from "./styles.module.scss";
 import Link from "@tiptap/extension-link";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import clsx from "clsx";
+import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import {
-  RiBold,
-  RiItalic,
-  RiParagraph,
-  RiH1,
+  RiAlignVertically, RiArrowGoBackFill,
+  RiArrowGoForwardFill, RiBold, RiH1,
   RiH2,
   RiH3,
   RiH4,
   RiH5,
-  RiH6,
-  RiListCheck,
-  RiSeparator,
-  RiArrowGoBackFill,
-  RiArrowGoForwardFill,
-  RiAlignVertically,
-  RiLink,
-  RiLinkUnlink,
+  RiH6, RiItalic, RiLink,
+  RiLinkUnlink, RiListCheck, RiParagraph, RiSeparator
 } from "react-icons/ri";
 import { setLink } from "src/helper/Common";
-import clsx from "clsx";
+import styles from "./styles.module.scss";
 
 export default forwardRef(function CCEditor(props, ref) {
   const { content, onChange } = props;

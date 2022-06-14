@@ -1,7 +1,6 @@
+import clsx from "clsx";
 import React from "react";
 import styles from "./Button.module.scss";
-import clsx from "clsx";
-import { Link } from "react-router-dom";
 const CCButton = (props) => {
   return (
     <button

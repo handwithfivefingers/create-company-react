@@ -16,7 +16,7 @@ exports.fetchTemplate = async (req, res) => {
   let current_page = (parseInt(page) - 1) * PAGE_SIZE;
   let _template = [];
 
-  let count = await TemplateMail.count();
+  let count = await TemplateMail.countDocuments();
 
   try {
     if (page) {

@@ -6,7 +6,7 @@ exports.fetchUser = async (req, res) => {
 
   _user = await User.find({}).select("-hash_password").sort("-createdAt");
 
-  let count = await User.count();
+  let count = await User.countDocuments();
 
   try {
     return successHandler({ _user, count }, res);
