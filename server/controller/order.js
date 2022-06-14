@@ -244,7 +244,8 @@ exports.getUrlReturn = async (req, res) => {
   var hmac = crypto.createHmac("sha512", secretKey);
 
   var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
-  let url =  process.env.NODE_ENV === "DEV" ? `http://localhost:3000/user/result?` : `https://app.thanhlapcongtyonline.vn/user/result?`
+  
+  let url =  process.env.NODE_ENV === "development" ? `http://localhost:3000/user/result?` : `https://app.thanhlapcongtyonline.vn/user/result?`
 
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua

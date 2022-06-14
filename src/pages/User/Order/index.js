@@ -68,7 +68,7 @@ const UserOrder = () => {
       amount: +record?.price * 100,
       orderInfo: record?._id,
     };
-
+    console.log(params);
     return paymentService(params);
   };
 
