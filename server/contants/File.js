@@ -101,17 +101,17 @@ exports.list_files = {
     // Đại diện pháp luật: "Quyết định thay đổi", "Phụ lục II-2", "File_3_UyQuyen.doc",
     legal_representative: [
       file_contants.change_info_quyetdinh,
-      file_contants.change_info_phu_luc_2,
+      file_contants.change_info_phu_luc_4,
       file_contants.change_info_uyquyen,
     ],
 
     // Người đại diện theo ủy quyền của chủ sở hữu là tổ chức: "Phụ lục II-1","File_3_UyQuyen.doc",
-    present_change: [file_contants.change_info_phu_luc_2, file_contants.change_info_uyquyen],
+    present_change: [file_contants.change_info_phu_luc_4, file_contants.change_info_uyquyen],
 
     // Địa chỉ trụ sở chính: "Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
     location: [
       file_contants.change_info_quyetdinh,
-      file_contants.change_info_phu_luc_2,
+      file_contants.change_info_phu_luc_4,
       file_contants.change_info_uyquyen,
     ],
 
@@ -132,22 +132,22 @@ exports.list_files = {
     // Ngành nghề kinh doanh:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
     company_career: [
       file_contants.change_info_quyetdinh,
-      file_contants.change_info_phu_luc_2,
+      file_contants.change_info_phu_luc_4,
       file_contants.change_info_uyquyen,
     ],
 
     // Tăng vốn điều lệ:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
     up_authorized_capital: [
       file_contants.change_info_quyetdinh,
-      file_contants.change_info_phu_luc_2,
+      file_contants.change_info_phu_luc_4,
       file_contants.change_info_uyquyen,
     ],
 
     // Tên doanh nghiệp:"Quyết định thay đổi", "Phụ lục II-1","File_3_UyQuyen.doc",
-    name: [file_contants.change_info_quyetdinh, file_contants.change_info_phu_luc_2, file_contants.change_info_uyquyen],
+    name: [file_contants.change_info_quyetdinh, file_contants.change_info_phu_luc_4, file_contants.change_info_uyquyen],
 
     // Nội dung đăng ký thuế: "Phụ lục II-1","File_3_UyQuyen.doc",
-    tax: [file_contants.change_info_phu_luc_2, file_contants.change_info_uyquyen],
+    tax: [file_contants.change_info_phu_luc_4, file_contants.change_info_uyquyen],
   },
   pending: {
     approve: [file_contants.pending_uyquyen, file_contants.pending_quyetdinh, file_contants.pending_a_b],
