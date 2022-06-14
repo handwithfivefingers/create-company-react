@@ -15,8 +15,11 @@ const AppRouter = require("./server/route");
 var cookieParser = require("cookie-parser");
 
 const { task } = require("./server/controller/service/cronjob");
+
 const {requireSignin} = require('./server/middleware');
+
 env.config();
+
 const { NODE_ENV , PORT , DEV_PORT } = process.env;
 
 const RUNTIME_PORT = NODE_ENV === 'development' ? DEV_PORT : PORT;
@@ -26,8 +29,6 @@ const mongoseOptions = {
   useUnifiedTopology: true,
   useCreateIndex:true
 }
-
-const BASE_PORT = process.env.NODE_ENV !== "development" ? process.env.PORT : 3001;
 
 // DB
 mongoose

@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Table, Tag, Button, Modal, Tooltip , Drawer, Form, message} from "antd";
-import axios from "../../../config/axios";
-import Tracking from "../../../components/Tracking";
-import { MdCreditCard } from "react-icons/md";
-import { number_format } from "src/helper/Common";
-import { useSearchParams } from "react-router-dom";
-import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
-import dateformat from "dateformat";
+import React, { useEffect, useState } from 'react';
+import { Table, Tag, Button, Modal, Tooltip, Drawer, Form, message } from 'antd';
+import axios from '../../../config/axios';
+import Tracking from '../../../components/Tracking';
+import { MdCreditCard } from 'react-icons/md';
+import { number_format } from 'src/helper/Common';
+import { useSearchParams } from 'react-router-dom';
+import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import dateformat from 'dateformat';
 import styles from './styles.module.scss';
 const UserOrder = () => {
-
-  
   const [state, setState] = useState({
     loading: false,
     data: [],
@@ -23,11 +21,11 @@ const UserOrder = () => {
     width: 0,
     component: null,
   });
-  const [drawer,setDrawer] = useState({
+  const [drawer, setDrawer] = useState({
     visible: false,
-    width:0,
-    data: null
-  })
+    width: 0,
+    data: null,
+  });
   useEffect(() => {
     getScreenData();
   }, []);
@@ -35,7 +33,7 @@ const UserOrder = () => {
   const getScreenData = async () => {
     try {
       setLoading(true);
-      let res = await axios.get("/order");
+      let res = await axios.get('/order');
 
       if (res.data.status === 200) {
         setData(res.data.data);
@@ -61,27 +59,15 @@ const UserOrder = () => {
   const handlePurchase = (record) => {
     setLoading(true);
     const date = new Date();
-    var createDate = dateformat(date, "yyyymmddHHmmss");
-    var orderId = dateformat(date, "HHmmss");
+    var createDate = dateformat(date, 'yyyymmddHHmmss');
+    var orderId = dateformat(date, 'HHmmss');
 
     let params = {
       createDate,
       orderId,
-      amount: +record?.price*100,
+      amount: +record?.price * 100,
       orderInfo: record?._id,
     };
-    // console.log(record);
-    // params.amount = 100000*100;
-    // params.orderInfo = "Test payment";
-    // AdminDashboardService.testPayment(params)
-    //   .then((res) => {
-    //     if (res.data.status === 200) {
-    //       return (window.location.href = res.data.url);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
 
     return paymentService(params);
   };
@@ -95,9 +81,10 @@ const UserOrder = () => {
       }
     } catch (err) {
       console.log(err);
-      message.error("something was wrong");
+      message.error('something was wrong');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const closeModal = () => {
@@ -105,24 +92,22 @@ const UserOrder = () => {
       ...modal,
       visible: false,
     });
-    setDrawer((draw) => ({...draw,visible:false}))
+    setDrawer((draw) => ({ ...draw, visible: false }));
   };
-
 
   const onEditOrder = (record) => {
     console.log('order', record);
-    let {data,files } = record;
+    let { data, files } = record;
     setDrawer((draw) => ({
       ...draw,
-      visible:true,
-      width:500,
+      visible: true,
+      width: 500,
       data: {
         data,
         files,
-      }
-    }))
-
-  }
+      },
+    }));
+  };
 
   return (
     <div>
@@ -158,13 +143,13 @@ const UserOrder = () => {
           render={(val, record, i) => {
             // 2 Case : 22/03/2022
             if (record.data.create_company) {
-              return "Thành lập doanh nghiệp";
-            } else  if (record.data.change_info) {
-              return "Thay đổi thông tin";
-            }else  if (record.data.pending) {
-              return "Tạm hoãn";
-            }else  if (record.data.dissolution) {
-              return "Giải thể";
+              return 'Thành lập doanh nghiệp';
+            } else if (record.data.change_info) {
+              return 'Thay đổi thông tin';
+            } else if (record.data.pending) {
+              return 'Tạm hoãn';
+            } else if (record.data.dissolution) {
+              return 'Giải thể';
             }
           }}
         />
@@ -193,38 +178,44 @@ const UserOrder = () => {
         <Table.Column
           align="center"
           width={88}
-          render={(v, record, i) =>
-         <div className={styles.btnGroup}>
-            <Tooltip title="Chỉnh sửa" color={'blue'}>
-              <Button size="large" type="primary" shape="circle" onClick={() => onEditOrder(record)}><FormOutlined /></Button>
-            </Tooltip>
-          {/* {!record.payment &&   */}
-            <Tooltip title="Thanh toán" color={'blue'}>
-              <Button size="large"  type="primary" shape="circle" disabled={record.payment} onClick={() => handlePurchase(record)}><MdCreditCard /></Button>
-            </Tooltip>
-          {/* // } */}
-         </div>
-          }
+          render={(v, record, i) => (
+            <div className={styles.btnGroup}>
+              <Tooltip title="Chỉnh sửa" color={'blue'}>
+                <Button size="large" type="primary" shape="circle" onClick={() => onEditOrder(record)}>
+                  <FormOutlined />
+                </Button>
+              </Tooltip>
+              {/* {!record.payment &&   */}
+              <Tooltip title="Thanh toán" color={'blue'}>
+                <Button
+                  size="large"
+                  type="primary"
+                  shape="circle"
+                  disabled={record.payment}
+                  onClick={() => handlePurchase(record)}
+                >
+                  <MdCreditCard />
+                </Button>
+              </Tooltip>
+              {/* // } */}
+            </div>
+          )}
         />
       </Table>
 
       <Modal visible={modal.visible} footer={null} bodyStyle={null} width={modal.width} onCancel={() => closeModal()}>
         {modal.component}
       </Modal>
-      <FormDrawer {...drawer} closeModal={closeModal}/>
+      <FormDrawer {...drawer} closeModal={closeModal} />
     </div>
   );
 };
 export default UserOrder;
 
-
 const FormDrawer = (props) => {
-
-
-
-  return <Drawer visible={props.visible} width={props.width} onClose={props.closeModal} destroyOnClose>
-            <Form>
-              
-            </Form>
-      </Drawer>
-}
+  return (
+    <Drawer visible={props.visible} width={props.width} onClose={props.closeModal} destroyOnClose>
+      <Form></Form>
+    </Drawer>
+  );
+};

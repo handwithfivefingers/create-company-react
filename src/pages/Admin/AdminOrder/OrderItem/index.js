@@ -1,13 +1,12 @@
 // import WebViewer from "@pdftron/webviewer";
+import WebViewer from "@pdftron/webviewer";
 import { Button, Card, Drawer, Form, Input, message, Modal, Space } from "antd";
-import React, { useEffect, useRef, useState, Component } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import { RiPlayList2Fill } from "react-icons/ri";
 import { useParams } from "react-router";
-import AdminOrderService from "src/service/AdminService/AdminOrderService";
-import axios from "src/config/axios";
-import WebViewer from "@pdftron/webviewer";
 import PDFViewer from "src/components/PDFViewer";
+import AdminOrderService from "src/service/AdminService/AdminOrderService";
 const allFiles = {
   create_company: {
     personal: [
