@@ -1,10 +1,10 @@
 const fs = require("fs");
 const { Log } = require("./../model");
 exports.loginFailed = (res) => {
-  return res.status(200).json({
+  return res.status(400).json({
     message: "Sai tài khoản hoặc mật khẩu!",
     success: false,
-    status: 401,
+    status: 400,
   });
 };
 

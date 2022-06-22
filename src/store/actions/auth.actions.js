@@ -1,15 +1,15 @@
-import { AUTH, AUTH_LOGIN, AUTH_LOGOUT, AUTH_REGISTER } from "../type/auth.type";
-import axios from "src/config/axios";
-import AuthService from "src/service/AuthService";
-import history from "src/helper/history";
-import { message } from "antd";
+import { AUTH, AUTH_LOGIN, AUTH_LOGOUT, AUTH_REGISTER } from '../type/auth.type';
+import axios from 'src/config/axios';
+import AuthService from 'src/service/AuthService';
+import history from 'src/helper/history';
+import { message } from 'antd';
 export const AuthUser = () => {
   return (dispatch) => {
     dispatch({
       type: AUTH.AUTH_REQUEST,
     });
     axios
-      .post("/auth")
+      .post('/auth')
       .then((res) => {
         dispatch({
           type: AUTH.AUTH_SUCCESS,
@@ -42,12 +42,13 @@ export const AuthLogin = (val) => {
             role: resp.data.data.role,
           },
         });
-        return resp.data.callbackUrl;
+        message.success('Login success');
       }
     } catch (err) {
       dispatch({
         type: AUTH_LOGIN.FAILURE,
       });
+      message.error(err.response.data.message);
     }
   };
 };
@@ -57,29 +58,32 @@ export const AuthRegister = (form) => {
     dispatch({
       type: AUTH_REGISTER.REQUEST,
     });
-
-    let resp = await AuthService.onRegister(form);
-    if (resp.status === 201) {
-      message.success(resp.data.message);
-      dispatch({
-        type: AUTH_REGISTER.SUCCESS,
-        payload: {
-          status: true,
-          role: resp.data.role,
-        },
-      });
-    } else {
-      message.error(resp.data.message);
-      dispatch({
-        type: AUTH_REGISTER.FAILURE,
-      });
+    try {
+      let resp = await AuthService.onRegister(form);
+      if (resp.status === 201) {
+        message.success(resp.data.message);
+        dispatch({
+          type: AUTH_REGISTER.SUCCESS,
+          payload: {
+            status: true,
+            role: resp.data.role,
+          },
+        });
+      } else {
+        message.error(resp.data.message);
+        dispatch({
+          type: AUTH_REGISTER.FAILURE,
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 };
 
 export const AuthLogout = () => {
   return async (dispatch) => {
-    await axios.post("/logout");
+    await axios.post('/logout');
     dispatch({
       type: AUTH_LOGOUT.SUCCESS,
       payload: {},

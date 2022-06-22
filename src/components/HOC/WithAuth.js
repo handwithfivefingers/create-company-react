@@ -1,13 +1,13 @@
-import { Layout, Menu } from "antd";
-import clsx from "clsx";
-import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import AdminSidebar from "src/components/Admin/AdminSidebar";
-import UserHeader from "src/components/User/UserHeader";
-import UserSidebar from "src/components/User/UserSidebar";
-import styles from "./styles.module.scss";
-import { FcInfo } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Layout, Menu } from 'antd';
+import clsx from 'clsx';
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import AdminSidebar from 'src/components/Admin/AdminSidebar';
+import UserHeader from 'src/components/User/UserHeader';
+import UserSidebar from 'src/components/User/UserSidebar';
+import styles from './styles.module.scss';
+import { FcInfo } from 'react-icons/fc';
+import { Link } from 'react-router-dom';
 const { Content, Footer } = Layout;
 
 const { SubMenu } = Menu;
@@ -17,17 +17,17 @@ export default function WithAuth(Component, role) {
       return <Navigate to="/" />;
     }
 
-    if (role === "admin") {
+    if (role === 'admin') {
       return (
         <Layout className={[styles.adminLayout]}>
           <AdminSidebar />
-          <Layout className={clsx(["site-layout", styles.adminSiteLayout])}>
+          <Layout className={clsx(['site-layout', styles.adminSiteLayout])}>
             <Content className={clsx([styles.adminMainContent])}>
               <div className={`site-layout-background`}>
                 <Component {...props} />
               </div>
             </Content>
-            <Footer style={{ textAlign: "center" }} className={styles.footer}>
+            <Footer style={{ textAlign: 'center' }} className={styles.footer}>
               <div className={styles.footerLeft}>Truyen Mai ©2019</div>
 
               <Link className={styles.footerRight} to="/admin/about">
@@ -42,12 +42,12 @@ export default function WithAuth(Component, role) {
     return (
       <Layout className={styles.mainLayout}>
         <UserSidebar />
-        <Layout className={clsx(["site-layout", styles.siteLayout])}>
+        <Layout className={clsx(['site-layout', styles.siteLayout])}>
           <Content className={clsx(styles.mainContent)}>
             <UserHeader className="site-layout-background" style={{ padding: 0 }} />
             <Component {...props} />
           </Content>
-          <Footer style={{ textAlign: "center" }}>©2019 Created by Truyenmai</Footer>
+          <Footer style={{ textAlign: 'center' }}>©2019 Created by Truyenmai</Footer>
         </Layout>
       </Layout>
     );

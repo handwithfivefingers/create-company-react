@@ -29,7 +29,7 @@ export default function HomePage() {
 
   const onLogin = async (val) => {
     setLoading(true);
-    dispatch(AuthAction.AuthLogin(val)).then((callbackUrl) => navigate(route.to || callbackUrl));
+    dispatch(AuthAction.AuthLogin(val))
     setLoading(false);
   };
 
@@ -39,12 +39,10 @@ export default function HomePage() {
     setLoading(false);
   };
 
-  //   if (status === "authenticated") {
-  //     Router.push("/");
-  //   }
-  if (authReducer.status) {
-    // console.log(navigate, location, type);
+
+  if (authReducer.status) {    // console.log(navigate, location, type);
     // navigate(-1 || authReducer.role);
+
     if (type !== "POP") {
       navigate(-1);
     } else {

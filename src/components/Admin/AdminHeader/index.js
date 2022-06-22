@@ -1,10 +1,9 @@
+import { PageHeader } from 'antd';
 import React from 'react';
 
-const AdminHeader = () => {
+const AdminHeader = (props) => {
   return (
-    <div>
-      AdminHeader
-    </div>
+    <PageHeader className="site-page-header" onBack={props?.onBack} title={props?.title} subTitle={props?.subTitle} />
   );
 };
 

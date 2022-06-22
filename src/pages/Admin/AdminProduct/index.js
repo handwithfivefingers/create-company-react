@@ -1,12 +1,13 @@
-import CareerForm from "src/components/Form/CarrerForm";
-import { FormOutlined, MinusSquareOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Card, Drawer, message, Modal, Space, Table, Tabs } from "antd";
-import React, { useEffect, useState } from "react";
-import CategoryForm from "src/components/Form/CategoryForm";
-import FormProduct from "src/components/Form/Product";
-import axios from "src/config/axios";
-import { number_format, makeid } from "src/helper/Common";
-import AdminProductService from "src/service/AdminService/AdminProductService";
+import CareerForm from 'src/components/Form/CarrerForm';
+import { FormOutlined, MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { Button, Card, Drawer, message, Modal, Space, Table, Tabs } from 'antd';
+import React, { useEffect, useState } from 'react';
+import CategoryForm from 'src/components/Form/CategoryForm';
+import FormProduct from 'src/components/Form/Product';
+import axios from 'src/config/axios';
+import { number_format, makeid } from 'src/helper/Common';
+import AdminProductService from 'src/service/AdminService/AdminProductService';
+import CCPagination from 'src/components/CCPagination';
 
 const { TabPane } = Tabs;
 const AdminProduct = (props) => {
@@ -68,7 +69,7 @@ const AdminProduct = (props) => {
     if (record) {
       setChildModal({
         visible: true,
-        width: "50%",
+        width: '50%',
         component: (
           <FormProduct
             type="edit"
@@ -87,7 +88,7 @@ const AdminProduct = (props) => {
   const onHandleAdd = () => {
     setChildModal({
       visible: true,
-      width: "50%",
+      width: '50%',
       component: (
         <FormProduct
           type="add"
@@ -123,7 +124,7 @@ const AdminProduct = (props) => {
 
   const onHandleDelete = (record) => {
     Modal.confirm({
-      title: "Bạn có chắc ?",
+      title: 'Bạn có chắc ?',
       content: `Muốn xóa sản phẩm ${record.name}`,
       onCancel: () => closeModal(),
       onOk: () => {
@@ -152,7 +153,7 @@ const AdminProduct = (props) => {
     // console.log("create category");
     setChildModal({
       visible: true,
-      width: "50%",
+      width: '50%',
       component: (
         <CategoryForm
           onFinishScreen={(output) => {
@@ -168,7 +169,7 @@ const AdminProduct = (props) => {
   const onHandleAddCareer = () => {
     setChildModal({
       visible: true,
-      width: "50%",
+      width: '50%',
       component: (
         <CareerForm
           onFinishScreen={(output) => {
@@ -239,15 +240,16 @@ const AdminProduct = (props) => {
       >
         <Tabs defaultActiveKey="1">
           <TabPane tab="Danh mục" key="1">
-            <Table loading={loading} dataSource={cateData} pagination={false} size="small">
+            <Table loading={loading} dataSource={cateData} pagination={false} size="small" bordered>
               <Table.Column title="Danh mục" render={(val, record, index) => record.name} />
-              <Table.Column title="Giá" width={"25%"} render={(val, record, index) => record.price} />
+              <Table.Column title="Giá" width={'25%'} render={(val, record, index) => record.price} />
               <Table.Column title="Loại" width="100px" render={(val, record, index) => record.type} />
             </Table>
           </TabPane>
           <TabPane tab="Sản phẩm" key="2">
             <Table
               loading={loading}
+              bordered
               dataSource={data}
               pagination={false}
               rowKey={(record) => record._uuid || record._id}
@@ -256,7 +258,7 @@ const AdminProduct = (props) => {
               <Table.Column title="Tên sản phẩm" render={(val, record, i) => record?.name} />
               <Table.Column
                 title="Giá tiền"
-                width={"25%"}
+                width={'25%'}
                 render={(val, record, i) => `${number_format(record?.price)} VND`}
               />
               <Table.Column
@@ -274,9 +276,9 @@ const AdminProduct = (props) => {
             </Table>
           </TabPane>
           <TabPane tab="Ngành nghề" key="3">
-            <Table dataSource={career} rowKey={(record) => record._uuid || record._id} size="small">
+            <Table dataSource={career} rowKey={(record) => record._uuid || record._id} size="small" bordered>
               <Table.Column title="Tên ngành" render={(val, record, i) => record.name} />
-              <Table.Column title="Mã ngành" width={"25%"} render={(val, record, i) => record.code} />
+              <Table.Column title="Mã ngành" width={'25%'} render={(val, record, i) => record.code} />
               <Table.Column
                 width="100px"
                 title=""

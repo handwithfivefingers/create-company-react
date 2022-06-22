@@ -1,12 +1,14 @@
-import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
-import { Button, Card, Divider, Form, message, Modal, Space, Table, Tag, Tooltip, Input } from "antd";
-import { Link } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
-import Tracking from "src/components/Tracking";
-import axios from "src/config/axios";
-import { number_format } from "src/helper/Common";
-import AdminOrderService from "src/service/AdminService/AdminOrderService";
-import styles from "./styles.module.scss";
+import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import { Button, Card, Divider, Form, message, Modal, Space, Table, Tag, Tooltip, Input, Pagination } from 'antd';
+import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import Tracking from 'src/components/Tracking';
+import axios from 'src/config/axios';
+import { number_format } from 'src/helper/Common';
+import AdminOrderService from 'src/service/AdminService/AdminOrderService';
+import styles from './styles.module.scss';
+import AdminHeader from 'src/components/Admin/AdminHeader';
+import CCPagination from 'src/components/CCPagination';
 const AdminOrder = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -17,33 +19,41 @@ const AdminOrder = () => {
   });
   const formRef = useRef();
 
+  const pagiConfig = {
+    current: data.current_page,
+    pageSize: 10,
+    total: data.count,
+    onChange: (page, pageSize) => {
+      fetchOrders(page);
+    },
+    showSizeChanger: false,
+  };
+
   useEffect(() => {
     fetchOrders();
   }, []);
 
-  const fetchOrders = (page) => {
+  const fetchOrders = async (page) => {
     // page -> number
-    let { company, user } = formRef?.current.getFieldsValue();
-    let params = {
-      page,
-      company,
-      user,
-    };
-
-    setLoading(true);
-    // console.log(params);
-    AdminOrderService.getOrder(params)
-      .then((res) => {
-        let { data, status } = res.data;
-        setData(data);
-        if (status !== 200) {
-          message.error(res.data.message);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => setLoading(false));
+    try {
+      setLoading(true);
+      let { company, user } = formRef?.current.getFieldsValue();
+      let params = {
+        page,
+        company,
+        user,
+      };
+      let res = await AdminOrderService.getOrder(params);
+      let { data, status } = res.data;
+      setData(data);
+      if (status !== 200) {
+        message.error(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePayment = (record) => {
@@ -63,13 +73,14 @@ const AdminOrder = () => {
   const onHandleDelete = (record) => {
     // console.log("delete", record);
     Modal.confirm({
-      title: "Xác thực",
-      content: "Bạn có muốn xóa ?",
+      title: 'Xác thực',
+      content: 'Bạn có muốn xóa ?',
       async onOk() {
         return await handleDeleteOrder(record._id);
       },
     });
   };
+
   const handleDeleteOrder = async (id) => {
     try {
       let res = await AdminOrderService.deleteOrder(id);
@@ -85,6 +96,7 @@ const AdminOrder = () => {
       fetchOrders(current_page);
     }
   };
+
   const onFilter = (val) => {
     let { current_page } = data;
     fetchOrders(current_page);
@@ -93,7 +105,7 @@ const AdminOrder = () => {
   const checkProgress = (record) => {
     setChildModal({
       visible: true,
-      width: "100%",
+      width: '100%',
       component: (
         <Tracking
           data={record}
@@ -106,23 +118,30 @@ const AdminOrder = () => {
     });
   };
 
-  const handleSendMailWithAttach = (attachments, content, email) => {
-    const form = new FormData();
-    attachments?.fileList?.map((item) => {
-      form.append("attachments", item.originFileObj);
-    });
-    form.append("content", content);
-    form.append("email", email);
-    setLoading(true);
-    // console.log("running sendmail");
-    axios
-      .post("/api/sendmail", form)
-      .then((res) => {
-        let msg = res.data.message;
-        message.success(`${msg} -> Email: ${[res.data.info.accepted].join("")}`);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+  const handleSendMailWithAttach = async (attachments, content, email) => {
+    try {
+      setLoading(true);
+
+      const form = new FormData();
+
+      attachments?.fileList?.map((item) => {
+        form.append('attachments', item.originFileObj);
+      });
+
+      form.append('content', content);
+
+      form.append('email', email);
+
+      let res = await axios.post('/api/sendmail', form);
+
+      let msg = res.data.message;
+
+      message.success(`${msg} -> Email: ${[res.data.info.accepted].join('')}`);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onClose = () => {
@@ -130,6 +149,66 @@ const AdminOrder = () => {
       ...childModal,
       visible: false,
     });
+  };
+
+  const renderAction = (record) => {
+    let xhtml = null;
+
+    xhtml = (
+      <Space>
+        <Button>
+          <Link to={`/admin/order/${record?._id}`}>
+            <FormOutlined />
+          </Link>
+        </Button>
+        <Button onClick={() => onHandleDelete(record)} icon={<DeleteOutlined />} />
+      </Space>
+    );
+    return xhtml;
+  };
+
+  const renderDate = (record) => {
+    return Date.parse(record?.createdAt).toLocaleDateString('vi-Vi', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const renderTag = (record) => {
+    return record?.payment === 1 ? <Tag color="green">Đã thanh toán</Tag> : <Tag color="volcano">Chưa thanh toán</Tag>;
+  };
+
+  const renderProgress = (record) => {
+    return (
+      <Tooltip
+        title={
+          <>
+            Step: {record?.track.step} <br />
+            Status: {record?.track.status}
+          </>
+        }
+      >
+        <Button type="text" onClick={() => checkProgress(record)}>
+          {record?.track.step}
+        </Button>
+      </Tooltip>
+    );
+  };
+
+  const renderProduct = (val, record, i) => {
+    return (
+      <div key={[val, i]} style={{ display: 'flex', justifyContent: 'flex-start' }}>
+        <Space wrap size={[8, 16]} align="start">
+          {record?.products.map((item) => (
+            <Tag color="#108ee9" key={item.key}>
+              {item.name}
+            </Tag>
+          ))}
+        </Space>
+      </div>
+    );
   };
 
   return (
@@ -153,118 +232,29 @@ const AdminOrder = () => {
           </Form>,
         ]}
       >
-
         <Table
           dataSource={data._order}
           loading={loading}
           size="small"
           bordered
-          pagination={{
-            current: data.current_page,
-            // pageSize: tableDataPaginate.per_page,
-            pageSize: 10,
-            total: data.count,
-            onChange: (page, pageSize) => {
-              fetchOrders(page);
-            },
-            showSizeChanger: false,
-          }}
+          className="table"
+          pagination={false}
           rowKey={(record) => record._id}
           scroll={{ x: 1280 }}
+          sticky={{ offsetHeader: 50 }}
         >
-          <Table.Column
-            title="Đơn hàng"
-            render={(val, record, i) => {
-              return record?.name;
-            }}
-          />
-          <Table.Column
-            title="Người đăng kí"
-            render={(val, record, i) => {
-              return record?.orderOwner.email;
-            }}
-          />
-          <Table.Column
-            width="350px"
-            title="Sản phẩm"
-            className="inline"
-            render={(val, record, i) => {
-              return (
-                <div key={[val, i]} style={{ display: "flex", justifyContent: "flex-start" }}>
-                  <Space wrap size={[8, 16]} align="start">
-                    {record?.products.map((item) => (
-                      <Tag color="#108ee9" key={item.key}>
-                        {item.name}
-                      </Tag>
-                    ))}
-                  </Space>
-                </div>
-              );
-            }}
-          />
-          <Table.Column
-            title="Giá tiền"
-            render={(val, record, i) => {
-              return <>{number_format(record?.price)} VND</>;
-            }}
-          />
-          <Table.Column
-            title="Tiến độ"
-            render={(val, record, i) => {
-              return (
-                <Tooltip
-                  title={
-                    <>
-                      Step: {record?.track.step} <br />
-                      Status: {record?.track.status}
-                    </>
-                  }
-                >
-                  <Button type="text" onClick={() => checkProgress(record)}>
-                    {record?.track.step}
-                  </Button>
-                </Tooltip>
-              );
-            }}
-          />
-          <Table.Column
-            title="Thanh toán"
-            render={(val, record, i) => {
-              return record?.payment === 1 ? (
-                <Tag color="green">Đã thanh toán</Tag>
-              ) : (
-                <Tag color="volcano">Chưa thanh toán</Tag>
-              );
-            }}
-          />
-          <Table.Column
-            title="Ngày tạo"
-            render={(val, record, i) => {
-              return Date.parse(record?.createdAt).toLocaleDateString("vi-Vi", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              });
-            }}
-          />
-          <Table.Column
-            title="Thao tác"
-            render={(val, record, i) => {
-              return (
-                <Space>
-                  <Button>
-                    <Link to={`/admin/order/${record?._id}`}>
-                      <FormOutlined />
-                    </Link>
-                  </Button>
-                  <Button onClick={() => onHandleDelete(record)} icon={<DeleteOutlined />} />
-                </Space>
-              );
-            }}
-          />
+          <Table.Column title="Đơn hàng" width="100px" render={(val, record, i) => record?.name} />
+          <Table.Column title="Người đăng kí" render={(val, record, i) => record?.orderOwner.email} />
+          <Table.Column width="375px" title="Sản phẩm" render={(val, record, i) => renderProduct(val, record, i)} />
+          <Table.Column title="Giá tiền" render={(val, record, i) => <>{number_format(record?.price)} VND</>} />
+          <Table.Column title="Tiến độ" width="75px" render={(val, record, i) => renderProgress(record)} />
+          <Table.Column title="Thanh toán" render={(val, record, i) => renderTag(record)} />
+          <Table.Column title="Ngày tạo" width="200px" render={(val, record, i) => renderDate(record)} />
+          <Table.Column title="Thao tác" render={(val, record, i) => renderAction(record)} />
         </Table>
       </Card>
+      <CCPagination {...pagiConfig} />
+
       <Modal footer={null} onCancel={() => onClose()} visible={childModal.visible} width={childModal.width}>
         {childModal.component}
       </Modal>

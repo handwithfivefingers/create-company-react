@@ -45,8 +45,21 @@
 // custom ant
 .cc-card {
   display: grid;
-  overflow: auto;
-  max-height: calc(100vh - 70px);
+  overflow: overlay;
+  // max-height: calc(100vh - 76px - 40px - 24px);
+  height: calc(100% - 25px);
+  grid-template-rows: 50px 1fr;
+  @include scroll(6px, 6px, transparent);
+  .ant-card-head {
+    .ant-card-head-wrapper {
+      .ant-card-head-title {
+        padding: 12px 0;
+      }
+    }
+  }
+  .ant-card-body {
+    padding: 12px 8px;
+  }
 }
 
 .ant-layout-footer {
@@ -55,24 +68,24 @@
 
 div.ant-form-item-control-input-content {
   // height: 32px;
-  input[type="color"],
-  input[type="date"],
-  input[type="datetime"],
-  input[type="datetime-local"],
-  input[type="email"],
-  input[type="month"],
-  input[type="number"],
-  input[type="password"],
-  input[type="search"],
-  input[type="tel"],
-  input[type="text"],
-  input[type="time"],
-  input[type="url"],
-  input[type="week"],
+  input[type='color'],
+  input[type='date'],
+  input[type='datetime'],
+  input[type='datetime-local'],
+  input[type='email'],
+  input[type='month'],
+  input[type='number'],
+  input[type='password'],
+  input[type='search'],
+  input[type='tel'],
+  input[type='text'],
+  input[type='time'],
+  input[type='url'],
+  input[type='week'],
   select:focus,
   .ant-picker,
   .ant-select-selector,
-   textarea {
+  textarea {
     // height: 32px;
     font-size: 16px;
   }
@@ -81,3 +94,7 @@ div.ant-form-item-control-input-content {
 /// Side bar
 $color: var(--text4);
 $bg: #fff;
+
+.site-layout-background {
+  height: calc(100vh - 74px);
+}
