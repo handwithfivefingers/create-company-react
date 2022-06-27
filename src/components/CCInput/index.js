@@ -1,6 +1,7 @@
-import React, { forwardRef, useState } from "react";
-import { Form, Input, InputNumber, DatePicker, Select, disabled } from "antd";
-import { makeid } from "src/helper/Common";
+import React, { forwardRef, useState } from 'react';
+import { Form, Input, InputNumber, DatePicker, Select, disabled } from 'antd';
+import { makeid } from 'src/helper/Common';
+import styles from './styles.module.scss';
 const { RangePicker } = DatePicker;
 
 const CCInput = forwardRef((props, ref) => {
@@ -9,7 +10,7 @@ const CCInput = forwardRef((props, ref) => {
 
   const handleOptions = () => {
     let option;
-    if (typeof props?.options !== "object") {
+    if (typeof props?.options !== 'object') {
       // function
       option = props?.options();
     } else {
@@ -19,9 +20,9 @@ const CCInput = forwardRef((props, ref) => {
   };
 
   switch (props.type) {
-    case "text":
+    case 'text':
       return (
-        <Form.Item value={value} name={name} label={label || " "} key={props?.key}>
+        <Form.Item value={value} name={name} label={label || ' '} key={props?.key}>
           <Input
             onChange={props?.onChange}
             style={style}
@@ -31,9 +32,9 @@ const CCInput = forwardRef((props, ref) => {
           />
         </Form.Item>
       );
-    case "number":
+    case 'number':
       return (
-        <Form.Item value={props?.value} name={props.name} label={props?.label || " "} key={props?.key}>
+        <Form.Item value={props?.value} name={props.name} label={props?.label || ' '} key={props?.key}>
           <InputNumber
             onChange={props?.onChange}
             style={props.style}
@@ -44,49 +45,81 @@ const CCInput = forwardRef((props, ref) => {
           />
         </Form.Item>
       );
-    case "date":
-      return (
-        <Form.Item name={props.name} label={props?.label || " "} key={props?.key}>
-          <DatePicker
-            style={{ ...props.style, width: "100%" }}
-            format="DD/MM/YYYY"
-            placeholder={props?.placeholder}
-            autoComplete={props?.autocomplete || "off"}
-            inputReadOnly={props?.inputReadOnly || true}
-            onChange={props?.onChange}
-
-            {...rest}
-          />
-        </Form.Item>
-      );
-    case "date-range":
+    case 'date':
+      // return (
+      //   <Form.Item name={props.name} label={props?.label || ' '} key={props?.key} layout={props?.layout}>
+      //     <DatePicker
+      //       style={{ ...props.style, width: '100%' }}
+      //       format="DD/MM/YYYY"
+      //       placeholder={props?.placeholder}
+      //       autoComplete={props?.autocomplete || 'off'}
+      //       inputReadOnly={props?.inputReadOnly || true}
+      //       onChange={props?.onChange}
+      //       {...rest}
+      //     />
+      //   </Form.Item>
+      // );
+      if (props?.layout === 'horizontal') {
+        return (
+          <div className={styles.formHorizontal}>
+            <div className={styles.formTitle}>{props?.label || ' '}</div>
+            <Form.Item name={props.name} key={props?.key} layout={props?.layout}>
+              <DatePicker
+                style={{ ...props.style, width: '100%' }}
+                format="DD/MM/YYYY"
+                placeholder={props?.placeholder}
+                autoComplete={props?.autocomplete || 'off'}
+                inputReadOnly={props?.inputReadOnly || true}
+                onChange={props?.onChange}
+                {...rest}
+              />
+            </Form.Item>
+          </div>
+        );
+      } else {
+        return (
+          <Form.Item name={props.name} label={props?.label || ' '} key={props?.key} layout={props?.layout}>
+            <DatePicker
+              style={{ ...props.style, width: '100%' }}
+              format="DD/MM/YYYY"
+              placeholder={props?.placeholder}
+              autoComplete={props?.autocomplete || 'off'}
+              inputReadOnly={props?.inputReadOnly || true}
+              onChange={props?.onChange}
+              {...rest}
+            />
+          </Form.Item>
+        );
+      }
+    case 'date-range':
       return (
         <>
-          <Form.Item name={props?.name} style={{ display: "none" }} key={props?.key}>
+          <Form.Item name={props?.name} style={{ display: 'none' }} key={props?.key}>
             <RangePicker inputReadOnly format="MM/DD/YYYY" />
           </Form.Item>
 
-          <Form.Item name={makeid(9)} label={props?.label || " "} key={props?.key}>
+          <Form.Item name={makeid(9)} label={props?.label || ' '} key={props?.key}>
             <RangePicker
               inputReadOnly={props?.inputReadOnly || true}
               onChange={props?.onChange}
               format="MM/DD/YYYY"
-              style={{ ...props.style, width: "100%" }}
+              style={{ ...props.style, width: '100%' }}
               placeholder={placeholder}
-              autoComplete={props?.autocomplete || "off"}
+              autoComplete={props?.autocomplete || 'off'}
+              separator={props?.separator}
               {...rest}
             />
           </Form.Item>
         </>
       );
-    case "select":
+    case 'select':
       let option;
       if (props?.onDropdownVisibleChange) {
         option = props.options();
       }
 
       return (
-        <Form.Item name={name} label={label || " "}>
+        <Form.Item name={name} label={label || ' '}>
           <Select
             onSelect={props?.onSelect}
             onChange={props?.onChange}
@@ -109,13 +142,13 @@ const CCInput = forwardRef((props, ref) => {
       );
     default:
       return (
-        <Form.Item value={value} name={name} label={label || " "} key={props?.key}>
+        <Form.Item value={value} name={name} label={label || ' '} key={props?.key}>
           <Input
             onChange={props?.onChange}
             style={style}
             placeholder={placeholder}
             disabled={props?.disabled}
-            autoComplete={props?.autocomplete || "off"}
+            autoComplete={props?.autocomplete || 'off'}
           />
         </Form.Item>
       );

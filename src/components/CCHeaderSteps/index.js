@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import styles from "./styles.module.scss";
-import clsx from "clsx";
-import { Skeleton, Card } from "antd";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import styles from './styles.module.scss';
+import clsx from 'clsx';
+import { Skeleton, Card } from 'antd';
+import { useSelector } from 'react-redux';
 const CCSteps = (props) => {
   const [current, setCurrent] = useState(0);
   const collapsed = useSelector((state) => state.commonReducer.collapsed);
@@ -11,10 +11,14 @@ const CCSteps = (props) => {
   }, [props.step]);
 
   const offset = props?.data?.length;
-
+  const handleClick = (ind) => {
+    if (props?.onFinishScreen) {
+      props.onFinishScreen(ind);
+    }
+  };
   return (
     <Card className={clsx([styles.cardHeader, { [styles.collapsed]: collapsed }])}>
-      <div className={styles.listStep} style={{ "--offset": offset }}>
+      <div className={styles.listStep} style={{ '--offset': offset }}>
         {props?.data?.map((item, index) => {
           return (
             <div
@@ -25,6 +29,7 @@ const CCSteps = (props) => {
                   [styles.sticky]: props.step == index,
                 },
               ])}
+              onClick={() => handleClick(index)}
             >
               <div className={clsx([styles.stepContent])}>
                 <div className={styles.icon}>

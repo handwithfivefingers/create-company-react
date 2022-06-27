@@ -88,8 +88,8 @@ export const SELECT = {
       value: "Toàn bộ công ty",
     },
     {
-      name: "Chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
-      value: "Chi nhánh/văn phòng đại diện/địa điểm kinh doanh",
+      name: "Chi nhánh hoặc Văn phòng đại diện hoặc Địa điểm kinh doanh",
+      value: "Chi nhánh hoặc Văn phòng đại diện hoặc Địa điểm kinh doanh",
     },
   ],
   BUSINESS_LOCATION: [

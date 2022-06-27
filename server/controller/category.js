@@ -1,11 +1,35 @@
-const { Product, Category, Career } = require("./../model");
-const { errHandler, successHandler } = require("./../response");
+const { Product, Category, Career } = require('./../model');
+const { errHandler, successHandler } = require('./../response');
 // Fetch data
 exports.getCategories = async (req, res) => {
   try {
     let _career = await Category.find({});
     let newCate = filterCaregories(_career);
     return successHandler(newCate, res);
+  } catch (err) {
+    console.log('getCategories error');
+    return errHandler(err, res);
+  }
+};
+
+exports.updateCate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const obj = {
+      name: req.body.name,
+      price: req.body.price,
+      type: req.body.type,
+    };
+
+    const cate = await Category.updateOne(
+      {
+        _id: id,
+      },
+      obj,
+      { new: true }
+    );
+
+    return successHandler(cate, res);
   } catch (err) {
     console.log('getCategories error');
     return errHandler(err, res);

@@ -1,21 +1,20 @@
-import { Button, Card, message, Modal, Tabs } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import CCSteps from "src/components/CCHeaderSteps";
-import ChangeInforForm from "src/components/Form/ChangeInforForm";
-import CreateCompany from "src/components/Form/CreateCompany";
-import PreviewData from "src/components/Form/PreviewData";
-import axios from "src/config/axios";
-import { stepType1 } from "src/contants/Step";
-import { useParams } from "react-router-dom";
-import TamHoanForm from "src/components/Form/PendingForm";
-import styles from "./styles.module.scss";
-import ProductService from "src/service/UserService/ProductService";
-import Dissolution from "src/components/Form/Dissolution";
-import dateformat from "dateformat";
+import { Button, Card, message, Modal, Tabs } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CCSteps from 'src/components/CCHeaderSteps';
+import ChangeInforForm from 'src/components/Form/ChangeInforForm';
+import CreateCompany from 'src/components/Form/CreateCompany';
+import PreviewData from 'src/components/Form/PreviewData';
+import axios from 'src/config/axios';
+import { stepType1 } from 'src/contants/Step';
+import { useParams } from 'react-router-dom';
+import TamHoanForm from 'src/components/Form/PendingForm';
+import styles from './styles.module.scss';
+import ProductService from 'src/service/UserService/ProductService';
+import Dissolution from 'src/components/Form/Dissolution';
+import dateformat from 'dateformat';
 
-import UyQuyen from "src/components/Form/UyQuyen";
-const { TabPane } = Tabs;
+import UyQuyen from 'src/components/Form/UyQuyen';
 
 const UserProductItem = (props) => {
   const formRef = useRef();
@@ -32,50 +31,39 @@ const UserProductItem = (props) => {
 
   const [changeInforStep, setChangeInforStep] = useState([
     {
-      title: "Bước 1",
-      desc: "Chọn loại hình",
+      title: 'Bước 1',
+      desc: 'Chọn loại hình',
     },
     {
       title: `Bước 2`,
-      desc: "Thông tin doanh nghiệp",
+      desc: 'Thông tin doanh nghiệp',
     },
     {
       title: `Bước 3`,
-      desc: "Ủy quyền",
-    },
-    {
-      title: `Bước 4`,
-      desc: "Preview",
+      desc: 'Xem lại',
     },
   ]);
 
   const [pendingStep, setPendingStep] = useState([
     {
-      title: "Bước 1",
-      desc: "Chọn loại hình",
+      title: 'Bước 1',
+      desc: 'Chọn loại hình',
     },
     {
       title: `Bước 2`,
-      desc: "Ủy quyền",
-    },
-    {
-      title: `Bước 3`,
-      desc: "Preview",
+      desc: 'Xem lại',
     },
   ]);
 
   const [dissolutionStep, setDissolutionStep] = useState([
     {
-      title: "Bước 1",
-      desc: "Chọn loại hình",
+      title: 'Bước 1',
+      desc: 'Chọn loại hình',
     },
+
     {
       title: `Bước 2`,
-      desc: "Ủy quyền",
-    },
-    {
-      title: `Bước 3`,
-      desc: "Preview",
+      desc: 'Xem lại',
     },
   ]);
 
@@ -140,36 +128,34 @@ const UserProductItem = (props) => {
       case 1:
         // Thành lập doanh nghiệp
         return (
-          <>
-            <Card className="card-boxShadow">
-              <CreateCompany
-                data={data.data}
-                ref={formRef}
-                onFinishScreen={(output) => setDataOutput(output)}
-                step={current}
-                setStep={(e) => setCurrent(e)}
-              />
+          <Card className="card-boxShadow">
+            <CreateCompany
+              data={data.data}
+              ref={formRef}
+              onFinishScreen={(output) => setDataOutput(output)}
+              step={current}
+              setStep={(e) => setCurrent(e)}
+            />
 
-              {current === 8 ? renderPrewviewForm(formRef) : ""}
+            {current === 8 ? renderPrewviewForm(formRef) : ''}
 
-              <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
-                {current > 0 ? <Button onClick={Prev}>Prev</Button> : ""}
-                {current < 8 ? <Button onClick={Next}>Next</Button> : ""}
-                {current === 8 ? (
-                  <>
-                    <Button loading={loading} onClick={handleSave}>
-                      Lưu lại
-                    </Button>
-                    <Button loading={loading} onClick={handlePurchaseCreateCompany}>
-                      Thanh toán
-                    </Button>
-                  </>
-                ) : (
-                  ""
-                )}
-              </div>
-            </Card>
-          </>
+            <div className={'card-boxShadow'} style={{ position: 'sticky', bottom: 0 }}>
+              {current > 0 ? <Button onClick={Prev}>Prev</Button> : ''}
+              {current < 8 ? <Button onClick={Next}>Next</Button> : ''}
+              {current === 8 ? (
+                <>
+                  <Button loading={loading} onClick={handleSave}>
+                    Lưu lại
+                  </Button>
+                  <Button loading={loading} onClick={handlePurchaseCreateCompany}>
+                    Thanh toán
+                  </Button>
+                </>
+              ) : (
+                ''
+              )}
+            </div>
+          </Card>
         );
       case 2:
         // Thay đổi thông tin
@@ -182,11 +168,10 @@ const UserProductItem = (props) => {
               onFinishScreen={(val) => handleChangeInforForm(val)}
             />
 
-            {current === changeInforStep?.length - 1 ? renderPrewviewForm(formRef) : ""}
+            {current === changeInforStep?.length - 1 ? renderPrewviewForm(formRef) : ''}
 
-            <UyQuyen ref={uyquyenRef} current={current === changeInforStep.length - 2} />
 
-            <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
+            <div className={'card-boxShadow'} style={{ position: 'sticky', bottom: 0 }}>
               {current > 0 && <Button onClick={Prev}>Prev</Button>}
 
               {current < changeInforStep.length - 1 && <Button onClick={Next}>Next</Button>}
@@ -215,15 +200,14 @@ const UserProductItem = (props) => {
               onFinishScreen={(val) => handleSetPendingStep(val)}
             />
 
-            <UyQuyen ref={uyquyenRef} current={current === 2} />
 
-            {current === 3 ? renderPrewviewForm(formRef) : ""}
+            {current === 2 ? renderPrewviewForm(formRef) : ''}
 
-            <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
+            <div className={'card-boxShadow'} style={{ position: 'sticky', bottom: 0 }}>
               {current > 0 && <Button onClick={Prev}>Prev</Button>}
 
-              {current < 3 && <Button onClick={Next}>Next</Button>}
-              {current === 3 && (
+              {current < 2 && <Button onClick={Next}>Next</Button>}
+              {current === 2 && (
                 <>
                   <Button loading={loading} onClick={handleSavePending}>
                     Lưu lại
@@ -246,15 +230,14 @@ const UserProductItem = (props) => {
               onFinishScreen={(val) => handleSetDissolutionStep(val)}
             />
 
-            <UyQuyen ref={uyquyenRef} current={current === 2} />
 
-            {current === 3 ? renderPrewviewForm(formRef) : ""}
+            {current === 2 ? renderPrewviewForm(formRef) : ''}
 
-            <div className={"card-boxShadow"} style={{ position: "sticky", bottom: 0 }}>
+            <div className={'card-boxShadow'} style={{ position: 'sticky', bottom: 0 }}>
               {current > 0 && <Button onClick={Prev}>Prev</Button>}
 
-              {current < 3 && <Button onClick={Next}>Next</Button>}
-              {current === 3 && (
+              {current < 2 && <Button onClick={Next}>Next</Button>}
+              {current === 2 && (
                 <>
                   <Button loading={loading} onClick={handleSaveDissolution}>
                     Lưu lại
@@ -275,13 +258,13 @@ const UserProductItem = (props) => {
   const renderHeaderStep = (type) => {
     switch (type) {
       case 1:
-        return <CCSteps step={current} data={stepType1} />;
+        return <CCSteps step={current} data={stepType1} onFinishScreen={(ind) => setCurrent(ind)} />;
       case 2:
-        return <CCSteps step={current} data={changeInforStep} />;
+        return <CCSteps step={current} data={changeInforStep} onFinishScreen={(ind) => setCurrent(ind)} />;
       case 3:
-        return <CCSteps step={current} data={pendingStep} />;
+        return <CCSteps step={current} data={pendingStep} onFinishScreen={(ind) => setCurrent(ind)} />;
       case 4:
-        return <CCSteps step={current} data={dissolutionStep} />;
+        return <CCSteps step={current} data={dissolutionStep} onFinishScreen={(ind) => setCurrent(ind)} />;
       default:
         return null;
     }
@@ -290,12 +273,12 @@ const UserProductItem = (props) => {
   const handleChangeInforForm = (val) => {
     let data = [
       {
-        title: "Bước 1",
-        desc: "Chọn loại hình",
+        title: 'Bước 1',
+        desc: 'Chọn loại hình',
       },
       {
         title: `Bước 2`,
-        desc: "Thông tin doanh nghiệp",
+        desc: 'Thông tin doanh nghiệp',
       },
     ];
 
@@ -305,12 +288,8 @@ const UserProductItem = (props) => {
 
     data.push(
       {
-        title: `Bước ${val.length > 0 ? val.length + 3 : data.length + 2}`,
-        desc: "Ủy quyền",
-      },
-      {
         title: `Bước ${val.length > 0 ? val.length + 4 : data.length + 3}`,
-        desc: "Preview",
+        desc: 'Xem lại',
       }
     );
 
@@ -320,22 +299,20 @@ const UserProductItem = (props) => {
   const handleSetPendingStep = (val) => {
     let data = [
       {
-        title: "Bước 1",
-        desc: "Chọn loại hình",
+        title: 'Bước 1',
+        desc: 'Chọn loại hình',
       },
     ];
+
     data.push(
       {
         title: `Bước 2`,
-        desc: `${val.children}`,
+        // desc: `${val.children}`,
+        desc: 'Nhập thông tin', // update 27/06/2022
       },
       {
         title: `Bước 3`,
-        desc: "Ủy quyền",
-      },
-      {
-        title: `Bước 4`,
-        desc: "Preview",
+        desc: 'Xem lại',
       }
     );
     setPendingStep(data);
@@ -344,8 +321,8 @@ const UserProductItem = (props) => {
   const handleSetDissolutionStep = (val) => {
     let data = [
       {
-        title: "Bước 1",
-        desc: "Chọn loại hình",
+        title: 'Bước 1',
+        desc: 'Chọn loại hình',
       },
     ];
     data.push(
@@ -355,11 +332,7 @@ const UserProductItem = (props) => {
       },
       {
         title: `Bước 3`,
-        desc: "Ủy quyền",
-      },
-      {
-        title: `Bước 4`,
-        desc: "Preview",
+        desc: 'Xem lại',
       }
     );
     setDissolutionStep(data);
@@ -378,7 +351,7 @@ const UserProductItem = (props) => {
     let params = {
       track: {
         step: 1,
-        status: "progress",
+        status: 'progress',
       },
       payment: 0,
       data: {
@@ -406,7 +379,7 @@ const UserProductItem = (props) => {
     let params = {
       track: {
         step: 1,
-        status: "progress",
+        status: 'progress',
       },
       payment: 0,
       data: {
@@ -423,7 +396,7 @@ const UserProductItem = (props) => {
     let params = {
       track: {
         step: 1,
-        status: "progress",
+        status: 'progress',
       },
       payment: 0,
       data: {
@@ -441,7 +414,7 @@ const UserProductItem = (props) => {
     let params = {
       track: {
         step: 1,
-        status: "progress",
+        status: 'progress',
       },
       payment: 0,
       data: {
@@ -460,7 +433,7 @@ const UserProductItem = (props) => {
     let params = {
       track: {
         step: 1,
-        status: "progress",
+        status: 'progress',
       },
       payment: 0,
       data: {
@@ -477,7 +450,7 @@ const UserProductItem = (props) => {
     let params = {
       track: {
         step: 1,
-        status: "progress",
+        status: 'progress',
       },
       payment: 0,
       data: {
@@ -496,7 +469,7 @@ const UserProductItem = (props) => {
     let params = {
       track: {
         step: 1,
-        status: "progress",
+        status: 'progress',
       },
       payment: 0,
       data: {
@@ -514,7 +487,7 @@ const UserProductItem = (props) => {
     let params = {
       track: {
         step: 1,
-        status: "progress",
+        status: 'progress',
       },
       payment: 0,
       data: {
@@ -533,7 +506,7 @@ const UserProductItem = (props) => {
       .then((res) => {
         if (res.data.status === 200) {
           message.success(res.data.message);
-          navigate("/user/san-pham");
+          navigate('/user/san-pham');
         }
       })
       .catch((err) => {
@@ -544,8 +517,8 @@ const UserProductItem = (props) => {
 
   const paymentService = (params) => {
     const date = new Date();
-    var createDate = dateformat(date, "yyyymmddHHmmss");
-    var orderId = dateformat(date, "HHmmss");
+    var createDate = dateformat(date, 'yyyymmddHHmmss');
+    var orderId = dateformat(date, 'HHmmss');
 
     params.createDate = createDate;
     params.orderId = orderId;
@@ -564,7 +537,6 @@ const UserProductItem = (props) => {
   return (
     <>
       <div className={styles.mainContent}>
-      
         {data && renderHeaderStep(data?.type)}
 
         {data && renderFormByType(data?.type)}
@@ -574,7 +546,7 @@ const UserProductItem = (props) => {
           width={childModal.width}
           footer={null}
           bodyStyle={{
-            background: "#eee",
+            background: '#eee',
           }}
           onCancel={closeModal}
         >

@@ -1,15 +1,16 @@
-import axios from "./../../config/axios";
+import axios from './../../config/axios';
 
 const api_path = {
-  getProducts: "/product",
-  createProducts: "/product/create",
-  editProducts: "/product/edit",
-  deleteProducts: "/product",
-  getCategories: "/admin/category",
-  createCategories: "/admin/category/create",
-  getCareer: "/nganhnghe",
-  createCareer: "/nganhnghe",
-  deleteCareer: "/nganhnghe/delete",
+  getProducts: '/product',
+  createProducts: '/product/create',
+  editProducts: '/product/edit',
+  deleteProducts: '/product',
+  getCategories: '/admin/category',
+  updateCategories: '/admin/category/update',
+  createCategories: '/admin/category/create',
+  getCareer: '/nganhnghe',
+  createCareer: '/nganhnghe',
+  deleteCareer: '/nganhnghe/delete',
 };
 
 const AdminProductService = {
@@ -27,6 +28,9 @@ const AdminProductService = {
   },
   getCategory: () => {
     return axios.get(`${api_path.getCategories}`);
+  },
+  updateCategories: (params) => {
+    return axios.post(`${api_path.updateCategories}/${params._id}`, params);
   },
   createCategory: (params) => {
     return axios.post(`${api_path.createCategories}`, params);

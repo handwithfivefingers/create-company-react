@@ -22,7 +22,6 @@ const AdminProduct = (props) => {
     component: null,
   });
 
-  const formRef = React.useRef();
 
   useEffect(() => {
     getScreenData();
@@ -31,10 +30,15 @@ const AdminProduct = (props) => {
   }, []);
 
   const getCareer = async () => {
-    const { data } = await axios.get(`/nganhnghe`);
-    if (data.status === 200) {
-      setCareer(data.data);
-    } else message.error(data.message || data.error);
+    try {
+      const { data } = await axios.get(`/nganhnghe`);
+      if (data.status === 200) {
+        setCareer(data.data);
+      }
+    } catch (err) {
+      console.log(err);
+      message.error(data.message || data.error);
+    }
   };
 
   const getScreenData = () => {
@@ -64,6 +68,8 @@ const AdminProduct = (props) => {
       })
       .catch((err) => console.log(err));
   };
+
+  // Product
 
   const onHandleEdit = (record) => {
     if (record) {
@@ -142,29 +148,7 @@ const AdminProduct = (props) => {
     });
   };
 
-  const closeModal = () => {
-    setChildModal({
-      ...childModal,
-      visible: false,
-    });
-  };
-
-  const onHandleCreateCategory = () => {
-    // console.log("create category");
-    setChildModal({
-      visible: true,
-      width: '50%',
-      component: (
-        <CategoryForm
-          onFinishScreen={(output) => {
-            // getScreenData();
-            addCategory(output);
-            closeModal();
-          }}
-        />
-      ),
-    });
-  };
+  // Career
 
   const onHandleAddCareer = () => {
     setChildModal({
@@ -192,6 +176,70 @@ const AdminProduct = (props) => {
       .catch((err) => console.log(err));
   };
 
+  const deleteCareer = (record) => {
+    AdminProductService.deleteCareer(record._id)
+      .then((res) => {
+        if (res.data.status === 200) {
+          message.success(res.data.message);
+        }
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        getCareer();
+      });
+  };
+
+  // Categories
+  const onHandleCreateCategory = () => {
+    // console.log("create category");
+    setChildModal({
+      visible: true,
+      width: '50%',
+      component: (
+        <CategoryForm
+          onFinishScreen={(output) => {
+            // getScreenData();
+            addCategory(output);
+            closeModal();
+          }}
+        />
+      ),
+    });
+  };
+
+  const onHandleUpdateCate = (record) => {
+    if (record) {
+      setChildModal({
+        visible: true,
+        width: '50%',
+        component: (
+          <FormProduct
+            type="edit"
+            data={record}
+            onEventEdit={(output) => onUpdateCate(output)}
+            onFinishScreen={() => {
+              getCateData();
+              closeModal();
+            }}
+          />
+        ),
+      });
+    }
+  };
+
+  const onUpdateCate = (data) => {
+    setLoading(true);
+    AdminProductService.updateCategories(data)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        getCateData();
+        setLoading(false);
+      });
+  };
+
   const addCategory = (val) => {
     AdminProductService.createCategory(val)
       .then((res) => {
@@ -205,17 +253,11 @@ const AdminProduct = (props) => {
       });
   };
 
-  const deleteCareer = (record) => {
-    AdminProductService.deleteCareer(record._id)
-      .then((res) => {
-        if (res.data.status === 200) {
-          message.success(res.data.message);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        getCareer();
-      });
+  const closeModal = () => {
+    setChildModal({
+      ...childModal,
+      visible: false,
+    });
   };
 
   return (
@@ -244,6 +286,18 @@ const AdminProduct = (props) => {
               <Table.Column title="Danh mục" render={(val, record, index) => record.name} />
               <Table.Column title="Giá" width={'25%'} render={(val, record, index) => record.price} />
               <Table.Column title="Loại" width="100px" render={(val, record, index) => record.type} />
+              <Table.Column
+                title=""
+                width="100px"
+                render={(val, record, i) => {
+                  return (
+                    <Space>
+                      <Button onClick={(e) => onHandleUpdateCate(record)} icon={<FormOutlined />} />
+                      {/* <Button onClick={(e) => onHandleDeleteProduct(record)} icon={<MinusSquareOutlined />} /> */}
+                    </Space>
+                  );
+                }}
+              />
             </Table>
           </TabPane>
           <TabPane tab="Sản phẩm" key="2">
@@ -293,9 +347,6 @@ const AdminProduct = (props) => {
           </TabPane>
         </Tabs>
       </Card>
-      {/* <Modal footer={null} visible={childModal.visible} width={childModal.width} onCancel={closeModal} destroyOnClose>
-        {childModal.component}
-      </Modal> */}
       <Drawer visible={childModal.visible} width={childModal.width} onClose={closeModal} destroyOnClose>
         {childModal.component}
       </Drawer>
