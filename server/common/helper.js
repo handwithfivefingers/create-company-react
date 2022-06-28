@@ -1,20 +1,20 @@
-const path = require("path");
-const fs = require("fs");
-const PizZip = require("pizzip");
+const path = require('path');
+const fs = require('fs');
+const PizZip = require('pizzip');
 
-const expressions = require("angular-expressions");
+const expressions = require('angular-expressions');
 
-const Docxtemplater = require("docxtemplater");
+const Docxtemplater = require('docxtemplater');
 
-const shortid = require("shortid");
+const shortid = require('shortid');
 
-const { assign, last } = require("lodash");
+const { assign, last } = require('lodash');
 
-const libre = require("libreoffice-convert");
+const libre = require('libreoffice-convert');
 
-require("datejs");
+require('datejs');
 
-libre.convertAsync = require("util").promisify(libre.convert);
+libre.convertAsync = require('util').promisify(libre.convert);
 
 expressions.filters.lower = function (input) {
   if (!input) return input;
@@ -27,16 +27,16 @@ expressions.filters.upper = function (input) {
 };
 
 function nullGetter(tag, props) {
-  if (props.tag === "simple") {
-    return "undefined";
+  if (props.tag === 'simple') {
+    return 'undefined';
   }
-  if (props.tag === "raw") {
-    return "";
+  if (props.tag === 'raw') {
+    return '';
   }
-  return "";
+  return '';
 }
 function angularParser(tag) {
-  tag = tag.replace(/^\.$/, "this").replace(/(’|‘)/g, "'").replace(/(“|”)/g, '"');
+  tag = tag.replace(/^\.$/, 'this').replace(/(’|‘)/g, "'").replace(/(“|”)/g, '"');
   const expr = expressions.compile(tag);
   // expr = expressions.compile(tag);
   return {
@@ -55,12 +55,11 @@ function angularParser(tag) {
 }
 
 const applyContent = async (file = null, data = null) => {
-  
   let dirname = global.__basedir;
 
-  let filePath = path.resolve(path.join(dirname, "/uploads/", file.path));
+  let filePath = path.resolve(path.join(dirname, '/uploads/', file.path));
 
-  const content = fs.readFileSync(filePath, "binary");
+  const content = fs.readFileSync(filePath, 'binary');
 
   const zip = new PizZip(content);
 
@@ -72,20 +71,20 @@ const applyContent = async (file = null, data = null) => {
   doc.render(data);
 
   return doc.getZip().generate({
-    type: "nodebuffer",
-    compression: "DEFLATE",
+    type: 'nodebuffer',
+    compression: 'DEFLATE',
   });
 };
 
 const saveFileAsDocx = async (buffer, ext) => {
-  let filePath = path.join(global.__basedir, "/uploads", `${shortid.generate()}-output${ext}`);
+  let filePath = path.join(global.__basedir, '/uploads', `${shortid.generate()}-output${ext}`);
   fs.writeFileSync(filePath, buffer);
   return filePath;
 };
 
-const specialFields = ["company_main_career", "company_opt_career"];
+const specialFields = ['company_main_career', 'company_opt_career'];
 
-const dateFields = ["doc_time_provide", "birth_day", "time_provide"];
+const dateFields = ['doc_time_provide', 'birth_day', 'time_provide', 'start','end'];
 
 const objToKeys = (obj, baseObj, path = null) => {
   const regex = /(?=.*\d[\s\S][-T:.Z])\w+/g;
@@ -101,20 +100,20 @@ const objToKeys = (obj, baseObj, path = null) => {
 
     // item => fields
 
-    let newPath = path ? [path, item].join("_") : item;
+    let newPath = path ? [path, item].join('_') : item;
 
     // Valid Item
 
     if (obj[item]) {
       // String || Number || Date
 
-      if (typeof obj[item] !== "object") {
+      if (typeof obj[item] !== 'object') {
         // console.log("\x1b[32m", "fieldName");
         // console.log(newPath);
         // console.log("\x1b[36m", "data Display");
         // console.log(obj[item]);
 
-        if (typeof obj[item] === "string" && isDate) {
+        if (typeof obj[item] === 'string' && isDate) {
           // Type DATE
           baseObj[newPath] = dateConvert(obj[item]); // Date Time convert
         } else {
@@ -150,11 +149,11 @@ exports.flattenObject = (data) => {
   _template.month = date.getMonth() + 1; // Month start at 0 -> 11
   _template.year = date.getFullYear();
   // handle Change Info Array;
-
+  console.log(_template);
   for (let props in _template) {
     if (
-      props === "change_info_transfer_contract_A_side_owner" &&
-      _template.change_info_transfer_contract_A_side_owner === "personal"
+      props === 'change_info_transfer_contract_A_side_owner' &&
+      _template.change_info_transfer_contract_A_side_owner === 'personal'
     ) {
       let {
         change_info_transfer_contract_A_side_personal_name: name,
@@ -177,17 +176,17 @@ exports.flattenObject = (data) => {
         },
       ];
     }
-    if (props === "create_company_approve_legal_respon") {
+    if (props === 'create_company_approve_legal_respon') {
       _template.legal_respon = _template[props].map((item) => ({
         ...item,
         birth_day: dateConvert(item.birth_day),
         doc_time_provide: dateConvert(item.doc_time_provide),
-        title_type: item.title === "Chủ tịch công ty" ? 1 : item.title === "Giám đốc" ? 2 : 3,
+        title_type: item.title === 'Chủ tịch công ty' ? 1 : item.title === 'Giám đốc' ? 2 : 3,
       }));
 
       delete _template.create_company_approve_legal_respon;
     }
-
+    if(props)
 
     /// Handle create_company_approve_origin_person_doc_type
     // {#doc_type==1}X{/}
@@ -197,11 +196,11 @@ exports.flattenObject = (data) => {
     // doc_type == 4 ? Loại khác ....
     //Channge info
     // Legal Representative
-    if(props === 'change_info_legal_representative_doc_place_provide') {
-      _template.lr_doc_place_provide = _template[props]
+    if (props === 'change_info_legal_representative_doc_place_provide') {
+      _template.lr_doc_place_provide = _template[props];
     }
-    if(props === 'change_info_legal_representative_new_title') {
-      _template.lr_new_title = _template[props]
+    if (props === 'change_info_legal_representative_new_title') {
+      _template.lr_new_title = _template[props];
     }
   }
 
@@ -211,12 +210,12 @@ exports.flattenObject = (data) => {
 exports.convertFile = async (file, data) => {
   let buffer = await applyContent(file, data);
 
-  let ext = ".pdf";
+  let ext = '.pdf';
 
   let pdfBuf = await libre.convertAsync(buffer, ext, undefined);
-  console.log("converting");
+  console.log('converting');
   let pdfFile = await saveFileAsDocx(pdfBuf, ext); // docx input
-  console.log("saving file");
+  console.log('saving file');
   return pdfFile;
 };
 
