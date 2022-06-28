@@ -69,7 +69,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
 
           <CCInput name={[...BASE_FORM, "reason"]} label="Lý do tạm ngưng" />
 
-          <CCInput name={[...BASE_FORM, "org_person"]} label="Tên người đại diện pháp luật/người đứng đầu chi nhánh" />
+          <CCInput name={[...BASE_FORM, "org_person"]} label="Tên người đại diện pháp luật hoặc người đứng đầu chi nhánh" />
         </>
       ) : (
         <Row gutter={[12, 16]}>
@@ -77,11 +77,11 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         </Row>
       )} */}
 
-      <CCInput name={[...BASE_FORM, 'company_name']} label="Nhập tên doanh nghiệp (ghi bằng chữ IN HOA)" />
+      <CCInput name={[...BASE_FORM, 'company_name']} label="Nhập tên doanh nghiệp" />
 
       <CCInput name={[...BASE_FORM, 'mst']} label="Mã số doanh nghiệp hoặc Mã số thuế" />
 
-      <CCInput name={[...BASE_FORM, 'org_person']} label="Tên người đại diện pháp luật/người đứng đầu chi nhánh" />
+      <CCInput name={[...BASE_FORM, 'org_person']} label="Tên người đại diện pháp luật hoặc Người đứng đầu chi nhánh" />
 
       <CCInput
         type="select"
@@ -176,7 +176,7 @@ const ChiNhanh = forwardRef((props, ref) => {
                 <Col lg={12} md={12} sm={24} xs={24} key={[field, i + 1]}>
                   <CCInput
                     name={[field.name, 'branch_name']}
-                    label="Nhập tên (của Chi nhánh hoặc Văn phòng đại diện hoặc Địa điểm kinh doanh, ghi bằng chữ IN HOA)"
+                    label="Nhập tên (của Chi nhánh hoặc Văn phòng đại diện hoặc Địa điểm kinh doanh)"
                   />
                   <CCInput
                     name={[field.name, 'resp_office']}
