@@ -47,7 +47,7 @@ const UserProductItem = (props) => {
   const [pendingStep, setPendingStep] = useState([
     {
       title: 'Bước 1',
-      desc: 'Chọn loại hình',
+      desc: 'Chọn loại hình doanh nghiệp',
     },
     {
       title: `Bước 2`,
@@ -300,7 +300,7 @@ const UserProductItem = (props) => {
     let data = [
       {
         title: 'Bước 1',
-        desc: 'Chọn loại hình',
+        desc: 'Chọn loại hình doanh nghiệp',
       },
     ];
 
@@ -347,7 +347,7 @@ const UserProductItem = (props) => {
 
   const handlePurchaseChangeInfo = () => {
     let val = formRef.current.getFieldsValue();
-    let uy_quyen = uyquyenRef.current.getFieldsValue();
+    // let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -356,7 +356,7 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
-        ...uy_quyen,
+        // ...uy_quyen,
       },
     };
     paymentService(params);
@@ -392,7 +392,7 @@ const UserProductItem = (props) => {
 
   const handlePurchasePending = () => {
     let val = formRef.current.getFieldsValue();
-    let uy_quyen = uyquyenRef.current.getFieldsValue();
+    // let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -401,7 +401,7 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
-        ...uy_quyen,
+        // ...uy_quyen,
       },
     };
 
@@ -410,7 +410,7 @@ const UserProductItem = (props) => {
 
   const handlePurchaseDissolution = () => {
     let val = formRef.current.getFieldsValue();
-    let uy_quyen = uyquyenRef.current.getFieldsValue();
+    // let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -419,7 +419,7 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
-        ...uy_quyen,
+        // ...uy_quyen,
       },
     };
 
@@ -446,7 +446,7 @@ const UserProductItem = (props) => {
 
   const handleSaveChangeInfo = () => {
     let val = formRef.current.getFieldsValue();
-    let uy_quyen = uyquyenRef.current.getFieldsValue();
+    // let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -455,7 +455,7 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
-        ...uy_quyen,
+        // ...uy_quyen,
       },
     };
     // console.log(params);
@@ -464,7 +464,7 @@ const UserProductItem = (props) => {
 
   const handleSavePending = () => {
     let val = formRef.current.getFieldsValue();
-    let uy_quyen = uyquyenRef.current.getFieldsValue();
+    // let uy_quyen = uyquyenRef.current.getFieldsValue();
 
     let params = {
       track: {
@@ -474,7 +474,7 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
-        ...uy_quyen,
+        // ...uy_quyen,
       },
     };
     // console.log(params);
@@ -483,7 +483,7 @@ const UserProductItem = (props) => {
 
   const handleSaveDissolution = () => {
     let val = formRef.current.getFieldsValue();
-    let uy_quyen = uyquyenRef.current.getFieldsValue();
+    // let uy_quyen = uyquyenRef.current.getFieldsValue();
     let params = {
       track: {
         step: 1,
@@ -492,7 +492,7 @@ const UserProductItem = (props) => {
       payment: 0,
       data: {
         ...val,
-        ...uy_quyen,
+        // ...uy_quyen,
       },
     };
 
