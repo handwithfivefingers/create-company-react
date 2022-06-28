@@ -7,7 +7,7 @@ import CreateCompany from 'src/components/Form/CreateCompany';
 import PreviewData from 'src/components/Form/PreviewData';
 import axios from 'src/config/axios';
 import { stepType1 } from 'src/contants/Step';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import TamHoanForm from 'src/components/Form/PendingForm';
 import styles from './styles.module.scss';
 import ProductService from 'src/service/UserService/ProductService';
@@ -18,6 +18,7 @@ import UyQuyen from 'src/components/Form/UyQuyen';
 
 const UserProductItem = (props) => {
   const formRef = useRef();
+
   const uyquyenRef = useRef();
 
   const [form, setForm] = useState({});
@@ -25,6 +26,7 @@ const UserProductItem = (props) => {
   const [current, setCurrent] = useState(0);
 
   const [data, setData] = useState();
+
   const [loading, setLoading] = useState();
 
   const navigate = useNavigate();
@@ -74,17 +76,28 @@ const UserProductItem = (props) => {
   });
 
   let params = useParams();
-
+  const location = useLocation();
   useEffect(() => {
     getDataBySlug();
   }, []);
 
-  const getDataBySlug = () => {
-    axios.get(`/product/${params.slug}`).then((res) => {
-      setData(res.data);
-    });
-  };
+  const getDataBySlug = async () => {
+    try {
+      let res = await ProductService.getDataBySlug(params);
+      if (res) {
+        // let { state } = location;
 
+        // if (state) {
+        //   let type = parseInt(state?.products[0]?.type);
+        //   setData({ ...res.data, type });
+        // } else 
+        setData(res.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // console.log(data);
   const Next = () => {
     // case here
     let val = formRef.current?.getFieldsValue();
@@ -170,7 +183,6 @@ const UserProductItem = (props) => {
 
             {current === changeInforStep?.length - 1 ? renderPrewviewForm(formRef) : ''}
 
-
             <div className={'card-boxShadow'} style={{ position: 'sticky', bottom: 0 }}>
               {current > 0 && <Button onClick={Prev}>Prev</Button>}
 
@@ -200,7 +212,6 @@ const UserProductItem = (props) => {
               onFinishScreen={(val) => handleSetPendingStep(val)}
             />
 
-
             {current === 2 ? renderPrewviewForm(formRef) : ''}
 
             <div className={'card-boxShadow'} style={{ position: 'sticky', bottom: 0 }}>
@@ -229,7 +240,6 @@ const UserProductItem = (props) => {
               current={current}
               onFinishScreen={(val) => handleSetDissolutionStep(val)}
             />
-
 
             {current === 2 ? renderPrewviewForm(formRef) : ''}
 
@@ -286,12 +296,10 @@ const UserProductItem = (props) => {
       data.push({ desc: val[i].children, title: `Bước ${i + 3}` });
     }
 
-    data.push(
-      {
-        title: `Bước ${val.length > 0 ? val.length + 4 : data.length + 3}`,
-        desc: 'Xem lại',
-      }
-    );
+    data.push({
+      title: `Bước ${val.length > 0 ? val.length + 4 : data.length + 3}`,
+      desc: 'Xem lại',
+    });
 
     setChangeInforStep(data);
   };

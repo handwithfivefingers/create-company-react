@@ -12,7 +12,7 @@ export default function AdminAbout() {
       <div className={styles.listItem}>
         <ul>
           Website Detail:
-          <li> Version : 0.4 (last updated: 14/06/2022)</li>
+          <li> Version : 0.4 (last updated: 28/06/2022)</li>
           <li> Framework: Nodejs Reactjs</li>
           <li> Node version: 16</li>
           <li> Express: 4.17</li>

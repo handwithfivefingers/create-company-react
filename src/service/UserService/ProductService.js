@@ -1,8 +1,9 @@
-import axios from "src/config/axios";
+import axios from 'src/config/axios';
 
 const api_path = {
-  create_company: "/order/create",
-  createCompanyWithPayment: "/order/create/payment",
+  create_company: '/order/create',
+  createCompanyWithPayment: '/order/create/payment',
+  getDataBySlug: `/product`,
 };
 
 const ProductService = {
@@ -11,6 +12,9 @@ const ProductService = {
   },
   createCompanyWithPayment: (form) => {
     return axios.post(api_path.createCompanyWithPayment, form);
+  },
+  getDataBySlug: (params) => {
+    return axios.get(`${api_path.getDataBySlug}/${params.slug}`);
   },
 };
 

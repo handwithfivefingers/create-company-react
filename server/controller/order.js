@@ -20,10 +20,8 @@ const PAGE_SIZE = 10;
 exports.getOrdersFromUser = async (req, res) => {
   try {
     let _order = await Order.find({ orderOwner: req.id })
-      .populate("products", "name")
+      .populate("products", "name type")
       .populate("orderOwner", "name")
-      // .populate("main_career", "name")
-      // .limit(10)
       .sort("-createdAt");
     // console.log(_order);
     return successHandler(_order, res);

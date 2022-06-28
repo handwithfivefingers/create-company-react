@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Button, Modal, Tooltip, Drawer, Form, message } from 'antd';
-import axios from '../../../config/axios';
 import Tracking from '../../../components/Tracking';
 import { MdCreditCard } from 'react-icons/md';
 import { number_format } from 'src/helper/Common';
 import { useSearchParams } from 'react-router-dom';
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import dateformat from 'dateformat';
+import { useNavigate } from 'react-router-dom';
 import styles from './styles.module.scss';
+import OrderService from 'src/service/UserService/OrderService';
 const UserOrder = () => {
-  const [state, setState] = useState({
-    loading: false,
-    data: [],
-  });
-
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [modal, setModal] = useState({
@@ -26,6 +22,7 @@ const UserOrder = () => {
     width: 0,
     data: null,
   });
+  let navigate = useNavigate();
   useEffect(() => {
     getScreenData();
   }, []);
@@ -33,7 +30,7 @@ const UserOrder = () => {
   const getScreenData = async () => {
     try {
       setLoading(true);
-      let res = await axios.get('/order');
+      let res = await OrderService.getOrders();
 
       if (res.data.status === 200) {
         setData(res.data.data);
@@ -47,17 +44,8 @@ const UserOrder = () => {
     }
   };
 
-  // const handleTracking = () => {
-  //   setModal({
-  //     ...modal,
-  //     width: "50%",
-  //     visible: true,
-  //     component: <Tracking />,
-  //   });
-  // };
-
   const handlePurchase = (record) => {
-    setLoading(true);
+
     const date = new Date();
     var createDate = dateformat(date, 'yyyymmddHHmmss');
     var orderId = dateformat(date, 'HHmmss');
@@ -68,14 +56,14 @@ const UserOrder = () => {
       amount: +record?.price * 100,
       orderInfo: record?._id,
     };
-    console.log(params);
+
     return paymentService(params);
   };
 
   const paymentService = async (params) => {
     setLoading(true);
     try {
-      const res = await axios.post(`/payment`, params);
+      const res = await OrderService.Payment(params);
       if (res.status === 200) {
         window.open(res.data.url);
       }
@@ -97,16 +85,21 @@ const UserOrder = () => {
 
   const onEditOrder = (record) => {
     console.log('order', record);
-    let { data, files } = record;
-    setDrawer((draw) => ({
-      ...draw,
-      visible: true,
-      width: 500,
-      data: {
-        data,
-        files,
-      },
-    }));
+
+    let { data } = record;
+    let url = null;
+    for (let props in data) {
+      if (props === 'pending') {
+        url = 'tam-ngung';
+      } else if (props === 'change_info') {
+        url = 'thay-djoi-thong-tin';
+      } else if (props === 'dissolution') {
+        url = 'giai-the';
+      } else if (props === 'create_company') {
+        url = 'thanh-lap-doanh-nghiep';
+      }
+    }
+    navigate(`/user/san-pham/${url}`, { state: record });
   };
 
   return (
