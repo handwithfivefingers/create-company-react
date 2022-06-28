@@ -35,48 +35,6 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         [styles.active]: props.current === props.index,
       })}
     >
-      {/* 
-
-      <CCInput name={[...BASE_FORM, "company_name"]} label="Nhập tên doanh nghiệp (ghi bằng chữ IN HOA)" />
-
-      <CCInput name={[...BASE_FORM, "mst"]} label="Mã số doanh nghiệp hoặc Mã số thuế" />
-
-      <CCInput name={[...BASE_FORM, "time_provide"]} label="Ngày cấp" type="date" />
-
-      <CCInput name={[...BASE_FORM, "place_provide"]} label="Nơi cấp" />
-
-      <CCInput
-        name={[...BASE_FORM, "opt_code"]}
-        label="Số Giấy chứng nhận đăng ký kinh doanh (chỉ kê khai nếu không có mã số doanh nghiệp/mã số thuế)"
-      />
-
-      <CCInput
-        type="select"
-        name={[...BASE_FORM, "obj"]}
-        label="Chọn đối tượng thông báo tạm ngưng kinh doanh"
-        onChange={handleChange}
-        options={SELECT.BUSINESS_OBJECT}
-      />
-
-      {objective === "Toàn bộ công ty" ? (
-        <>
-          <CCInput
-            name={[...BASE_FORM, "time_range"]}
-            label="Thời gian đăng ký tạm ngưng (từ ngày/tháng/năm đến ngày/tháng/năm)"
-            onChange={handleDateChange}
-            type="date-range"
-          />
-
-          <CCInput name={[...BASE_FORM, "reason"]} label="Lý do tạm ngưng" />
-
-          <CCInput name={[...BASE_FORM, "org_person"]} label="Tên người đại diện pháp luật hoặc người đứng đầu chi nhánh" />
-        </>
-      ) : (
-        <Row gutter={[12, 16]}>
-          <ChiNhanh ref={ref} />
-        </Row>
-      )} */}
-
       <CCInput name={[...BASE_FORM, 'company_name']} label="Nhập tên doanh nghiệp" />
 
       <CCInput name={[...BASE_FORM, 'mst']} label="Mã số doanh nghiệp hoặc Mã số thuế" />
