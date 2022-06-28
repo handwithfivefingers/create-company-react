@@ -60,6 +60,11 @@ app.use(express.static(path.join(__dirname, "build")));
 
 app.use("/api", AppRouter);
 
+app.use("/robots.txt", (req,res) => {
+  let robotFile = path.join(__dirname, "uploads", 'robots.txt')
+  res.sendFile(robotFile)
+});
+
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
