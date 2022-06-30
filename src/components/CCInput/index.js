@@ -29,6 +29,7 @@ const CCInput = forwardRef((props, ref) => {
             placeholder={placeholder}
             disabled={props?.disabled}
             autoComplete="off"
+            value={props?.value}
           />
         </Form.Item>
       );
@@ -127,8 +128,9 @@ const CCInput = forwardRef((props, ref) => {
             defaultValue={props?.defaultValue || null}
             defaultActiveFirstOption={props?.defaultActiveFirstOption}
             onDropdownVisibleChange={handleOptions}
-            autoComplete="off"
             style={props?.style}
+            placeholder={props?.placeholder}
+            autoComplete="off"
           >
             {optional?.map((item, i) => {
               return (

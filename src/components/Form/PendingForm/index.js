@@ -5,9 +5,9 @@ import KinhDoanhLaiTruocThoiHan from './KinhDoanhLaiTruocThoiHan';
 import styles from './styles.module.scss';
 import TamNgungKinhDoanh from './TamNgungKinhDoanh';
 const TamHoanForm = forwardRef((props, ref) => {
-  const [productSelect, setProductSelect] = useState('');
+  // const [productSelect, setProductSelect] = useState('');
 
-  const [selectType, setSelectType] = useState();
+  // const [selectType, setSelectType] = useState();
 
   // const renderFormByType = (type) => {
   //   let xhtml = null;
@@ -26,14 +26,14 @@ const TamHoanForm = forwardRef((props, ref) => {
   //   }
   // };
   const handleChangle = (val) => {
-    setProductSelect(val);
+    // setProductSelect(val);
     let opt = {
       key: '6268e6d6973cec53fcbb4080',
       value: '6268e6d6973cec53fcbb4080',
       children: 'Đăng ký tạm ngưng kinh doanh',
       type: '1',
     };
-    setSelectType(opt);
+    // setSelectType(opt);
     if (props.onFinishScreen) {
       props.onFinishScreen(opt);
     }
@@ -54,7 +54,7 @@ const TamHoanForm = forwardRef((props, ref) => {
           [styles.active]: props.current === 0,
         })}
       >
-        <Select onChange={(val) => handleChangle(val)} placeholder="Chọn loại hình doanh nghiệp">
+        <Select onChange={(val) => handleChangle(val)} placeholder="Bấm vào đây">
           {props.data?.map((item) => {
             return (
               <Select.Option key={item._id} value={item._id}>
