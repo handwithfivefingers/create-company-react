@@ -45,7 +45,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
-      - run: npm install --if-present
+      - run: npm ci
       - run: npm run build --if-present
       - run: pm2 restart 3
       - run: npm test
