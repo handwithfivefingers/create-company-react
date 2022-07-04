@@ -5,29 +5,44 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
   pull_request:
-    branches: [ "master" ]
+    branches: ['master']
 
 jobs:
   build:
-
     runs-on: self-hosted
 
     strategy:
       matrix:
         node-version: [16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    env:
+      REACT_APP_BASEHOST_PROD: ${{secrets.REACT_APP_BASEHOST_PROD}}
+      DATABASE_URL: ${{ secrets.DATABASE_URL}}
+      SECRET: ${{ secrets.SECRET}}
+      PORT: ${{ secrets.PORT}}
+      PAGE_SIZE: ${{ secrets.PAGE_SIZE}}
+      EXPIRE_TIME: ${{ secrets.EXPIRE_TIME}}
+      VNPAY_URL: ${{ secrets.VNPAY_URL}}
+      RETURN_URL: ${{ secrets.RETURN_URL}}
+      TMN_CODE_VPN: ${{ secrets.TMN_CODE_VPN}}
+      SECRET_KEY_VPN: ${{ secrets.SECRET_KEY_VPN}}
+      MAIL_NAME: ${{ secrets.MAIL_NAME}}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD}}
+      MAIL_HOST: ${{ secrets.MAIL_HOST}}
+      MAIL_PORT: ${{ secrets.MAIL_PORT}}
+      GG_REFRESH_TOKEN: ${{ secrets.GG_REFRESH_TOKEN}}
+      GG_REFRESH_URI: ${{ secrets.GG_REFRESH_URI}}
+      GG_EMAIL_CLIENT_ID: ${{ secrets.GG_EMAIL_CLIENT_ID}}
+      GG_EMAIL_CLIENT_SECRET: ${{ secrets.GG_EMAIL_CLIENT_SECRET}}
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm i
-    - run: npm run build --if-present
-    - run: pm2 restart 3
-    - run: npm test
-
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm run build --if-present
+      - run: pm2 restart 3
+      - run: npm test
