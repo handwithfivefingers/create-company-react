@@ -1,36 +1,9 @@
-import React from "react";
-import { Row, Col, Typography, Avatar, List } from "antd";
+import { Col, Row, Typography } from "antd";
 // import { List } from 'antd/lib/form/Form';
-import styles from "./Footer.module.scss";
 import clsx from "clsx";
 import CCButton from "../Button";
+import styles from "./Footer.module.scss";
 const Footer = () => {
-  const data = [
-    {
-      id: 1,
-      name: "Twitter",
-    },
-    {
-      id: 2,
-      name: "Facebook",
-    },
-    {
-      id: 3,
-      name: "Instagram",
-    },
-  ];
-  const data2 = [
-    {
-      id: 1,
-      name: "Email Address",
-      value: "handwithfivefinger",
-    },
-    {
-      id: 2,
-      name: "Phone Number",
-      value: "0123456789",
-    },
-  ];
   return (
     <>
       <div className={clsx([styles.container])}>
@@ -57,10 +30,10 @@ const Footer = () => {
         </div>
         <Row
           gutter={[16, 12]}
-          style={{ background: "#333", padding: 12, margin: 0 }}
+          style={{ background: "#333", padding: 12}}
         >
           <Col span={24} align="center">
-            <Typography.Paragraph style={{ margin: 0, color: "#fff" }}>
+            <Typography.Paragraph style={{ color: "#fff" }}>
               Công ty TNHH Thành lập công ty Online - Giấy phép kinh doanh số:
               12312312 - Cấp ngày 17/11/2017
             </Typography.Paragraph>

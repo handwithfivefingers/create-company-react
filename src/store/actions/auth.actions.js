@@ -1,8 +1,7 @@
-import { AUTH, AUTH_LOGIN, AUTH_LOGOUT, AUTH_REGISTER } from '../type/auth.type';
+import { message } from 'antd';
 import axios from 'src/config/axios';
 import AuthService from 'src/service/AuthService';
-import history from 'src/helper/history';
-import { message } from 'antd';
+import { AUTH, AUTH_LOGIN, AUTH_LOGOUT, AUTH_REGISTER } from '../type/auth.type';
 export const AuthUser = () => {
   return (dispatch) => {
     dispatch({

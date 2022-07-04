@@ -1,16 +1,13 @@
-import { Layout, Menu } from 'antd';
+import { Layout } from 'antd';
 import clsx from 'clsx';
-import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { FcInfo } from 'react-icons/fc';
+import { Link, Navigate } from 'react-router-dom';
 import AdminSidebar from 'src/components/Admin/AdminSidebar';
 import UserHeader from 'src/components/User/UserHeader';
 import UserSidebar from 'src/components/User/UserSidebar';
 import styles from './styles.module.scss';
-import { FcInfo } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
 const { Content, Footer } = Layout;
 
-const { SubMenu } = Menu;
 export default function WithAuth(Component, role) {
   return function Authenticated(props) {
     if (!props.status) {

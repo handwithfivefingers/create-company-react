@@ -226,7 +226,6 @@ const File2 = React.forwardRef((props, ref) => {
                   width: "50px",
                   minWidth: 50,
                   maxWidth: 50,
-                  margin: "10px 0",
                 }}
               />
             </i>

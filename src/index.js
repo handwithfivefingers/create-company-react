@@ -4,6 +4,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store";
+import datejs from 'datejs'; // core-pack
+
 window.store = store;
 ReactDOM.render(
   <Provider store={store}>

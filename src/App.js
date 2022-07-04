@@ -1,25 +1,23 @@
-import { ConfigProvider, Layout } from "antd";
-import React, { useEffect, useState, useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, useRoutes, useLocation, useNavigate } from "react-router-dom";
-import CustomHeader from "src/components/CustomHeader";
-import LoadingScreen from "src/components/LoadingScreen";
-import Footer from "./components/Footer";
-import { LAYOUT_ROUTER } from "./contants/Route";
-import { useAuth, useDetectLocation } from "./helper/Hook";
-import { RouteAction } from "src/store/actions";
-import RouterContext, { RouterProvider } from "src/helper/Context";
-import moment from "moment";
-import "aos/dist/aos.css";
-import "./assets/css/styles.scss";
+import { ConfigProvider } from 'antd';
+import { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { BrowserRouter, useLocation, useRoutes } from 'react-router-dom';
+import LoadingScreen from 'src/components/LoadingScreen';
+import RouterContext, { RouterProvider } from 'src/helper/Context';
+import { LAYOUT_ROUTER } from './contants/Route';
+import { useAuth, useDetectLocation } from './helper/Hook';
+import moment from 'moment';
+
+import 'aos/dist/aos.css';
+import './assets/css/styles.scss';
 
 ConfigProvider.config({
   theme: {
-    primaryColor: "#cd2027",
+    primaryColor: '#cd2027',
     // primaryColor: "#791314",
   },
 });
-moment.defaultFormat = "DD/MM/YYYY";
+moment.defaultFormat = 'DD/MM/YYYY';
 
 const RouterComponent = (props) => {
   let location = useLocation();
@@ -31,21 +29,21 @@ const RouterComponent = (props) => {
   const { route, setRoute } = useContext(RouterContext);
   const [displayLocation, setDisplayLocation] = useState(location);
 
-  const [transitionStage, setTransistionStage] = useState("fadeIn");
+  const [transitionStage, setTransistionStage] = useState('fadeIn');
   useEffect(() => {
     if (route !== routeDetect) setRoute(routeDetect);
   }, [location]);
 
   useEffect(() => {
-    if (location !== displayLocation && location.pathname === "/") setTransistionStage("fadeOut");
+    if (location !== displayLocation && location.pathname === '/') setTransistionStage('fadeOut');
   }, [location]);
 
   return (
     <div
       className={`${transitionStage}`}
       onAnimationEnd={() => {
-        if (transitionStage === "fadeOut") {
-          setTransistionStage("fadeIn");
+        if (transitionStage === 'fadeOut') {
+          setTransistionStage('fadeIn');
           setDisplayLocation(location);
         }
       }}
@@ -58,8 +56,8 @@ const RouterComponent = (props) => {
 function App() {
   const auth = useAuth(); // custom Hook
   const [route, setRoute] = useState({
-    to: "",
-    from: "",
+    to: '',
+    from: '',
   });
 
   const authReducer = useSelector((state) => state.authReducer);

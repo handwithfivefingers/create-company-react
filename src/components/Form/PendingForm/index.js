@@ -1,13 +1,11 @@
 import { Form, Select } from 'antd';
 import clsx from 'clsx';
-import React, { forwardRef, useState } from 'react';
-import KinhDoanhLaiTruocThoiHan from './KinhDoanhLaiTruocThoiHan';
+import { forwardRef, useState } from 'react';
 import styles from './styles.module.scss';
 import TamNgungKinhDoanh from './TamNgungKinhDoanh';
 const TamHoanForm = forwardRef((props, ref) => {
-  // const [productSelect, setProductSelect] = useState('');
 
-  // const [selectType, setSelectType] = useState();
+  const [selectType, setSelectType] = useState();
 
   // const renderFormByType = (type) => {
   //   let xhtml = null;
@@ -18,32 +16,13 @@ const TamHoanForm = forwardRef((props, ref) => {
   //   return xhtml;
   // };
 
-  // const handleOnChange = (val, opt) => {
-  //   console.log(opt);
-  //   setSelectType(opt);
-  //   if (props.onFinishScreen) {
-  //     props.onFinishScreen(opt);
-  //   }
-  // };
-  const handleChangle = (val) => {
-    // setProductSelect(val);
-    let opt = {
-      key: '6268e6d6973cec53fcbb4080',
-      value: '6268e6d6973cec53fcbb4080',
-      children: 'Đăng ký tạm ngưng kinh doanh',
-      type: '1',
-    };
-    // setSelectType(opt);
+  const handleChange = (val, opt) => {
+    setSelectType(opt);
     if (props.onFinishScreen) {
       props.onFinishScreen(opt);
     }
-    //   {
-    //     "key": "6268e6d6973cec53fcbb4080",
-    //     "value": "6268e6d6973cec53fcbb4080",
-    //     "children": "Đăng ký tạm ngưng kinh doanh",
-    //     "type": "1"
-    // }
   };
+
   return (
     <Form ref={ref} layout="vertical">
       <Form.Item
@@ -54,10 +33,10 @@ const TamHoanForm = forwardRef((props, ref) => {
           [styles.active]: props.current === 0,
         })}
       >
-        <Select onChange={(val) => handleChangle(val)} placeholder="Bấm vào đây">
+        <Select onSelect={(val,opt) => handleChange(val,opt)} placeholder="Bấm vào đây">
           {props.data?.map((item) => {
             return (
-              <Select.Option key={item._id} value={item._id}>
+              <Select.Option key={item._id} value={item._id} {...item}>
                 {item.name}
               </Select.Option>
             );
@@ -87,7 +66,7 @@ const TamHoanForm = forwardRef((props, ref) => {
         </Select>
       </Form.Item> */}
       {/* {selectType?.type && renderFormByType(selectType?.type)} */}
-      <TamNgungKinhDoanh ref={ref} current={props.current} index={1} />
+      <TamNgungKinhDoanh ref={ref} current={props.current} index={1} data={selectType} />
     </Form>
   );
 });

@@ -1,11 +1,11 @@
 import { CaretLeftOutlined, CaretRightOutlined, DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import React, { memo, useCallback, useEffect, useState } from "react";
-import { LAYOUT_ROUTER, UserRouter } from "../../../contants/Route";
-import styles from "./styles.module.scss";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthAction, CommonAction } from "src/store/actions";
+import { UserRouter } from "../../../contants/Route";
+import styles from "./styles.module.scss";
 
 const { Sider } = Layout;
 
@@ -67,7 +67,7 @@ const UserSidebar = (props) => {
           </Menu.Item>
 
           {renderSidebar(UserRouter)}
-          <Menu.Item onClick={() => signOut()} icon={<DesktopOutlined />}>
+          <Menu.Item key="/logout" onClick={() => signOut()} icon={<DesktopOutlined />}>
             Đăng xuất
           </Menu.Item>
         </Menu>
