@@ -1,5 +1,3 @@
-
-
 const UY_QUYEN = {
   approve: {
     title: 'Ủy quyền',
@@ -225,7 +223,6 @@ const THAY_DOI_THONG_TIN_DANG_KI_THUE_FORM = {
   },
 };
 
-
 const CHANGE_INFO_FORM = {
   base_inform: {
     title: 'Thông tin doanh nghiệp',
@@ -390,6 +387,11 @@ const PENDING_FORM = {
         president_2: 'Tên thành viên HĐQT thứ 2',
         president_3: 'Tên thành viên HĐQT thứ 3',
       },
+      contribute_members: {
+        name: 'Nhập tên Chủ tịch HĐTV',
+        capital: 'Vốn góp',
+        capital_percent: 'chiếm % vốn điều lệ',
+      },
       branch: {
         branch_name: 'Tên chi nhánh/văn phòng đại diện/địa điểm kinh doanh (ghi bằng chữ in hoa)',
         resp_office: 'Mã số thuế chi nhánh/văn phòng đại diện/địa điểm kinh doanh',
@@ -446,7 +448,6 @@ const LABEL = {
 
   uy_quyen: { ...UY_QUYEN },
 };
-
 
 export {
   LABEL,

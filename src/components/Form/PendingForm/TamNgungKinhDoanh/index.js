@@ -15,17 +15,15 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
   // const { type } = props?.data;
   const [type, setType] = useState();
   const handleChange = (e, pathname) => {
-    ref.current.setFieldsValue({
-      pending: {
-        approve: {
-          [pathname]: e.target.value?.toUpperCase(),
-        },
+    ref.current.setFields([
+      {
+        name: [...BASE_FORM, pathname],
+        value: e.target.value.toUpperCase(),
       },
-    });
+    ]);
   };
 
   useEffect(() => {
-    console.log(props);
     if (props.data) {
       setType(props.data.type);
     }
@@ -39,14 +37,9 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         {
           label: PENDING_FORM.approve.fields.list_president.president,
           name: 'president',
-        },
-        {
-          label: PENDING_FORM.approve.fields.list_president.president_2,
-          name: 'president_2',
-        },
-        {
-          label: PENDING_FORM.approve.fields.list_president.president_3,
-          name: 'president_3',
+          options: {
+            toUpperCase: true,
+          },
         },
       ];
       // BASE_FORM, listForm, listName, addBtn, formLength;
@@ -57,11 +50,51 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
           <CCInput label={PENDING_FORM.approve.fields.main_legal} name={[...BASE_FORM, 'main_legal']} />
 
           <CCListForm
+            label="Hội đồng quản trị"
             BASE_FORM={BASE_FORM}
             listForm={listForm}
             formLength={5}
+            defaultLength={3}
             btnText="Thêm thành viên HĐQT (nếu có)"
             listName="list_president"
+            ref={ref}
+          />
+        </>
+      );
+    } else if (type === '2') {
+      let listForm = [
+        {
+          label: PENDING_FORM.approve.fields.contribute_members.name,
+          name: 'name',
+          options: {
+            toUpperCase: true,
+          },
+        },
+        {
+          label: PENDING_FORM.approve.fields.contribute_members.capital,
+          name: 'capital',
+        },
+        {
+          label: PENDING_FORM.approve.fields.contribute_members.capital_percent,
+          name: 'capital_percent',
+        },
+      ];
+      // BASE_FORM, listForm, listName, addBtn, formLength;
+
+      xhtml = (
+        <>
+          <CCInput label={PENDING_FORM.approve.fields.location} name={[...BASE_FORM, 'location']} />
+          <CCInput label={PENDING_FORM.approve.fields.main_legal} name={[...BASE_FORM, 'main_legal']} />
+
+          <CCListForm
+            label="Hội đồng thành viên"
+            BASE_FORM={BASE_FORM}
+            listForm={listForm}
+            formLength={5}
+            defaultLength={2}
+            btnText="Thêm thành viên góp vốn (nếu có)"
+            listName="contribute_members"
+            ref={ref}
           />
         </>
       );

@@ -4,7 +4,6 @@ import { forwardRef, useState } from 'react';
 import styles from './styles.module.scss';
 import TamNgungKinhDoanh from './TamNgungKinhDoanh';
 const TamHoanForm = forwardRef((props, ref) => {
-
   const [selectType, setSelectType] = useState();
 
   // const renderFormByType = (type) => {
@@ -33,7 +32,7 @@ const TamHoanForm = forwardRef((props, ref) => {
           [styles.active]: props.current === 0,
         })}
       >
-        <Select onSelect={(val,opt) => handleChange(val,opt)} placeholder="Bấm vào đây">
+        <Select onSelect={(val, opt) => handleChange(val, opt)} placeholder="Bấm vào đây">
           {props.data?.map((item) => {
             return (
               <Select.Option key={item._id} value={item._id} {...item}>
