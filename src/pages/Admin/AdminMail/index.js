@@ -1,34 +1,34 @@
-import { DeleteOutlined, FormOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Drawer, message, Popover, Row, Table, Tooltip } from "antd";
-import parser from "html-react-parser";
-import { useEffect, useState } from "react";
-import TemplateMail from "src/components/Form/TemplateMail";
-import AdminMailService from "src/service/AdminService/AdminMailService";
-import styles from "./styles.module.scss";
+import { DeleteOutlined, FormOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Drawer, message, Popover, Row, Table, Tooltip } from 'antd';
+import parser from 'html-react-parser';
+import { useEffect, useState, memo } from 'react';
+import TemplateMail from 'src/components/Form/TemplateMail';
+import AdminMailService from 'src/service/AdminService/AdminMailService';
+import styles from './styles.module.scss';
 function ListTemplateMail(props) {
   // const router = useRouter();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [drawer, setDrawer] = useState({
-    title: "",
+    title: '',
     visible: false,
     component: null,
     width: 0,
   });
   const fetchTemplateMail = async (page = 1) => {
-    setLoading(true);
-    let params = { page: page };
     try {
+      let params = { page: page };
+      setLoading(true);
       let res = await AdminMailService.getTemplate(params);
       if (res.data.status === 200) {
-        setData(res.data.data);
+        setData(res.data.data); // render 1 lan
       } else {
         message.error(res.data.message);
       }
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setLoading(false); // render 2 lan
     }
   };
 
@@ -39,9 +39,9 @@ function ListTemplateMail(props) {
   const addTemplate = () => {
     setDrawer({
       ...drawer,
-      title: "Thêm mẫu mới",
+      title: 'Thêm mẫu mới',
       visible: true,
-      width: "500px",
+      width: '500px',
       component: <TemplateMail onClose={onClose} type={1} onFinishScreen={() => fetchTemplateMail()} />,
     });
   };
@@ -49,9 +49,9 @@ function ListTemplateMail(props) {
   const editTemplate = (record) => {
     setDrawer({
       ...drawer,
-      title: "Chỉnh sửa mẫu",
+      title: 'Chỉnh sửa mẫu',
       visible: true,
-      width: "500px",
+      width: '500px',
       component: (
         <TemplateMail
           data={record}
@@ -85,6 +85,7 @@ function ListTemplateMail(props) {
       fetchTemplateMail();
     }
   };
+  console.log('render');
 
   return (
     <Card
@@ -114,36 +115,36 @@ function ListTemplateMail(props) {
         scroll={{ x: 1200 }}
       >
         <Table.Column
-          width={"20%"}
+          width={'20%'}
           title="Mẫu Email"
           dataIndex="name"
           render={(val, record, i) => (
-            <Tooltip title={record.name} color={"#108ee9"} key={"#108ee9"}>
+            <Tooltip title={record.name} color={'#108ee9'} key={'#108ee9'}>
               {record.name}
             </Tooltip>
           )}
         />
-        <Table.Column width={"20%"} title="Subject" dataIndex="subject" render={(val, record, i) => record.subject} />
+        <Table.Column width={'20%'} title="Subject" dataIndex="subject" render={(val, record, i) => record.subject} />
         <Table.Column
           title="Nội dung Email"
-          width={"50%"}
+          width={'50%'}
           render={(val, record, i) => (
             <div className={styles.tableContent}>
               <Popover
-                content={<div className={styles.popover}>{parser(record?.content || "")}</div>}
-                color={"#108ee9"}
-                key={"#108ee9"}
-                title={record.name || ""}
+                content={<div className={styles.popover}>{parser(record?.content || '')}</div>}
+                color={'#108ee9'}
+                key={'#108ee9'}
+                title={record.name || ''}
                 placement="top"
               >
-                {parser(record?.content || "")}
+                {parser(record?.content || '')}
               </Popover>
             </div>
           )}
         />
 
         <Table.Column
-          width={"10%"}
+          width={'10%'}
           title="Action"
           render={(val, record, i) => (
             <Row>
@@ -174,4 +175,4 @@ function ListTemplateMail(props) {
   );
 }
 
-export default ListTemplateMail;
+export default memo(ListTemplateMail);

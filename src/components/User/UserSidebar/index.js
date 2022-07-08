@@ -1,11 +1,11 @@
-import { CaretLeftOutlined, CaretRightOutlined, DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AuthAction, CommonAction } from "src/store/actions";
-import { UserRouter } from "../../../contants/Route";
-import styles from "./styles.module.scss";
+import { CaretLeftOutlined, CaretRightOutlined, DesktopOutlined, PieChartOutlined } from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthAction, CommonAction } from 'src/store/actions';
+import { UserRouter } from '../../../contants/Route';
+import styles from './styles.module.scss';
 
 const { Sider } = Layout;
 
@@ -23,10 +23,10 @@ const UserSidebar = (props) => {
   };
 
   useEffect(() => {
-    if (location.pathname.includes("/user/san-pham")) setCurrent("/user/san-pham");
+    if (location.pathname.includes('/user/san-pham')) setCurrent('/user/san-pham');
     else setCurrent(location.pathname);
   }, [location]);
-  
+
   const changeTitle = (item) => {
     dispatch(CommonAction.titleChange(item.title));
   };
@@ -45,9 +45,9 @@ const UserSidebar = (props) => {
 
   const signOut = async () => {
     await dispatch(AuthAction.AuthLogout());
-    navigate("/");
+    navigate('/');
   };
-
+  console.log('render Sidebar');
   return (
     <>
       <Sider
@@ -55,15 +55,15 @@ const UserSidebar = (props) => {
         collapsible
         collapsed={collapsed}
         onCollapse={onCollapse}
-        breakpoint={"md"}
+        breakpoint={'md'}
         reverseArrow={true}
         trigger={<div className={styles.trigger}>{!collapsed ? <CaretLeftOutlined /> : <CaretRightOutlined />}</div>}
         className={styles.sidebar}
       >
         <div className="logo" style={{ height: 64 }} />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={[current]} selectedKeys={[current]}>
-          <Menu.Item key={"/"} icon={<PieChartOutlined />}>
-            <Link to={"/"}>Trang chủ</Link>
+          <Menu.Item key={'/'} icon={<PieChartOutlined />}>
+            <Link to={'/'}>Trang chủ</Link>
           </Menu.Item>
 
           {renderSidebar(UserRouter)}

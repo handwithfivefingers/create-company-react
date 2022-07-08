@@ -47,19 +47,6 @@ const CCInput = forwardRef((props, ref) => {
         </Form.Item>
       );
     case 'date':
-      // return (
-      //   <Form.Item name={props.name} label={props?.label || ' '} key={props?.key} layout={props?.layout}>
-      //     <DatePicker
-      //       style={{ ...props.style, width: '100%' }}
-      //       format="DD/MM/YYYY"
-      //       placeholder={props?.placeholder}
-      //       autoComplete={props?.autocomplete || 'off'}
-      //       inputReadOnly={props?.inputReadOnly || true}
-      //       onChange={props?.onChange}
-      //       {...rest}
-      //     />
-      //   </Form.Item>
-      // );
       if (props?.layout === 'horizontal') {
         return (
           <div className={styles.formHorizontal}>
@@ -79,7 +66,7 @@ const CCInput = forwardRef((props, ref) => {
         );
       } else {
         return (
-          <Form.Item name={props.name} label={props?.label || ' '} key={props?.key} layout={props?.layout}>
+          <Form.Item name={props.name} label={props?.label || ' '} key={props?.key}>
             <DatePicker
               style={{ ...props.style, width: '100%' }}
               format="DD/MM/YYYY"
@@ -118,7 +105,6 @@ const CCInput = forwardRef((props, ref) => {
       if (props?.onDropdownVisibleChange) {
         option = props.options();
       }
-
       return (
         <Form.Item name={name} label={label || ' '}>
           <Select
@@ -143,17 +129,34 @@ const CCInput = forwardRef((props, ref) => {
         </Form.Item>
       );
     default:
-      return (
-        <Form.Item value={value} name={name} label={label || ' '} key={props?.key}>
-          <Input
-            onChange={props?.onChange}
-            style={style}
-            placeholder={placeholder}
-            disabled={props?.disabled}
-            autoComplete={props?.autocomplete || 'off'}
-          />
-        </Form.Item>
-      );
+      if (props?.layout === 'horizontal') {
+        return (
+          <div className={styles.formHorizontal}>
+            <div className={styles.formTitle}>{props?.label || ' '}</div>
+            <Form.Item value={value} name={name}  key={props?.key}>
+              <Input
+                onChange={props?.onChange}
+                style={style}
+                placeholder={placeholder}
+                disabled={props?.disabled}
+                autoComplete={props?.autocomplete || 'off'}
+              />
+            </Form.Item>
+          </div>
+        );
+      } else {
+        return (
+          <Form.Item value={value} label={label || ' '} name={name} key={props?.key}>
+            <Input
+              onChange={props?.onChange}
+              style={style}
+              placeholder={placeholder}
+              disabled={props?.disabled}
+              autoComplete={props?.autocomplete || 'off'}
+            />
+          </Form.Item>
+        );
+      }
   }
 });
 

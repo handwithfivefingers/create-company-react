@@ -43,7 +43,6 @@ const SettingMail = forwardRef((props, ref) => {
       });
     }
   }, [props]);
-
   return (
     <Form ref={ref} onFinish={props.mailSubmit} layout="vertical">
       <Form.Item label={"Mail đăng kí"} name="mailRegister">

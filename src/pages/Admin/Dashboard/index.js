@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { List, Row, Skeleton, Avatar, Col, Card, message, Button } from "antd";
-import AdminDashboardService from "src/service/AdminService/AdminDashboardService";
-
+import React, { useState, useEffect } from 'react';
+import { List, Row, Skeleton, Avatar, Col, Card, message, Button } from 'antd';
+import AdminDashboardService from 'src/service/AdminService/AdminDashboardService';
+import { GrStatusWarning } from 'react-icons/gr';
+import styles from './styles.module.scss';
+import clsx from 'clsx';
 const AdminDashboard = () => {
   const [logs, setLogs] = useState([]);
   const [orderPayment, setOrderPayment] = useState([]);
@@ -16,10 +18,10 @@ const AdminDashboard = () => {
       setLoading(true);
       let { data } = await AdminDashboardService.getLogs();
       // setLogs(data);
-      console.log(data?.data);
+      // console.log(data?.data);
       if (data) setLogs(data?.data);
     } catch (err) {
-      let msg = "Đã có lỗi xảy ra, vui lòng thử lại sau";
+      let msg = 'Đã có lỗi xảy ra, vui lòng thử lại sau';
       message.error(msg);
     } finally {
       setLoading(false);
@@ -28,13 +30,13 @@ const AdminDashboard = () => {
 
   const testPayment = () => {
     const date = new Date();
-    var createDate = Date.parse(date).toString("yyyyMMddHHmmss");
-    var orderId = Date.parse(date).toString("HHmmss");
+    var createDate = Date.parse(date).toString('yyyyMMddHHmmss');
+    var orderId = Date.parse(date).toString('HHmmss');
     let params = {};
     params.createDate = createDate;
     params.orderId = orderId;
-    params.amount = 100000*100;
-    params.orderInfo = "Test payment";
+    params.amount = 100000 * 100;
+    params.orderInfo = 'Test payment';
     AdminDashboardService.testPayment(params)
       .then((res) => {
         if (res.data.status === 200) {
@@ -48,25 +50,28 @@ const AdminDashboard = () => {
 
   return (
     <Row gutter={[16, 12]}>
-      {/* <Col span={24}>
-        <Button onClick={testPayment}>Test payment</Button>
-      </Col> */}
       <Col span={16}>
         <Card title="Logs hệ thống" className="cc-card">
           <List
-            className="demo-loadmore-list"
+            className={clsx([styles.list, 'demo-loadmore-list'])}
             loading={loading}
             itemLayout="horizontal"
             dataSource={logs}
             renderItem={(item) => (
-              <List.Item actions={[]}>
+              <List.Item actions={[]}     className={clsx([styles.listItem])}>
                 <Skeleton avatar title={false} loading={loading} active>
                   <List.Item.Meta
-                    avatar={<Avatar src={item?.picture?.large} />}
-                    title={item?.createdAt}
-                    description="Chức năng quản lý request gửi về từ server"
+                    avatar={
+                      <Avatar
+                        className={clsx([styles.ava])}
+                        size={{ xs: 12, sm: 18, md: 24, lg: 30, xl: 36, xxl: 42 }}
+                        icon={<GrStatusWarning />}
+                      />
+                    }
+                    title={new Date(item?.createdAt).toString('dd/MM/yyyy HH:mm')}
+                    description={JSON.stringify(item.error)}
                   />
-                  <div>Status: {item.error?.status} </div>
+                  {/* <div>Status: {item.error?.status} </div> */}
                 </Skeleton>
               </List.Item>
             )}

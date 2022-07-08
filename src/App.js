@@ -1,5 +1,5 @@
 import { ConfigProvider } from 'antd';
-import { useContext, useEffect, useState } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, useLocation, useRoutes } from 'react-router-dom';
 import LoadingScreen from 'src/components/LoadingScreen';
@@ -48,6 +48,8 @@ const RouterComponent = (props) => {
         }
       }}
     >
+      {/* <Suspense fallback={<LoadingScreen />}></Suspense>
+       */}
       {Route}
     </div>
   );

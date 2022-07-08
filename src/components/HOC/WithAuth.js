@@ -42,6 +42,7 @@ export default function WithAuth(Component, role) {
         <Layout className={clsx(['site-layout', styles.siteLayout])}>
           <Content className={clsx(styles.mainContent)}>
             <UserHeader className="site-layout-background" style={{ padding: 0 }} />
+
             <Component {...props} />
           </Content>
           <Footer style={{ textAlign: 'center' }}>©2019 Created by Truyenmai</Footer>

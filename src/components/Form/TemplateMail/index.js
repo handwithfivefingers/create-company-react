@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Card, Form, Button, message, Spin, Input } from "antd";
-import CCEditor from "../../Editor";
-import { RiArrowGoBackFill, RiCloseFill } from "react-icons/ri";
-import styles from "./styles.module.scss";
-import axios from "src/config/axios";
-import AdminMailService from "src/service/AdminService/AdminMailService";
-import clsx from "clsx";
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { Card, Form, Button, message, Spin, Input } from 'antd';
+import CCEditor from '../../Editor';
+import { RiArrowGoBackFill, RiCloseFill } from 'react-icons/ri';
+import styles from './styles.module.scss';
+import axios from 'src/config/axios';
+import AdminMailService from 'src/service/AdminService/AdminMailService';
+import clsx from 'clsx';
 
-export default function TemplateMail(props) {
+const TemplateMail = (props) => {
   const [name, setName] = useState();
   const [content, setContent] = useState();
   const [subject, setSubject] = useState();
@@ -73,9 +73,9 @@ export default function TemplateMail(props) {
 
   return (
     <div className={styles.mail}>
-      <Input size="middle" placeholder={"Tiêu đề"} value={name} onChange={(e) => setName(e.target.value)} />
+      <Input size="middle" placeholder={'Tiêu đề'} value={name} onChange={(e) => setName(e.target.value)} />
 
-      <Input size="middle" placeholder={"Subject"} value={subject} onChange={(e) => setSubject(e.target.value)} />
+      <Input size="middle" placeholder={'Subject'} value={subject} onChange={(e) => setSubject(e.target.value)} />
 
       <CCEditor content={content} ref={editorRef} />
 
@@ -92,4 +92,7 @@ export default function TemplateMail(props) {
       </div>
     </div>
   );
-}
+  
+};
+
+export default memo(TemplateMail);

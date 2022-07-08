@@ -12,12 +12,12 @@ const UserHeader = (props) => {
 
   const commonReducer = useSelector((state) => state.commonReducer);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(new Date().toString('HH:mm:ss'));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setTime(new Date().toString('HH:mm:ss'));
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <PageHeader

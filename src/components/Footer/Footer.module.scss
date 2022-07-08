@@ -7,4 +7,9 @@
       margin: 5px;
     }
   }
+  :global {
+    .ant-row {
+      margin: 0 !important; 
+    }
+  }
 }

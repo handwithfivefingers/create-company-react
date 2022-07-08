@@ -1,16 +1,14 @@
-import { CaretLeftOutlined, CaretRightOutlined, PieChartOutlined } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
+import { CaretLeftOutlined, CaretRightOutlined, PieChartOutlined } from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
 // import { signOut } from "next-auth/react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-
-import React, { useEffect, useState } from "react";
-import { RiLogoutCircleLine } from "react-icons/ri";
-import { AdminRouter } from "src/contants/Route";
-import styles from "./styles.module.scss";
-import { useDispatch } from "react-redux";
-import { AuthAction } from "src/store/actions";
+import { memo, useEffect, useState } from 'react';
+import { RiLogoutCircleLine } from 'react-icons/ri';
+import { useDispatch } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AdminRouter } from 'src/contants/Route';
+import { AuthAction } from 'src/store/actions';
+import styles from './styles.module.scss';
 const { Sider } = Layout;
-const { SubMenu } = Menu;
 
 const AdminSidebar = () => {
   const [collapse, setCollapse] = useState(false);
@@ -24,8 +22,9 @@ const AdminSidebar = () => {
   };
   const signOut = async () => {
     await dispatch(AuthAction.AuthLogout());
-    navigate("/");
+    navigate('/');
   };
+
   const renderSidebar = (route) => {
     let xhtml = null;
     xhtml = route.map((item, i) => {
@@ -37,10 +36,10 @@ const AdminSidebar = () => {
               <Link
                 to={item.path}
                 style={{
-                  display: "flex",
+                  display: 'flex',
                   flex: 1,
-                  width: "100%",
-                  color: "#fff",
+                  width: '100%',
+                  color: '#fff',
                 }}
               >
                 {item.name}
@@ -60,7 +59,7 @@ const AdminSidebar = () => {
     return xhtml;
   };
   useEffect(() => {
-    if (location.pathname.includes("/admin/order")) setCurrent("/admin/order");
+    if (location.pathname.includes('/admin/order')) setCurrent('/admin/order');
     else setCurrent(location.pathname);
   }, [location]);
   return (
@@ -75,8 +74,8 @@ const AdminSidebar = () => {
       >
         <div className="logo" style={{ height: 64 }} />
         <Menu theme="dark" defaultSelectedKeys={[current]} selectedKeys={[current]} mode="inline">
-          <Menu.Item key={"/"} icon={<PieChartOutlined />}>
-            <Link to={"/"}>Trang chủ</Link>
+          <Menu.Item key={'/'} icon={<PieChartOutlined />}>
+            <Link to={'/'}>Trang chủ</Link>
           </Menu.Item>
           {renderSidebar(AdminRouter)}
           <Menu.Item key="/logout" onClick={() => signOut()} icon={<RiLogoutCircleLine />}>
@@ -88,4 +87,4 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default memo(AdminSidebar);
