@@ -11,13 +11,15 @@ import CCListForm from 'src/components/CCListForm';
 const BASE_FORM = ['pending', 'approve'];
 
 const TamNgungKinhDoanh = forwardRef((props, ref) => {
+  
   const [objective, setObjective] = useState('');
-  // const { type } = props?.data;
+
   const [type, setType] = useState();
+
   const handleChange = (e, pathname) => {
     ref.current.setFields([
       {
-        name: [...BASE_FORM, pathname],
+        name: [pathname],
         value: e.target.value.toUpperCase(),
       },
     ]);
@@ -36,6 +38,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
       let listForm = [
         {
           label: PENDING_FORM.approve.fields.list_president.president,
+          placeholder: 'NGUYỄN VĂN A',
           name: 'president',
           options: {
             toUpperCase: true,
@@ -51,9 +54,11 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
 
       xhtml = (
         <>
-          <CCInput label={PENDING_FORM.approve.fields.location} name={[...BASE_FORM, 'location']} />
-
-          {/* <CCInput label={PENDING_FORM.approve.fields.main_legal} name={[...BASE_FORM, 'main_legal']} /> */}
+          <CCInput
+            label={PENDING_FORM.approve.fields.location}
+            name={[...BASE_FORM, 'location']}
+            placeholder="Địa chỉ trụ sở chính"
+          />
 
           <CCListForm
             label="Hội đồng quản trị"
@@ -71,6 +76,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
       let listForm = [
         {
           label: PENDING_FORM.approve.fields.contribute_members.name,
+          placeholder: 'NGUYỄN VĂN A',
           name: 'name',
           options: {
             toUpperCase: true,
@@ -83,6 +89,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         },
         {
           label: PENDING_FORM.approve.fields.contribute_members.capital,
+          placeholder: '80,000,000',
           name: 'capital',
           options: {
             column: 12,
@@ -91,6 +98,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         },
         {
           label: PENDING_FORM.approve.fields.contribute_members.capital_percent,
+          placeholder: '80',
           name: 'capital_percent',
           options: {
             column: 12,
@@ -102,9 +110,11 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
 
       xhtml = (
         <>
-          <CCInput label={PENDING_FORM.approve.fields.location} name={[...BASE_FORM, 'location']} />
-
-          {/* <CCInput label={PENDING_FORM.approve.fields.main_legal} name={[...BASE_FORM, 'main_legal']} /> */}
+          <CCInput
+            label={PENDING_FORM.approve.fields.location}
+            name={[...BASE_FORM, 'location']}
+            placeholder="Địa chỉ trụ sở chính"
+          />
 
           <CCListForm
             label="Hội đồng thành viên"
@@ -132,12 +142,17 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         name={[...BASE_FORM, 'company_name']}
         label="Nhập tên doanh nghiệp"
         placeholder="CÔNG TY TNHH DỊCH VỤ TƯ VẤN WARREN B"
-        onChange={(e) => handleChange(e, 'company_name')}
+        onChange={(e) => handleChange(e, [...BASE_FORM, 'company_name'])}
       />
 
       <CCInput name={[...BASE_FORM, 'mst']} label="Mã số doanh nghiệp hoặc Mã số thuế" placeholder="0316184427" />
 
-      <CCInput name={[...BASE_FORM, 'org_person']} label="Tên người đại diện pháp luật" placeholder="Nguyễn Văn A" />
+      <CCInput
+        name={[...BASE_FORM, 'org_person']}
+        label="Người đại diện pháp luật (nhập đầy đủ họ và tên)"
+        placeholder="NGUYỄN VĂN A"
+        onChange={(e) => handleChange(e, [...BASE_FORM, 'org_person'])}
+      />
 
       {type && renderFormByType()}
 
@@ -160,7 +175,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
               </>
             }
             placeholder="CHI NHÁNH CÔNG TY TNHH DỊCH VỤ TƯ VẤN WARREN B"
-            onChange={(e) => handleChange(e, 'branch_name')}
+            onChange={(e) => handleChange(e, [...BASE_FORM, 'branch_name'])}
           />
           <CCInput
             name={[...BASE_FORM, 'resp_office']}

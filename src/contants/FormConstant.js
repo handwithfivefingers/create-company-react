@@ -407,7 +407,8 @@ const PENDING_FORM = {
         end: 'Thời gian đăng ký tạm ngưng đến',
       },
       reason: 'Lý do tạm ngưng',
-      org_person: 'Tên người đại diện pháp luật/người đứng đầu chi nhánh',
+      // org_person: 'Tên người đại diện pháp luật/người đứng đầu chi nhánh',
+      org_person: 'Người đại diện pháp luật (nhập đầy đủ họ và tên)'
     },
   },
 };

@@ -22,7 +22,7 @@ const CCListForm = forwardRef((props, ref) => {
   };
 
   const handleRenderLabel = (formItem, i) => {
-    console.log(formItem, i );
+    // console.log(formItem, i);
     let index = formItem.options?.compare?.index;
     if (index && index <= i + 1) {
       return formItem?.options?.customLabel + (i + 1);
@@ -35,7 +35,7 @@ const CCListForm = forwardRef((props, ref) => {
 
     xhtml = listForm.map((formItem, index) => {
       let column = formItem.options.column;
-      console.log(listForm, formItem)
+      // console.log(listForm, formItem);
       return (
         <Col span={column || 24}>
           <CCInput
@@ -45,6 +45,7 @@ const CCListForm = forwardRef((props, ref) => {
             type={formItem?.type}
             onChange={(e) => handleChange(e, formItem, i)}
             layout={formItem?.options?.layout}
+            placeholder={formItem?.placeholder}
           />
         </Col>
       );
@@ -61,7 +62,6 @@ const CCListForm = forwardRef((props, ref) => {
               {fields?.map((field, i) => (
                 <>
                   <Col lg={12} md={12} sm={24} xs={24} key={[field, i + 1]}>
-
                     <Row gutter={[16, 12]}>{renderListform(listForm, field, i)}</Row>
 
                     <Space style={{ display: 'flex', justifyContent: 'center' }}>

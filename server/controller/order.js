@@ -153,6 +153,7 @@ exports.orderWithPayment = async (req, res) => {
     const { selectProduct } = data;
 
     let price = await calcPrice(selectProduct._id);
+
     let files = findKeysByObject(data, selectProduct?.type);
 
     if (!price) return errHandler('Product not found', res);
@@ -186,7 +187,7 @@ exports.orderWithPayment = async (req, res) => {
 
     return paymentOrder(req, res, params);
   } catch (err) {
-    console.log('orderWithPayment error');
+    console.log('orderWithPayment error', err);
     return errHandler(err, res);
   }
 };
@@ -285,38 +286,42 @@ const calcPrice = async (productId) => {
 };
 
 const findKeysByObject = (obj, type = null) => {
-  if (!type) return;
-  if (!obj) return;
+  try {
+    if (!type) return;
+    if (!obj) return;
 
-  let files = [];
+    let files = [];
 
-  for (let props in obj) {
-    let list = getListFiles(props);
+    for (let props in obj) {
+      let list = getListFiles(props);
 
-    let keys = Object.keys(obj?.[props]).map((key) => key);
+      let keys = Object.keys(obj?.[props]).map((key) => key);
 
-    let len = keys.length;
-    if (keys && list) {
-      for (let i = 0; i < len; i++) {
-        let key = keys[i];
+      let len = keys.length;
+      if (keys && list) {
+        for (let i = 0; i < len; i++) {
+          let key = keys[i];
 
-        let objProperty = list?.[key];
+          let objProperty = list?.[key];
 
-        let isFunction = objProperty && typeof objProperty === 'function';
-        if (isFunction) {
-          // explicit property
-          if (props === 'create_company') {
-            let opt = obj[props][key]?.present_person; // get selected item
-            files = [...files, ...objProperty(type, props, key, opt)];
-          } else {
-            console.log(data);
-            files = [...files, ...objProperty(type, props, key)];
+          let isFunction = objProperty && typeof objProperty === 'function';
+          if (isFunction) {
+            // explicit property
+            if (props === 'create_company') {
+              let opt = obj[props][key]?.present_person; // get selected item
+              files = [...files, ...objProperty(type, props, key, opt)];
+            } else {
+
+              files = [...files, ...objProperty(type, props, key)];
+            }
           }
         }
       }
     }
+    // console.log(files);
+    files = uniqBy(files, 'path').filter((item) => item);
+    return files;
+  } catch (err) {
+    console.log('findKeysByObject', err);
   }
-  // console.log(files);
-  files = uniqBy(files, 'path').filter((item) => item);
-  return files;
 };
