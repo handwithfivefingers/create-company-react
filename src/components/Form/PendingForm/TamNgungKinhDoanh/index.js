@@ -11,7 +11,6 @@ import CCListForm from 'src/components/CCListForm';
 const BASE_FORM = ['pending', 'approve'];
 
 const TamNgungKinhDoanh = forwardRef((props, ref) => {
-  
   const [objective, setObjective] = useState('');
 
   const [type, setType] = useState();
@@ -19,7 +18,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
   const handleChange = (e, pathname) => {
     ref.current.setFields([
       {
-        name: [pathname],
+        name: Array.isArray(pathname) ? [...pathname] : [pathname],
         value: e.target.value.toUpperCase(),
       },
     ]);
@@ -149,7 +148,9 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
 
       <CCInput
         name={[...BASE_FORM, 'org_person']}
-        label="Người đại diện pháp luật (nhập đầy đủ họ và tên)"
+        label={
+          <div dangerouslySetInnerHTML={{ __html: '</>Người đại diện pháp luật <i>(nhập đầy đủ họ và tên)</i></>' }} />
+        }
         placeholder="NGUYỄN VĂN A"
         onChange={(e) => handleChange(e, [...BASE_FORM, 'org_person'])}
       />
