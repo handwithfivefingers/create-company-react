@@ -88,7 +88,7 @@ const FormProduct = (props) => {
             // onChange={handleChange}
             optionFilterProp="children"
             // defaultValue={[]}
-            filterOption={(input, option) => option.children.join("").toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterOption={(input, option) => option.children?.join("")?.toLowerCase()?.indexOf(input.toLowerCase()) >= 0}
           >
             {cateData?.map((item) => (
               <Select.Option key={item._id} value={item._id}>
@@ -105,7 +105,7 @@ const FormProduct = (props) => {
             allowClear
             // defaultValue={props?.data?.parentId?.map((item) => item._id) || []}
             optionFilterProp="children"
-            filterOption={(input, option) => option.children.join("").toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterOption={(input, option) => option.children?.join("")?.toLowerCase()?.indexOf(input.toLowerCase()) >= 0}
             style={{ width: "100%" }}
             placeholder="Please select"
           >

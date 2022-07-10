@@ -234,7 +234,12 @@ const AdminOrder = () => {
       >
         <Table
           dataSource={data._order}
-          loading={loading}
+          // loading={loading}
+          loading={{
+            spinning: loading,
+            tip: 'Loading...',
+            delay: 100,
+          }}
           size="small"
           bordered
           className="table"

@@ -12,6 +12,9 @@ const { assign, last } = require('lodash');
 
 const libre = require('libreoffice-convert');
 
+const qs = require('query-string');
+const crypto = require('crypto');
+
 require('datejs');
 
 libre.convertAsync = require('util').promisify(libre.convert);
@@ -84,7 +87,7 @@ const saveFileAsDocx = async (buffer, ext) => {
 
 const specialFields = ['company_main_career', 'company_opt_career'];
 
-const dateFields = ['doc_time_provide', 'birth_day', 'time_provide', 'start','end'];
+const dateFields = ['doc_time_provide', 'birth_day', 'time_provide', 'start', 'end'];
 
 const objToKeys = (obj, baseObj, path = null) => {
   const regex = /(?=.*\d[\s\S][-T:.Z])\w+/g;
@@ -135,9 +138,6 @@ const objToKeys = (obj, baseObj, path = null) => {
 };
 
 const dateConvert = (dateString) => {
-  //   return Date.parse(dateString).toString("dd/mm/yyyy");
-  //   Date.i18n.setLanguage("vi-VN");
-  //   console.log(Date);
   return Date.parse(dateString).toString(`dd/MM/yyyy`);
 };
 
@@ -186,19 +186,18 @@ exports.flattenObject = (data) => {
 
       delete _template.create_company_approve_legal_respon;
     }
-    if(props)
-
-    /// Handle create_company_approve_origin_person_doc_type
-    // {#doc_type==1}X{/}
-    // doc_type == 1 ? 'CMND'
-    // doc_type == 2 ? 'CCCD'
-    // doc_type == 3 ? Hộ Chiếu
-    // doc_type == 4 ? Loại khác ....
-    //Channge info
-    // Legal Representative
-    if (props === 'change_info_legal_representative_doc_place_provide') {
-      _template.lr_doc_place_provide = _template[props];
-    }
+    if (props)
+      if (props === 'change_info_legal_representative_doc_place_provide') {
+        /// Handle create_company_approve_origin_person_doc_type
+        // {#doc_type==1}X{/}
+        // doc_type == 1 ? 'CMND'
+        // doc_type == 2 ? 'CCCD'
+        // doc_type == 3 ? Hộ Chiếu
+        // doc_type == 4 ? Loại khác ....
+        //Channge info
+        // Legal Representative
+        _template.lr_doc_place_provide = _template[props];
+      }
     if (props === 'change_info_legal_representative_new_title') {
       _template.lr_new_title = _template[props];
     }
@@ -231,3 +230,68 @@ exports.removeListFiles = (attachments, path = null) => {
     }
   }
 };
+
+exports.getVpnParams = (req, params) => {
+  let { createDate, orderId, amount, orderInfo } = params;
+
+  var ipAddr =
+    req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress;
+
+  var tmnCode = process.env.TMN_CODE_VPN;
+
+  var secretKey = process.env.SECRET_KEY_VPN;
+
+  var returnUrl =
+    process.env.NODE_ENV === 'DEV' ? 'http://localhost:3001/api/order/payment/url_return' : process.env.RETURN_URL;
+
+  var orderType = req?.body?.orderType || 'billpayment';
+
+  var locale = (Boolean(req.body?.language) && req.body?.language) || 'vn';
+
+  var vnp_Params = {
+    vnp_Version: '2.1.0',
+    vnp_Command: 'pay',
+    vnp_TmnCode: tmnCode,
+    vnp_Locale: locale,
+    vnp_CurrCode: 'VND',
+    vnp_TxnRef: orderId,
+    vnp_OrderInfo: orderInfo,
+    vnp_OrderType: orderType,
+    vnp_Amount: amount,
+    vnp_ReturnUrl: returnUrl,
+    vnp_IpAddr: ipAddr,
+    vnp_CreateDate: createDate,
+  };
+
+  vnp_Params = sortObject(vnp_Params);
+
+  var signData = qs.stringify(vnp_Params, { encode: false });
+
+  var hmac = crypto.createHmac('sha512', secretKey);
+
+  var signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest('hex');
+
+  vnp_Params['vnp_SecureHash'] = signed;
+  return vnp_Params;
+};
+
+const sortObject = (obj) => {
+  var sorted = {};
+  var str = [];
+  var key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      str.push(encodeURIComponent(key));
+    }
+  }
+  str.sort();
+  for (key = 0; key < str.length; key++) {
+    sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
+  }
+  return sorted;
+};
+
+exports.module = { sortObject };

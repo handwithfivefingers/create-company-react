@@ -17,8 +17,6 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       let { data } = await AdminDashboardService.getLogs();
-      // setLogs(data);
-      // console.log(data?.data);
       if (data) setLogs(data?.data);
     } catch (err) {
       let msg = 'Đã có lỗi xảy ra, vui lòng thử lại sau';
@@ -28,25 +26,25 @@ const AdminDashboard = () => {
     }
   };
 
-  const testPayment = () => {
-    const date = new Date();
-    var createDate = Date.parse(date).toString('yyyyMMddHHmmss');
-    var orderId = Date.parse(date).toString('HHmmss');
-    let params = {};
-    params.createDate = createDate;
-    params.orderId = orderId;
-    params.amount = 100000 * 100;
-    params.orderInfo = 'Test payment';
-    AdminDashboardService.testPayment(params)
-      .then((res) => {
-        if (res.data.status === 200) {
-          return (window.location.href = res.data.url);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const testPayment = () => {
+  //   const date = new Date();
+  //   var createDate = Date.parse(date).toString('yyyyMMddHHmmss');
+  //   var orderId = Date.parse(date).toString('HHmmss');
+  //   let params = {};
+  //   params.createDate = createDate;
+  //   params.orderId = orderId;
+  //   params.amount = 100000 * 100;
+  //   params.orderInfo = '6298edcfe6214c530533b255';
+  //   AdminDashboardService.testPayment(params)
+  //     .then((res) => {
+  //       if (res.data.status === 200) {
+  //         return (window.location.href = res.data.url);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   return (
     <Row gutter={[16, 12]}>
@@ -54,11 +52,11 @@ const AdminDashboard = () => {
         <Card title="Logs hệ thống" className="cc-card">
           <List
             className={clsx([styles.list, 'demo-loadmore-list'])}
-            loading={loading}
+            // loading={loading}
             itemLayout="horizontal"
             dataSource={logs}
             renderItem={(item) => (
-              <List.Item actions={[]}     className={clsx([styles.listItem])}>
+              <List.Item actions={[]} className={clsx([styles.listItem])}>
                 <Skeleton avatar title={false} loading={loading} active>
                   <List.Item.Meta
                     avatar={
@@ -69,7 +67,7 @@ const AdminDashboard = () => {
                       />
                     }
                     title={new Date(item?.createdAt).toString('dd/MM/yyyy HH:mm')}
-                    description={JSON.stringify(item.error)}
+                    description={<span style={{wordBreak:'break-word'}}>{JSON.stringify(item.error)}</span>}
                   />
                   {/* <div>Status: {item.error?.status} </div> */}
                 </Skeleton>
@@ -82,7 +80,7 @@ const AdminDashboard = () => {
         <Card title="Đơn hàng đã thanh toán">
           <List
             className="demo-loadmore-list"
-            loading={loading}
+            // loading={loading}
             itemLayout="horizontal"
             dataSource={orderPayment}
             renderItem={(item) => (
@@ -102,7 +100,7 @@ const AdminDashboard = () => {
         <Card title="Đơn hàng vừa tạo">
           <List
             className="demo-loadmore-list"
-            loading={loading}
+            // loading={loading}
             itemLayout="horizontal"
             dataSource={orderLatest}
             renderItem={(item) => (

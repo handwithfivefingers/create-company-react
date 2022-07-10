@@ -1,41 +1,39 @@
-const express = require("express");
+const express = require('express');
 
-const env = require("dotenv");
+const env = require('dotenv');
 
 const app = express();
 
-const path = require("path");
+const path = require('path');
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const cors = require("cors");
+const cors = require('cors');
 
-const AppRouter = require("./server/route");
+const AppRouter = require('./server/route');
 
-var cookieParser = require("cookie-parser");
+var cookieParser = require('cookie-parser');
 
-const { task } = require("./server/controller/service/cronjob");
+const { task } = require('./server/controller/service/cronjob');
 
-const {requireSignin} = require('./server/middleware');
+const { requireSignin } = require('./server/middleware');
 
 env.config();
 
-const { NODE_ENV , PORT , DEV_PORT } = process.env;
+const { NODE_ENV, PORT, DEV_PORT } = process.env;
 
 const RUNTIME_PORT = NODE_ENV === 'development' ? DEV_PORT : PORT;
 
 const mongoseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex:true
-}
+  useCreateIndex: true,
+};
 
 // DB
-mongoose
-  .connect(process.env.DATABASE_URL, mongoseOptions)
-  .then(() => {
-    console.log("DB connected");
-  });
+mongoose.connect(process.env.DATABASE_URL, mongoseOptions).then(() => {
+  console.log('DB connected');
+});
 
 // middleware
 
@@ -46,7 +44,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://app.thanhlapcongtyonline.vn"],
+    origin: ['http://localhost:3000', 'https://app.thanhlapcongtyonline.vn'],
   })
 );
 
@@ -54,32 +52,34 @@ global.__basedir = __dirname;
 
 // Routes middleware
 
-app.use("/public",  express.static(path.join(__dirname, "uploads")));
+app.use('/public', express.static(path.join(__dirname, 'uploads')));
 
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, 'build')));
 
-app.use("/api", AppRouter);
+app.use('/api', AppRouter);
 
-app.use("/robots.txt", (req,res) => {
-  let robotFile = path.join(__dirname, "uploads", 'robots.txt')
-  res.sendFile(robotFile)
+app.use('/robots.txt', (req, res) => {
+  let robotFile = path.join(__dirname, 'uploads', 'robots.txt');
+  res.sendFile(robotFile);
 });
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
+if (process.env.NODE_ENV !== 'development') {
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+}
 
 // Handling 500
 app.use((err, req, res, next) => {
   res.status(500).send({
     error: err.stack,
-    message: "Internal Server Error",
+    message: 'Internal Server Error',
   });
 });
 
 // Cron running ;
-if(process.env.NODE_ENV !== 'development') {
-  task.start()
+if (process.env.NODE_ENV !== 'development') {
+  task.start();
 }
 
 app.listen(RUNTIME_PORT, () => {

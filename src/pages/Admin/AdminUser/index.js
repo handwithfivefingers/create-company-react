@@ -41,10 +41,14 @@ const AdminUser = () => {
     });
   };
   return (
-    <Card title="Quản lý người dùng" className='cc-card'>
+    <Card title="Quản lý người dùng" className="cc-card">
       <Table
         size="small"
-        loading={loading}
+        loading={{
+          spinning: loading,
+          tip: 'Loading...',
+          delay: 100,
+        }}
         dataSource={data}
         pagination={{
           className: styles.pagination,

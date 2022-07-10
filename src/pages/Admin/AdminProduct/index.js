@@ -22,7 +22,6 @@ const AdminProduct = (props) => {
     component: null,
   });
 
-
   useEffect(() => {
     getScreenData();
     getCateData();
@@ -116,19 +115,19 @@ const AdminProduct = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const onEventAdd = (params) => {
-    AdminProductService.createProduct(params)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setLoading(false);
-        getScreenData();
-      });
+  const onEventAdd = async (params) => {
+    try {
+      await AdminProductService.createProduct(params);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+      getScreenData();
+    }
   };
 
   const onHandleDelete = (record) => {
+    console.log(record);
     Modal.confirm({
       title: 'Bạn có chắc ?',
       content: `Muốn xóa sản phẩm ${record.name}`,
@@ -176,17 +175,17 @@ const AdminProduct = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const deleteCareer = (record) => {
-    AdminProductService.deleteCareer(record._id)
-      .then((res) => {
-        if (res.data.status === 200) {
-          message.success(res.data.message);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        getCareer();
-      });
+  const deleteCareer = async (record) => {
+    try {
+      let res = await AdminProductService.deleteCareer(record._id);
+      if (res.data.status === 200) {
+        message.success(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      getCareer();
+    }
   };
 
   // Categories
@@ -227,30 +226,29 @@ const AdminProduct = (props) => {
     }
   };
 
-  const onUpdateCate = (data) => {
-    setLoading(true);
-    AdminProductService.updateCategories(data)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        getCateData();
-        setLoading(false);
-      });
+  const onUpdateCate = async (data) => {
+    try {
+      setLoading(true);
+      await AdminProductService.updateCategories(data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      getCateData();
+      setLoading(false);
+    }
   };
 
-  const addCategory = (val) => {
-    AdminProductService.createCategory(val)
-      .then((res) => {
-        if (res.data.status === 201) {
-          message.success(res.data.message);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        getCateData();
-      });
+  const addCategory = async (val) => {
+    try {
+      let res = await AdminProductService.createCategory(val);
+      if (res.data.status === 201) {
+        message.success(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      getCateData();
+    }
   };
 
   const closeModal = () => {
@@ -282,7 +280,17 @@ const AdminProduct = (props) => {
       >
         <Tabs defaultActiveKey="1">
           <TabPane tab="Danh mục" key="1">
-            <Table loading={loading} dataSource={cateData} pagination={false} size="small" bordered>
+            <Table
+              loading={{
+                spinning: loading,
+                tip: 'Loading...',
+                delay: 100,
+              }}
+              dataSource={cateData}
+              pagination={false}
+              size="small"
+              bordered
+            >
               <Table.Column title="Danh mục" render={(val, record, index) => record.name} />
               <Table.Column title="Giá" width={'25%'} render={(val, record, index) => record.price} />
               <Table.Column title="Loại" width="100px" render={(val, record, index) => record.type} />
@@ -302,7 +310,11 @@ const AdminProduct = (props) => {
           </TabPane>
           <TabPane tab="Sản phẩm" key="2">
             <Table
-              loading={loading}
+              loading={{
+                spinning: loading,
+                tip: 'Loading...',
+                delay: 100,
+              }}
               bordered
               dataSource={data}
               pagination={false}

@@ -90,7 +90,7 @@ const UserProductItem = (props) => {
         // if (state) {
         //   let type = parseInt(state?.products[0]?.type);
         //   setData({ ...res.data, type });
-        // } else 
+        // } else
         setData(res.data);
       }
     } catch (err) {
@@ -472,8 +472,7 @@ const UserProductItem = (props) => {
 
   const handleSavePending = () => {
     let val = formRef.current.getFieldsValue();
-    // let uy_quyen = uyquyenRef.current.getFieldsValue();
-
+ 
     let params = {
       track: {
         step: 1,
@@ -485,7 +484,6 @@ const UserProductItem = (props) => {
         // ...uy_quyen,
       },
     };
-    // console.log(params);
     saveService(params);
   };
 

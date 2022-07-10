@@ -45,7 +45,6 @@ const UserOrder = () => {
   };
 
   const handlePurchase = (record) => {
-
     const date = new Date();
     var createDate = dateformat(date, 'yyyymmddHHmmss');
     var orderId = dateformat(date, 'HHmmss');
@@ -108,7 +107,12 @@ const UserOrder = () => {
         size="small"
         bordered
         dataSource={data}
-        loading={loading}
+        // loading={loading}
+        loading={{
+          spinning: loading,
+          tip: 'Loading...',
+          delay: 100,
+        }}
         rowKey={(record) => record._id}
         scroll={{ x: 1000 }}
       >

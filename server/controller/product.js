@@ -1,9 +1,9 @@
 // import User from "./../model/user";
 
-const { Product, Category, Career } = require("./../model");
-const { updatedHandler, errHandler, successHandler } = require("../response");
-const lodash = require("lodash");
-const slugify = require("slugify");
+const { Product, Category, Career } = require('./../model');
+const { updatedHandler, errHandler, successHandler } = require('../response');
+const lodash = require('lodash');
+const slugify = require('slugify');
 exports.createProduct = async (req, res) => {
   try {
     const obj = {
@@ -28,9 +28,9 @@ exports.createProduct = async (req, res) => {
 
     await _product.save();
 
-    return successHandler(data, res);
+    return successHandler('', res);
   } catch (err) {
-    console.log("createProduct error");
+    console.log('createProduct error', err);
     return errHandler(err, res);
   }
 };
@@ -59,32 +59,35 @@ exports.editProduct = async (req, res) => {
 
     return updatedHandler(product, res);
   } catch (err) {
-    console.log("editProduct error");
+    console.log('editProduct error');
     return errHandler(err, res);
   }
 };
 
 exports.fetchProduct = async (req, res) => {
   try {
-    let _product = await Product.find({}).populate("categories", "name").populate("parentId", "name");
+    let _product = await Product.find({}).populate('categories', 'name').populate('parentId', 'name');
     let newData = filterData(_product);
     let lastData = filterCaregories(newData);
     return successHandler(lastData, res);
   } catch (err) {
-    console.log("fetchProduct error");
+    console.log('fetchProduct error');
     return errHandler(err, res);
   }
 };
 
 exports.deleteProduct = async (req, res) => {
   try {
-    const { id } = req.query;
-    const _product = await Product.findOneAndDelete({
-      slug: id,
+    const { id } = req.params;
+    console.log(id, req);
+    // return;
+    await Product.findOneAndDelete({
+      _id: id,
     });
-    return res.status(200).json({ message: "Xóa sản phẩm thành công", status: 200 });
+
+    return res.status(200).json({ message: 'Xóa sản phẩm thành công', status: 200 });
   } catch (err) {
-    console.log("deleteProduct error");
+    console.log('deleteProduct error');
     return errHandler(err, res);
   }
 };
@@ -97,7 +100,7 @@ exports.getProductBySlug = async (req, res) => {
       categories: {
         $in: [_cate._id],
       },
-    }).populate("categories");
+    }).populate('categories');
 
     let newData = filterData(_product);
 
@@ -105,7 +108,7 @@ exports.getProductBySlug = async (req, res) => {
 
     return successHandler(lastData, res, _cate);
   } catch (err) {
-    console.log("getProductBySlug error");
+    console.log('getProductBySlug error');
 
     return errHandler(err, res);
   }

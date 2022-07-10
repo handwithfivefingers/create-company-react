@@ -24,7 +24,7 @@ const AdminProductService = {
     return axios.post(api_path.createProducts, params);
   },
   deleteProduct: (params) => {
-    return axios.post(`${api_path.deleteProducts}/${params._id}`, params);
+    return axios.delete(`${api_path.deleteProducts}/${params._id}`, params);
   },
   getCategory: () => {
     return axios.get(`${api_path.getCategories}`);

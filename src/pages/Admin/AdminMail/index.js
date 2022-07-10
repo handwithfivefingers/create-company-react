@@ -102,7 +102,11 @@ function ListTemplateMail(props) {
         size="small"
         bordered
         dataSource={data._template}
-        loading={loading}
+        loading={{
+          spinning: loading,
+          tip: 'Loading...',
+          delay: 100,
+        }}
         pagination={{
           current: data.current_page,
           pageSize: 10,

@@ -1,32 +1,28 @@
-const { errHandler, successHandler, permisHandler, existHandler } = require("../response");
-const { Product, Category, Career, User, Order } = require("./../model");
-const { sendmailWithAttachments } = require("./sendmail");
-const shortid = require("shortid");
-const mongoose = require("mongoose");
-const qs = require("query-string");
-const crypto = require("crypto");
-const { ResponseCode } = require("../common/ResponseCode");
-const { list_files } = require("../contants/File");
-const { uniqBy } = require("lodash");
+const { errHandler, successHandler, permisHandler, existHandler } = require('../response');
+const { Product, Category, Career, User, Order } = require('./../model');
+const { sendmailWithAttachments } = require('./sendmail');
+const shortid = require('shortid');
+const mongoose = require('mongoose');
+const qs = require('query-string');
+const crypto = require('crypto');
+const { ResponseCode } = require('../common/ResponseCode');
+const { getListFiles } = require('../contants/File');
+const { uniqBy } = require('lodash');
+const { getVpnParams } = require('../common/helper');
 const PAGE_SIZE = 10;
 
 // Get getOrdersFromUser
 
-// const url =
-//   process.env.NODE_ENV === "development"
-//     ? "http://localhost:3001/user/result?"
-//     : "https://app.thanhlapcongtyonline.vn/user/result?";
-
 exports.getOrdersFromUser = async (req, res) => {
   try {
     let _order = await Order.find({ orderOwner: req.id })
-      .populate("products", "name type")
-      .populate("orderOwner", "name")
-      .sort("-createdAt");
+      .populate('products', 'name type')
+      .populate('orderOwner', 'name')
+      .sort('-createdAt');
     // console.log(_order);
     return successHandler(_order, res);
   } catch (err) {
-    console.log("getOrdersFromUser error");
+    console.log('getOrdersFromUser error');
     return errHandler(err, res);
   }
 };
@@ -38,7 +34,7 @@ exports.getOrders = async (req, res) => {
 
     let current_page = (parseInt(page) - 1) * PAGE_SIZE;
 
-    const email = new RegExp(condition?.name, "i");
+    const email = new RegExp(condition?.name, 'i');
 
     let _user = await User.find({
       $and: [
@@ -47,19 +43,19 @@ exports.getOrders = async (req, res) => {
           // role: "User",
         },
       ],
-    }).select("_id");
+    }).select('_id');
 
     let newCondition = _user.map((item) => ({ orderOwner: item._id }));
 
-    if (req.role === "admin") {
+    if (req.role === 'admin') {
       let _order = await Order.find({
         $or: newCondition.length > 0 ? newCondition : [{}],
       })
-        .populate("products", "name")
-        .populate("orderOwner", "name email")
+        .populate('products', 'name')
+        .populate('orderOwner', 'name email')
         .skip(current_page)
         .limit(PAGE_SIZE)
-        .sort("-createdAt");
+        .sort('-createdAt');
 
       const count = await Order.find({
         $or: newCondition.length > 0 ? newCondition : [{}],
@@ -69,7 +65,7 @@ exports.getOrders = async (req, res) => {
     }
     return getOrder(req, res);
   } catch (err) {
-    console.log("getOrders error");
+    console.log('getOrders error');
     return errHandler(err, res);
   }
 };
@@ -77,14 +73,14 @@ exports.getOrders = async (req, res) => {
 const getOrder = async (req, res) => {
   try {
     let _order = await Order.find({ orderOwner: req.id })
-      .populate("products", "name")
-      .populate("orderOwner", "name")
+      .populate('products', 'name')
+      .populate('orderOwner', 'name')
       // .limit(10)
-      .sort("-createdAt");
+      .sort('-createdAt');
 
     return successHandler(_order, res);
   } catch (err) {
-    console.log("getOrder error");
+    console.log('getOrder error');
     return errHandler(err, res);
   }
 };
@@ -93,15 +89,15 @@ exports.getOrderBySlug = async (req, res) => {
   const { id } = req.params;
 
   try {
-    if (req.role === "admin") {
-      const _order = await Order.findById(id).populate("products", "name type");
+    if (req.role === 'admin') {
+      const _order = await Order.findById(id).populate('products', 'name type');
 
       return successHandler(_order, res);
     }
 
     return permisHandler(res);
   } catch (err) {
-    console.log("getOrderBySlug error");
+    console.log('getOrderBySlug error');
 
     return errHandler(err, res);
   }
@@ -114,6 +110,12 @@ exports.createOrders = async (req, res) => {
 
     const { selectProduct, selectChildProduct } = data;
 
+    let files = findKeysByObject(data, selectProduct?.type);
+    let price = await calcPrice(selectProduct._id);
+
+    if (!price) return errHandler('Product not found', res);
+    if (!files) return errHandler(err, res);
+
     let newData = {
       track,
       payment,
@@ -121,32 +123,12 @@ exports.createOrders = async (req, res) => {
       categories,
       orderOwner: req.id,
       name: shortid.generate(),
-      products: selectChildProduct ? selectChildProduct : selectProduct,
+      products: selectProduct._id,
+      files,
+      price,
     };
 
-    let files = findKeysByObject(data, list_files).flat();
-
-    newData.files =  uniqBy(files, "name").filter((item) => item);;
-
-    // Handle Calculate Price with multi Product
-
-    let price = 0;
-
-    // Push Multi Product
-
-    if (selectChildProduct) {
-      // By child product
-      // price += await calcPrice(selectChildProduct);
-    }
-
-    if (selectProduct) {
-      // By Category product
-      price += await calcPrice(selectProduct);
-    }
-
-    newData.price = price;
-
-    newData.slug = newData.name + "-" + shortid.generate();
+    newData.slug = newData.name + '-' + shortid.generate();
 
     let _save = new Order({ ...newData });
 
@@ -154,7 +136,7 @@ exports.createOrders = async (req, res) => {
 
     return successHandler(_obj, res);
   } catch (err) {
-    console.log("createOrders error");
+    console.log('createOrders error', err);
     return errHandler(err, res);
   }
 };
@@ -168,7 +150,13 @@ exports.orderWithPayment = async (req, res) => {
 
     //  khai báo
     const { track, payment, data, categories } = req.body;
-    const { selectProduct, selectChildProduct } = data;
+    const { selectProduct } = data;
+
+    let price = await calcPrice(selectProduct._id);
+    let files = findKeysByObject(data, selectProduct?.type);
+
+    if (!price) return errHandler('Product not found', res);
+    if (!files) return errHandler(err, res);
 
     var newData = {
       track,
@@ -177,30 +165,12 @@ exports.orderWithPayment = async (req, res) => {
       categories,
       orderOwner: req.id,
       name: shortid.generate(),
-      products: selectChildProduct ? selectChildProduct : selectProduct,
+      products: selectProduct,
+      price,
+      files,
     };
 
-    let price = 0;
-
-    // Handle Calculate Price with multi Product
-
-    if (selectChildProduct) {
-      // By child product
-      // price += await calcPrice(selectChildProduct);
-    }
-
-    if (selectProduct) {
-      // By Category product
-      price += await calcPrice(selectProduct);
-    }
-
-    let files = findKeysByObject(data, list_files).flat();
-
-    newData.files = uniqBy(files, "name").filter((item) => item);
-
-    newData.price = price;
-
-    newData.slug = newData.name + "-" + shortid.generate();
+    newData.slug = newData.name + '-' + shortid.generate();
 
     let _save = new Order({ ...newData });
 
@@ -216,7 +186,7 @@ exports.orderWithPayment = async (req, res) => {
 
     return paymentOrder(req, res, params);
   } catch (err) {
-    console.log("orderWithPayment error");
+    console.log('orderWithPayment error');
     return errHandler(err, res);
   }
 };
@@ -225,11 +195,11 @@ exports.getUrlReturn = async (req, res) => {
   // console.log(req.query, " Get URL Return");
   var vnp_Params = req.query;
 
-  var secureHash = vnp_Params["vnp_SecureHash"];
+  var secureHash = vnp_Params['vnp_SecureHash'];
 
-  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params['vnp_SecureHash'];
 
-  delete vnp_Params["vnp_SecureHashType"];
+  delete vnp_Params['vnp_SecureHashType'];
 
   vnp_Params = sortObject(vnp_Params);
 
@@ -239,21 +209,24 @@ exports.getUrlReturn = async (req, res) => {
 
   var signData = qs.stringify(vnp_Params, { encode: false });
 
-  var hmac = crypto.createHmac("sha512", secretKey);
+  var hmac = crypto.createHmac('sha512', secretKey);
 
-  var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
-  
-  let url =  process.env.NODE_ENV === "development" ? `http://localhost:3000/user/result?` : `https://app.thanhlapcongtyonline.vn/user/result?`
+  var signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest('hex');
+
+  let url =
+    process.env.NODE_ENV === 'development'
+      ? `http://localhost:3000/user/result?`
+      : `https://app.thanhlapcongtyonline.vn/user/result?`;
 
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-    let code = vnp_Params["vnp_ResponseCode"];
+    let code = vnp_Params['vnp_ResponseCode'];
     const query = qs.stringify({
       code,
       text: ResponseCode[code],
     });
 
-    if (code === "00") {
+    if (code === '00') {
       // Success
       const _update = {
         payment: Number(1),
@@ -263,18 +236,18 @@ exports.getUrlReturn = async (req, res) => {
 
       // console.log("getUrlReturn updated Success");
 
-      let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate("orderOwner", "_id name email");
+      let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate('orderOwner', '_id name email');
 
       // console.log(_order);
 
       let params = {
         email: _order.orderOwner.email,
-        subject: "Thanh toán thành công",
+        subject: 'Thanh toán thành công',
         content: `Chào ${_order?.orderOwner?.name},<br />
         Quý khách đã thanh toán thành công.
         Thông tin giấy tờ sẽ được gửi sớm nhất có thể, quý khách vui lòng đợi trong giây lát.
         <br/> Xin cảm ơn`,
-        type: "any",
+        type: 'any',
       };
       await sendmailWithAttachments(req, res, params);
 
@@ -290,112 +263,60 @@ exports.getUrlReturn = async (req, res) => {
 };
 
 const paymentOrder = (req, res, params) => {
-  let { createDate, orderId, amount, orderInfo } = params;
-
-  var ipAddr =
-    req.headers["x-forwarded-for"] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress;
-
-  var tmnCode = process.env.TMN_CODE_VPN;
-
-  var secretKey = process.env.SECRET_KEY_VPN;
+  let vnp_Params = getVpnParams(req, params);
 
   var vnpUrl = process.env.VNPAY_URL;
 
-
-
-  var returnUrl =process.env.NODE_ENV === 'DEV' ? 'http://localhost:3001/api/order/payment/url_return': process.env.RETURN_URL;
-
-  var orderType = req?.body?.orderType || "billpayment";
-
-  var locale = (Boolean(req.body?.language) && req.body?.language) || "vn";
-
-  var vnp_Params = {
-    vnp_Version: "2.1.0",
-    vnp_Command: "pay",
-    vnp_TmnCode: tmnCode,
-    vnp_Locale: locale,
-    vnp_CurrCode: "VND",
-    vnp_TxnRef: orderId,
-    vnp_OrderInfo: orderInfo,
-    vnp_OrderType: orderType,
-    vnp_Amount: amount,
-    vnp_ReturnUrl: returnUrl,
-    vnp_IpAddr: ipAddr,
-    vnp_CreateDate: createDate,
-  };
-
-  vnp_Params = sortObject(vnp_Params);
-
-  var signData = qs.stringify(vnp_Params, { encode: false });
-
-  var hmac = crypto.createHmac("sha512", secretKey);
-
-  var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
-
-  vnp_Params["vnp_SecureHash"] = signed;
-
-  vnpUrl += "?" + qs.stringify(vnp_Params, { encode: false });
+  vnpUrl += '?' + qs.stringify(vnp_Params, { encode: false });
 
   return res.status(200).json({ status: 200, url: vnpUrl });
 };
 
 // common
-function sortObject(obj) {
-  var sorted = {};
-  var str = [];
-  var key;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      str.push(encodeURIComponent(key));
-    }
-  }
-  str.sort();
-  for (key = 0; key < str.length; key++) {
-    sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
-  }
-  return sorted;
-}
 
-const calcPrice = async (productArray) => {
-  if (typeof productArray === "string") {
-    let _product = await Product.findOne({ _id: productArray }).select("price");
-    return _product.price;
-  }
+const calcPrice = async (productId) => {
+  if (!productId) return null;
 
-  let allProduct = productArray?.map(async (_id) => {
-    let _product = await Product.findOne({ _id: _id }).select("price");
-    return _product;
-  });
+  let _prod = await Product.findOne({ _id: productId }).select('price');
 
-  return await Promise.all(allProduct)
-    .then((res) => res.reduce((prev, current) => (prev += current.price), 0))
-    .catch((err) => console.log(err));
+  if (!_prod) return null;
+
+  return _prod.price;
 };
 
-const findKeysByObject = (obj, listfiles) => {
+const findKeysByObject = (obj, type = null) => {
+  if (!type) return;
   if (!obj) return;
-  let files;
-  // console.log("findKeysByObject", files, obj);
-  for (let prop in obj) {
-    // prop => create_company || change_info || pending || disolution
-    if (listfiles[prop]) {
-      files = Object.keys(obj[prop]).map((key) => {
-        if (obj[prop][key]) {
-          if (typeof listfiles[prop][key] === "object" && !Array.isArray(listfiles[prop][key])) {
-            // Check listfiles must be a Object
-            if (obj[prop][key].present_person) {
-              let person = obj[prop][key].present_person;
-              return listfiles[prop][key][person];
-            } else {
-              return listfiles[prop][key].personal;
-            }
-          } else return listfiles[prop][key];
+
+  let files = [];
+
+  for (let props in obj) {
+    let list = getListFiles(props);
+
+    let keys = Object.keys(obj?.[props]).map((key) => key);
+
+    let len = keys.length;
+    if (keys && list) {
+      for (let i = 0; i < len; i++) {
+        let key = keys[i];
+
+        let objProperty = list?.[key];
+
+        let isFunction = objProperty && typeof objProperty === 'function';
+        if (isFunction) {
+          // explicit property
+          if (props === 'create_company') {
+            let opt = obj[props][key]?.present_person; // get selected item
+            files = [...files, ...objProperty(type, props, key, opt)];
+          } else {
+            console.log(data);
+            files = [...files, ...objProperty(type, props, key)];
+          }
         }
-      });
+      }
     }
   }
+  // console.log(files);
+  files = uniqBy(files, 'path').filter((item) => item);
   return files;
 };

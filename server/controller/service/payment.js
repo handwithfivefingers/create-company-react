@@ -5,15 +5,12 @@ const { sendmailWithAttachments } = require('../sendmail');
 const { ResponseCode } = require('../../common/ResponseCode');
 const crypto = require('crypto');
 const { startSession } = require('mongoose');
+const { getVpnParams, sortObject } = require('../../common/helper');
 
 exports.testPayment = (req, res) => {
-  // console.log(req.body);
   let { createDate, orderId, amount, orderInfo } = req.body;
-  // console.log(createDate, orderId, amount, orderInfo);
   return paymentOrder(req, res, { createDate, orderId, amount, orderInfo });
 };
-// https://app.thanhlapcongtyonline.vn/api/order/payment/undefined/user/order?
-// `${process.env.REACT_APP_BASEHOST}/user/order?${query}
 
 const urlReturn =
   process.env.NODE_ENV === 'development'
@@ -24,12 +21,11 @@ const paymentOrder = async (req, res, params) => {
   const session = await startSession();
 
   try {
-    console.log('coming payment');
     let { createDate, orderId, amount, orderInfo } = params;
 
     let _update = {
       orderInfo, // _id
-      createDate,
+      orderCreated: createDate,
       orderId,
       amount,
     };
@@ -39,77 +35,26 @@ const paymentOrder = async (req, res, params) => {
 
     await Order.findOneAndUpdate({ _id: orderInfo }, _update, { session, new: true });
 
-    var ipAddr =
-      req.headers['x-forwarded-for'] ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      req.connection.socket.remoteAddress;
-
-    var tmnCode = process.env.TMN_CODE_VPN;
-
-    var secretKey = process.env.SECRET_KEY_VPN;
+    let vnp_Params = getVpnParams(req, params);
 
     var vnpUrl = process.env.VNPAY_URL;
-    // var vnpUrl = url;
-    // var returnUrl = "http://localhost:3001/api/return_vnp";
-
-    var returnUrl = urlReturn;
-
-    var orderType = req?.body?.orderType || 'billpayment';
-
-    var locale = 'vn';
-
-    var vnp_Params = {
-      vnp_Version: '2.1.0',
-      vnp_Command: 'pay',
-      vnp_TmnCode: tmnCode,
-      vnp_Locale: locale,
-      vnp_CurrCode: 'VND',
-      vnp_TxnRef: orderId,
-      vnp_OrderInfo: orderInfo,
-      vnp_OrderType: orderType,
-      vnp_Amount: amount,
-      vnp_ReturnUrl: returnUrl,
-      vnp_IpAddr: ipAddr,
-      vnp_CreateDate: createDate,
-    };
-
-    vnp_Params = sortObject(vnp_Params);
-
-    var signData = qs.stringify(vnp_Params, { encode: false });
-
-    var hmac = crypto.createHmac('sha512', secretKey);
-
-    var signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest('hex');
-
-    vnp_Params['vnp_SecureHash'] = signed;
 
     vnpUrl += '?' + qs.stringify(vnp_Params, { encode: false });
 
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    await session.commitTransaction();
+    session.endSession();
     return res.status(200).json({ status: 200, url: vnpUrl });
   } catch (err) {
-    console.log(err);
-    return errHandler(err, res);
-  } finally {
+    console.log('paymentOrder', err);
+
+    await session.abortTransaction();
     session.endSession();
+
+    return errHandler(err, res);
   }
 };
-
-function sortObject(obj) {
-  var sorted = {};
-  var str = [];
-  var key;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      str.push(encodeURIComponent(key));
-    }
-  }
-  str.sort();
-  for (key = 0; key < str.length; key++) {
-    sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
-  }
-  return sorted;
-}
 
 exports.getUrlReturn = async (req, res) => {
   console.log(req.query, ' Get URL Return');
@@ -214,32 +159,3 @@ exports.checkStatus = async (req, res) => {
     res.status(200).json({ RspCode: '97', Message: 'Fail checksum' });
   }
 };
-/**
- VNPAY_URL
-RETURN_URL
-TMN_CODE_VPN
-SECRET_KEY_VPN
- */
-
-// exports.QueryDr = async (req, res) => {
-//   var secretKey = process.env.SECRET_KEY_VPN;
-
-//   var vnp_TmnCode = process.env.TMN_CODE_VPN;
-
-//   let params = {
-//     vnp_Version: "2.1.0",
-//     vnp_Command: "pay",
-//     vnp_TmnCode,
-//     vnp_TxnRef: "",
-//     vnp_OrderInfo: "",
-//     vnp_TransDate: "",
-//     vnp_CreateDate: "",
-//     vnp_IpAddr: "",
-//     vnp_SecureHashType: "",
-//     vnp_SecureHash: "",
-//   };
-
-//   var hmac = crypto.createHmac("sha512", secretKey);
-
-//   var signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
-// };

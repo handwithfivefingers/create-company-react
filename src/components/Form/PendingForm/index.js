@@ -15,8 +15,14 @@ const TamHoanForm = forwardRef((props, ref) => {
   //   return xhtml;
   // };
 
-  const handleChange = (val, opt) => {
+  const handleChange = (val, opt, pathName) => {
     setSelectType(opt);
+    ref.current.setFields([
+      {
+        name: [pathName],
+        value: opt,
+      },
+    ]);
     if (props.onFinishScreen) {
       props.onFinishScreen(opt);
     }
@@ -32,7 +38,7 @@ const TamHoanForm = forwardRef((props, ref) => {
           [styles.active]: props.current === 0,
         })}
       >
-        <Select onSelect={(val, opt) => handleChange(val, opt)} placeholder="Bấm vào đây">
+        <Select onSelect={(val, opt) => handleChange(val, opt, 'selectProduct')} placeholder="Bấm vào đây">
           {props.data?.map((item) => {
             return (
               <Select.Option key={item._id} value={item._id} {...item}>
