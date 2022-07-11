@@ -22,7 +22,7 @@ const AdminDashboard = () => {
       // console.log(data);
       // if (data) setLogs(data?.data);
       let { _logs, output, error } = data.data;
-      console.log(_logs, output, error);
+      // console.log(_logs, output, error);
       setLogs((state) => ({
         ...state,
         _logs,
@@ -118,7 +118,7 @@ const AdminDashboard = () => {
                           />
                         }
                         title={item.slice(0, 28)}
-                        description={<span style={{ wordBreak: 'break-word' }}>{item.slice(29)}</span>}
+                        description={<span style={{ wordBreak: 'break-word' }}>{ item.slice(29) }</span>}
                       />
                       {/* <div>Status: {item.error?.status} </div> */}
                     </Skeleton>
