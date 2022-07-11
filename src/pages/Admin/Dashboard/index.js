@@ -17,7 +17,16 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       let { data } = await AdminDashboardService.getLogs();
-      if (data) setLogs(data?.data);
+      // console.log(data);
+      // if (data) setLogs(data?.data);
+      let { _logs, out, error } = data.data;
+      console.log(_logs, out, error);
+      setLogs((state) => ({
+        ...state,
+        _logs,
+        out,
+        error,
+      }));
     } catch (err) {
       let msg = 'Đã có lỗi xảy ra, vui lòng thử lại sau';
       message.error(msg);
@@ -54,7 +63,7 @@ const AdminDashboard = () => {
             className={clsx([styles.list, 'demo-loadmore-list'])}
             // loading={loading}
             itemLayout="horizontal"
-            dataSource={logs}
+            dataSource={logs._logs}
             renderItem={(item) => (
               <List.Item actions={[]} className={clsx([styles.listItem])}>
                 <Skeleton avatar title={false} loading={loading} active>
@@ -67,7 +76,7 @@ const AdminDashboard = () => {
                       />
                     }
                     title={new Date(item?.createdAt).toString('dd/MM/yyyy HH:mm')}
-                    description={<span style={{wordBreak:'break-word'}}>{JSON.stringify(item.error)}</span>}
+                    description={<span style={{ wordBreak: 'break-word' }}>{JSON.stringify(item.error)}</span>}
                   />
                   {/* <div>Status: {item.error?.status} </div> */}
                 </Skeleton>

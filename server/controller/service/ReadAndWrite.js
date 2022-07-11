@@ -15,9 +15,13 @@ exports.checkingOrder = async (req, res) => {
   if (process.env.NODE_ENV !== 'development') return res.status(200).json({ message: 'ngonnn' });
   try {
     // let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
-    let _order = await Order.findOne({ _id: '62cbe5e335a0a01480249432' }).populate('orderOwner', 'email');
+
+    let _order = await Order.findOne({ _id: '62cbf36f1ca8ce71ae3f558b' }).populate('orderOwner', 'email');
+
     console.log('coming', _order);
+
     if (_order) return handleConvertFile(_order, req, res);
+
     return res.status(200).json({ data: [] });
   } catch (err) {
     console.log('checkingOrder err');
@@ -36,6 +40,8 @@ const handleConvertFile = async (order, req, res) => {
 
     if (files) {
       let _contentOrder = flattenObject(data);
+
+      console.log(_contentOrder);
 
       for (let file of files) {
         // console.log("start");
