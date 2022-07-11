@@ -74,8 +74,8 @@ const getPendingFiles = (type, key) => {
       path: '/files/pending/cp/pending_quyet_dinh_tam_ngung_kinh_doanh.docx',
     },
     pending_bienban_cp: {
-      name: 'Biên bản tạm nhưng kinh doanh',
-      path: '/files/pending/cp/pending_bien_ban_tam_ngung_kinh_doanh.docx',
+      name: 'Biên bản họp tạm nhưng kinh doanh',
+      path: '/files/pending/cp/pending_bien_ban_hop_tam_ngung_kinh_doanh.docx',
     },
   };
   // pending_uyquyen, pending_quyetdinh, pending_a_b -> Quyết định tạm ngưng 1 tv
