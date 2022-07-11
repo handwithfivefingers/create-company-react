@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Tag, Button, Modal, Tooltip, Drawer, Form, message } from 'antd';
-import Tracking from '../../../components/Tracking';
-import { MdCreditCard } from 'react-icons/md';
-import { number_format } from 'src/helper/Common';
-import { useSearchParams } from 'react-router-dom';
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import { FormOutlined } from '@ant-design/icons';
+import { Button, Drawer, Form, message, Modal, Table, Tag, Tooltip } from 'antd';
 import dateformat from 'dateformat';
+import { useEffect, useState } from 'react';
+import { MdCreditCard } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import styles from './styles.module.scss';
+import { number_format } from 'src/helper/Common';
 import OrderService from 'src/service/UserService/OrderService';
+import styles from './styles.module.scss';
+
 const UserOrder = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -139,13 +138,13 @@ const UserOrder = () => {
           dataIndex=""
           render={(val, record, i) => {
             // 2 Case : 22/03/2022
-            if (record.data.create_company) {
+            if (record?.data?.create_company) {
               return 'Thành lập doanh nghiệp';
-            } else if (record.data.change_info) {
+            } else if (record?.data?.change_info) {
               return 'Thay đổi thông tin';
-            } else if (record.data.pending) {
+            } else if (record?.data?.pending) {
               return 'Tạm hoãn';
-            } else if (record.data.dissolution) {
+            } else if (record?.data?.dissolution) {
               return 'Giải thể';
             }
           }}

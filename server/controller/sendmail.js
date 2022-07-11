@@ -182,6 +182,7 @@ const withFilesPath = async (params, transporter) => {
   finally {
     await Order.updateOne({ _id: rest._id }, { send: 1 });
     console.log("sendmail success");
+    
   }
 };
 

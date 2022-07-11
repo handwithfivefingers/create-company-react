@@ -1,24 +1,26 @@
-const { Order, Setting } = require("../../model");
+const { Order, Setting } = require('../../model');
 
-const libre = require("libreoffice-convert");
+const libre = require('libreoffice-convert');
 
-const { sendmailWithAttachments } = require("../sendmail");
+const { sendmailWithAttachments } = require('../sendmail');
 
-const { errHandler } = require("../../response");
+const { errHandler } = require('../../response');
 
-const { flattenObject, convertFile, removeListFiles } = require("./../../common/helper");
-const { uniqBy } = require("lodash");
+const { flattenObject, convertFile, removeListFiles } = require('./../../common/helper');
+const { uniqBy } = require('lodash');
 
-libre.convertAsync = require("util").promisify(libre.convert);
+libre.convertAsync = require('util').promisify(libre.convert);
 
 exports.checkingOrder = async (req, res) => {
+  if (process.env.NODE_ENV !== 'development') return res.status(200).json({ message: 'ngonnn' });
   try {
     // let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
-    let _order = await Order.findOne({ _id: "62bb2c0c0eeef73cbe6a17d5" }).populate("orderOwner", "email");
-    if(_order) return handleConvertFile(_order, req, res);
-    return res.status(200).json({data: []})
+    let _order = await Order.findOne({ _id: '62cbe5e335a0a01480249432' }).populate('orderOwner', 'email');
+    console.log('coming', _order);
+    if (_order) return handleConvertFile(_order, req, res);
+    return res.status(200).json({ data: [] });
   } catch (err) {
-    console.log("checkingOrder err");
+    console.log('checkingOrder err');
 
     return errHandler(err, res);
   }
@@ -30,10 +32,9 @@ const handleConvertFile = async (order, req, res) => {
   try {
     let { files, data } = order;
     let mailParams = await getMailContent(order);
-    files = uniqBy(files, "name").filter((item) => item);
+    files = uniqBy(files, 'name').filter((item) => item);
 
     if (files) {
-      
       let _contentOrder = flattenObject(data);
 
       for (let file of files) {
@@ -52,30 +53,32 @@ const handleConvertFile = async (order, req, res) => {
 
       await sendmailWithAttachments(req, res, mailParams);
 
-      return res.status(200).json({ message: "ok" });
+      return res.status(200).json({ message: 'ok' });
     }
 
     return res.status(400).json({
-      error: "Files not found",
+      error: 'Files not found',
     });
   } catch (err) {
-    console.log("handleConvertFile error");
+    console.log('handleConvertFile error');
 
     attachments.length > 0 && (await removeListFiles(attachments, true));
 
     return errHandler(err, res);
+  } finally {
+    await removeListFiles(attachments);
   }
 };
 
 const getMailContent = async (order) => {
-  let _setting = await Setting.find().populate("mailRegister mailPayment"); // -> _setting
+  let _setting = await Setting.find().populate('mailRegister mailPayment'); // -> _setting
   let mailParams;
   mailParams = {
-    email: "handgod1995@gmail.com",
+    email: 'handgod1995@gmail.com',
     removeFiles: true,
     send: 1,
     _id: order._id,
-    type: "path",
+    type: 'path',
   };
   if (_setting) {
     let { mailPayment } = _setting[0];
@@ -84,8 +87,8 @@ const getMailContent = async (order) => {
     mailParams.content = content;
     mailParams.email = order.orderOwner?.email;
   } else {
-    mailParams.subject = "Testing auto generate files";
-    mailParams.content = "Testing auto generate files";
+    mailParams.subject = 'Testing auto generate files';
+    mailParams.content = 'Testing auto generate files';
   }
   return mailParams;
 };

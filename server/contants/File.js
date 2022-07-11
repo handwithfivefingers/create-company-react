@@ -59,15 +59,18 @@ const getPendingFiles = (type, key) => {
       name: 'Phụ lục II - 19',
       path: '/files/pending/pending_File_A_B_Phuluc_II_19.docx',
     }, // phu luc 19
+
     // 2 thành viên
     pending_quyetdinh_twoPerson: {
-      name: 'BIÊN BẢN HỌP TẠM NGỪNG KINH DOANH CỦA HỘI ĐỒNG THÀNH VIÊN',
+      name: 'QUYẾT ĐỊNH TẠM NGỪNG KINH DOANH CỦA HỘI ĐỒNG THÀNH VIÊN',
       path: '/files/pending/2tv/pending_quyet_dinh_tam_ngung_kinh_doanh.docx',
     },
+    
     pending_bienban_twoPerson: {
-      name: 'QUYẾT ĐỊNH TẠM NGỪNG KINH DOANH CỦA HỘI ĐỒNG THÀNH VIÊN',
-      path: '/files/pending/2tv/pending_quyet_dinh.docx',
+      name: 'BIÊN BẢN HỌP TẠM NGỪNG KINH DOANH CỦA HỘI ĐỒNG THÀNH VIÊN',
+      path: '/files/pending/2tv/pending_bien_ban_hop_tam_ngung_kinh_doanh.docx',
     },
+
     // cổ phần
     pending_quyetdinh_cp: {
       name: 'Quyết định tạm nhưng kinh doanh',
