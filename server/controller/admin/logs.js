@@ -12,10 +12,10 @@ exports.getLogs = async (req, res) => {
 
     let out = fs.readFileSync(path.join(global.__basedir, 'uploads', 'logs', 'out.log'), 'utf8');
 
-    // console.log(error, out);
+    let output = out.split('\n').reverse().slice(1)
 
     if (_logs) {
-      return successHandler({ _logs, error, out }, res);
+      return successHandler({ _logs, error, output }, res);
     } else {
       return errHandler(_logs, res);
     }

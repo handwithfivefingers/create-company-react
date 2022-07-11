@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { List, Row, Skeleton, Avatar, Col, Card, message, Button } from 'antd';
+import { List, Row, Skeleton, Avatar, Col, Card, message, Button, Tabs } from 'antd';
 import AdminDashboardService from 'src/service/AdminService/AdminDashboardService';
 import { GrStatusWarning } from 'react-icons/gr';
 import styles from './styles.module.scss';
 import clsx from 'clsx';
+
+const { TabPane } = Tabs;
 const AdminDashboard = () => {
   const [logs, setLogs] = useState([]);
   const [orderPayment, setOrderPayment] = useState([]);
@@ -19,12 +21,12 @@ const AdminDashboard = () => {
       let { data } = await AdminDashboardService.getLogs();
       // console.log(data);
       // if (data) setLogs(data?.data);
-      let { _logs, out, error } = data.data;
-      console.log(_logs, out, error);
+      let { _logs, output, error } = data.data;
+      console.log(_logs, output, error);
       setLogs((state) => ({
         ...state,
         _logs,
-        out,
+        output,
         error,
       }));
     } catch (err) {
@@ -54,35 +56,72 @@ const AdminDashboard = () => {
   //       console.log(err);
   //     });
   // };
+  // const renderTabs = () => {
+  //   let xhtml = null;
+  //   xhtml = (
 
+  //   );
+
+  //   return xhtml;
+  // };
   return (
     <Row gutter={[16, 12]}>
       <Col span={16}>
         <Card title="Logs hệ thống" className="cc-card">
-          <List
-            className={clsx([styles.list, 'demo-loadmore-list'])}
-            // loading={loading}
-            itemLayout="horizontal"
-            dataSource={logs._logs}
-            renderItem={(item) => (
-              <List.Item actions={[]} className={clsx([styles.listItem])}>
-                <Skeleton avatar title={false} loading={loading} active>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        className={clsx([styles.ava])}
-                        size={{ xs: 12, sm: 18, md: 24, lg: 30, xl: 36, xxl: 42 }}
-                        icon={<GrStatusWarning />}
+          <Tabs defaultActiveKey="1" destroyInactiveTabPane className={styles.tabs}>
+            <TabPane tab="Truy cập" key="1">
+              <List
+                className={clsx([styles.list, 'demo-loadmore-list'])}
+                loading={loading}
+                itemLayout="horizontal"
+                dataSource={logs._logs}
+                renderItem={(item) => (
+                  <List.Item actions={[]} className={clsx([styles.listItem])}>
+                    <Skeleton avatar title={false} loading={loading} active>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar
+                            className={clsx([styles.ava])}
+                            size={{ xs: 12, sm: 18, md: 24, lg: 30, xl: 36, xxl: 42 }}
+                            icon={<GrStatusWarning />}
+                          />
+                        }
+                        title={new Date(item?.createdAt).toString('dd/MM/yyyy HH:mm')}
+                        description={<span style={{ wordBreak: 'break-word' }}>{JSON.stringify(item.error)}</span>}
                       />
-                    }
-                    title={new Date(item?.createdAt).toString('dd/MM/yyyy HH:mm')}
-                    description={<span style={{ wordBreak: 'break-word' }}>{JSON.stringify(item.error)}</span>}
-                  />
-                  {/* <div>Status: {item.error?.status} </div> */}
-                </Skeleton>
-              </List.Item>
-            )}
-          />
+                      {/* <div>Status: {item.error?.status} </div> */}
+                    </Skeleton>
+                  </List.Item>
+                )}
+              />
+            </TabPane>
+            <TabPane tab="Hệ thống" key="2">
+              <List
+                className={clsx([styles.list, 'demo-loadmore-list'])}
+                loading={loading}
+                itemLayout="horizontal"
+                dataSource={logs.output}
+                renderItem={(item) => (
+                  <List.Item actions={[]} className={clsx([styles.listItem])}>
+                    <Skeleton avatar title={false} loading={loading} active>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar
+                            className={clsx([styles.ava])}
+                            size={{ xs: 12, sm: 18, md: 24, lg: 30, xl: 36, xxl: 42 }}
+                            icon={<GrStatusWarning />}
+                          />
+                        }
+                        title={item.slice(0, 28)}
+                        description={<span style={{ wordBreak: 'break-word' }}>{item}</span>}
+                      />
+                      {/* <div>Status: {item.error?.status} </div> */}
+                    </Skeleton>
+                  </List.Item>
+                )}
+              />
+            </TabPane>
+          </Tabs>
         </Card>
       </Col>
       <Col span={8}>
