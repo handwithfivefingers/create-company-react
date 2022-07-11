@@ -67,8 +67,13 @@ const AdminDashboard = () => {
   return (
     <Row gutter={[16, 12]}>
       <Col span={16}>
-        <Card title="Logs hệ thống" className="cc-card">
-          <Tabs defaultActiveKey="1" destroyInactiveTabPane className={styles.tabs}>
+        <Card title="Logs hệ thống">
+          <Tabs
+            defaultActiveKey="1"
+            destroyInactiveTabPane
+            className={[styles.tabs, 'cc-card'].join(',')}
+            animated={{ inkBar: true, tabPane: true }}
+          >
             <TabPane tab="Truy cập" key="1">
               <List
                 className={clsx([styles.list, 'demo-loadmore-list'])}
@@ -113,7 +118,7 @@ const AdminDashboard = () => {
                           />
                         }
                         title={item.slice(0, 28)}
-                        description={<span style={{ wordBreak: 'break-word' }}>{item}</span>}
+                        description={<span style={{ wordBreak: 'break-word' }}>{item.slice(29)}</span>}
                       />
                       {/* <div>Status: {item.error?.status} </div> */}
                     </Skeleton>

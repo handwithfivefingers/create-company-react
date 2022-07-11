@@ -16,7 +16,7 @@ exports.checkingOrder = async (req, res) => {
   try {
     // let _order = await Order.findOne({ $and: [{ payment: 1, send: 0 }] }).populate("orderOwner", "email");
 
-    let _order = await Order.findOne({ _id: '62cc4bb3cbd68958773282d1' }).populate('orderOwner', 'email');
+    let _order = await Order.findOne({ _id: '62cc52eb1067ba620909f03c' }).populate('orderOwner', 'email');
 
     console.log('coming', _order);
 
