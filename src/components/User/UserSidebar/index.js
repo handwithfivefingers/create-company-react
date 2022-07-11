@@ -27,15 +27,11 @@ const UserSidebar = (props) => {
     else setCurrent(location.pathname);
   }, [location]);
 
-  const changeTitle = (item) => {
-    dispatch(CommonAction.titleChange(item.title));
-  };
-
   const renderSidebar = useCallback((route) => {
     let xhtml = null;
     xhtml = route.map((item, i) => {
       return (
-        <Menu.Item key={item.path} icon={item?.icon || <PieChartOutlined />} onClick={() => changeTitle(item)}>
+        <Menu.Item key={item.path} icon={item?.icon || <PieChartOutlined />} >
           <Link to={item.path}>{item.title}</Link>
         </Menu.Item>
       );

@@ -13,8 +13,6 @@ const BASE_FORM = ['pending', 'approve'];
 const TamNgungKinhDoanh = forwardRef((props, ref) => {
   const [objective, setObjective] = useState('');
 
-  const [type, setType] = useState();
-
   const handleChange = (e, pathname) => {
     ref.current.setFields([
       {
@@ -24,13 +22,14 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
     ]);
   };
 
-  useEffect(() => {
-    if (props.data) {
-      setType(props.data.type);
-    }
-  }, [props]);
+  // useEffect(() => {
+  //   if (props.data) {
+  //     setType(props.data.type);
+  //   }
+  // }, [props.data]);
 
-  const renderFormByType = () => {
+  const renderFormByType = (type) => {
+
     let xhtml = null;
 
     if (type === '3') {
@@ -39,6 +38,8 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
           label: PENDING_FORM.approve.fields.list_president.president,
           placeholder: 'NGUYỄN VĂN A',
           name: 'president',
+          onChange: true,
+
           options: {
             toUpperCase: true,
             compare: {
@@ -77,6 +78,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
           label: PENDING_FORM.approve.fields.contribute_members.name,
           placeholder: 'NGUYỄN VĂN A',
           name: 'name',
+          onChange: true,
           options: {
             toUpperCase: true,
             compare: {
@@ -93,6 +95,8 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
           options: {
             column: 12,
             layout: 'horizontal',
+            format: true,
+            formatter: (v) => `${new Intl.NumberFormat('en-US').format(v.replace(/,/g, ''))}`,
           },
         },
         {
@@ -102,6 +106,11 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
           options: {
             column: 12,
             layout: 'horizontal',
+            format: true,
+            formatter: (v) => `${v.replace('%', '')}%`,
+            max: 100,
+            min: 0,
+            length: 3,
           },
         },
       ];
@@ -128,6 +137,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         </>
       );
     }
+    console.log('trigger render', xhtml)
     return xhtml;
   };
 
@@ -155,7 +165,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         onChange={(e) => handleChange(e, [...BASE_FORM, 'org_person'])}
       />
 
-      {type && renderFormByType()}
+      {renderFormByType(props?.data?.type)}
 
       <CCInput
         type="select"

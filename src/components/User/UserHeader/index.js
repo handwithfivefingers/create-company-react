@@ -8,16 +8,16 @@ import styles from './styles.module.scss';
 
 const UserHeader = (props) => {
   const navigate = useNavigate();
-  const [time, setTime] = useState(new Date().toString('HH:mm:ss'));
+  const [time, setTime] = useState(new Date().toString('HH:mm'));
 
   const commonReducer = useSelector((state) => state.commonReducer);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setTime(new Date().toString('HH:mm:ss'));
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date().toString('HH:mm'));
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <PageHeader

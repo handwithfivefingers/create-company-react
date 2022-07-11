@@ -141,7 +141,7 @@ const dateConvert = (dateString) => {
   return Date.parse(dateString).toString(`dd/MM/yyyy`);
 };
 
-exports.flattenObject = (data) => {
+const flattenObject = (data) => {
   const _template = {};
   objToKeys(data, _template);
   const date = new Date();
@@ -206,7 +206,7 @@ exports.flattenObject = (data) => {
   return _template;
 };
 
-exports.convertFile = async (file, data) => {
+const convertFile = async (file, data) => {
   let buffer = await applyContent(file, data);
 
   let ext = '.pdf';
@@ -218,7 +218,7 @@ exports.convertFile = async (file, data) => {
   return pdfFile;
 };
 
-exports.removeListFiles = (attachments, path = null) => {
+const removeListFiles = (attachments, path = null) => {
   for (let attach of attachments) {
     if (fs.existsSync(attach.pdfFile)) {
       // fs.unlinkSync(attach.pdfFile);
@@ -230,8 +230,23 @@ exports.removeListFiles = (attachments, path = null) => {
     }
   }
 };
+const sortObject = (obj) => {
+  var sorted = {};
+  var str = [];
+  var key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      str.push(encodeURIComponent(key));
+    }
+  }
+  str.sort();
+  for (key = 0; key < str.length; key++) {
+    sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
+  }
+  return sorted;
+};
 
-exports.getVpnParams = (req, params) => {
+const getVpnParams = (req, params) => {
   let { createDate, orderId, amount, orderInfo } = params;
 
   var ipAddr =
@@ -278,20 +293,4 @@ exports.getVpnParams = (req, params) => {
   return vnp_Params;
 };
 
-const sortObject = (obj) => {
-  var sorted = {};
-  var str = [];
-  var key;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      str.push(encodeURIComponent(key));
-    }
-  }
-  str.sort();
-  for (key = 0; key < str.length; key++) {
-    sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
-  }
-  return sorted;
-};
-
-exports.module = { sortObject };
+module.exports = { sortObject, getVpnParams, flattenObject, convertFile, removeListFiles };

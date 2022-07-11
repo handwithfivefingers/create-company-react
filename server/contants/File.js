@@ -21,8 +21,30 @@ const getFileByPathName = (type, pathName, key, opt) =>
     dissolution: getDissolutionFiles(type, key),
   }?.[pathName]);
 
-const getPendingFiles = (type, key) => {
+const a = (pathName) => ((type, key, opt) => {
+  return {
+    // create_company
+    create_company: getCreateCompanyFiles(type, key, opt),
 
+    // change_info
+    change_info: getChangeInfoFiles(type, key, opt),
+
+    // pending
+    pending: getPendingFiles(type, key),
+
+    // dissolution
+    dissolution: getDissolutionFiles(type, key),
+  };
+}, [pathName]);
+
+
+/**
+ *
+ * @param {*} type
+ * @param {*} key
+ * @returns { Files Array}
+ */
+const getPendingFiles = (type, key) => {
   const allFiles = {
     // 1 thành viên
     pending_quyetdinh: {
@@ -185,6 +207,11 @@ const getCreateCompanyFiles = (type, key, opt = null) => {
   }
 };
 
+/**
+ * @param {*} type
+ * @param {*} key
+ * @returns { Files Array}
+ */
 const getChangeInfoFiles = (type, key) => {
   const allFiles = {
     // 1 thành viên
@@ -363,6 +390,11 @@ const getChangeInfoFiles = (type, key) => {
   }
 };
 
+/**
+ * @param {*} type
+ * @param {*} key
+ * @returns { Files Array}
+ */
 const getDissolutionFiles = (type, key) => {
   const allFiles = {
     giai_the_1: {

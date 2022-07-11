@@ -10,6 +10,7 @@ const { Content, Footer } = Layout;
 
 export default function WithAuth(Component, role) {
   return function Authenticated(props) {
+    console.log('trigger render');
     if (!props.status) {
       return <Navigate to="/" />;
     }
@@ -41,7 +42,9 @@ export default function WithAuth(Component, role) {
         <UserSidebar />
         <Layout className={clsx(['site-layout', styles.siteLayout])}>
           <Content className={clsx(styles.mainContent)}>
-            <UserHeader className="site-layout-background" style={{ padding: 0 }} />
+            <UserHeader className="site-layout-background"
+            //  style={{ padding: 0 }} 
+             />
 
             <Component {...props} />
           </Content>

@@ -4,7 +4,7 @@ import { Button, Card, Drawer, Form, Input, message, Modal, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import { RiPlayList2Fill } from "react-icons/ri";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import PDFViewer from "src/components/PDFViewer";
 import AdminOrderService from "src/service/AdminService/AdminOrderService";
 const allFiles = {

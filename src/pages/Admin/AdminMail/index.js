@@ -171,7 +171,7 @@ function ListTemplateMail(props) {
         width={720}
         onClose={onClose}
         visible={drawer.visible}
-        bodyStyle={{ paddingBottom: 80 }}
+        // bodyStyle={{ paddingBottom: 80 }}
       >
         {drawer.component}
       </Drawer>

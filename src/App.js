@@ -1,13 +1,13 @@
 import { ConfigProvider } from 'antd';
-import { Suspense, useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, useLocation, useRoutes } from 'react-router-dom';
 import LoadingScreen from 'src/components/LoadingScreen';
 import RouterContext, { RouterProvider } from 'src/helper/Context';
-import { LAYOUT_ROUTER } from './contants/Route';
+import { LAYOUT_ROUTER, UserRouter } from './contants/Route';
 import { useAuth, useDetectLocation } from './helper/Hook';
 import moment from 'moment';
-
+import { CommonAction } from './store/actions';
 import 'aos/dist/aos.css';
 import './assets/css/styles.scss';
 
@@ -30,13 +30,19 @@ const RouterComponent = (props) => {
   const [displayLocation, setDisplayLocation] = useState(location);
 
   const [transitionStage, setTransistionStage] = useState('fadeIn');
-  useEffect(() => {
-    if (route !== routeDetect) setRoute(routeDetect);
-  }, [location]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (location !== displayLocation && location.pathname === '/') setTransistionStage('fadeOut');
+    let { pathname } = location;
+    if (route !== routeDetect) setRoute(routeDetect);
+    if (location !== displayLocation && pathname === '/') setTransistionStage('fadeOut');
+    changeTitle(pathname);
   }, [location]);
+
+  const changeTitle = (pathname) => {
+    let item = UserRouter.find((item) => item.path.includes(pathname));
+    item && dispatch(CommonAction.titleChange(item.title));
+  };
 
   return (
     <div
@@ -48,8 +54,6 @@ const RouterComponent = (props) => {
         }
       }}
     >
-      {/* <Suspense fallback={<LoadingScreen />}></Suspense>
-       */}
       {Route}
     </div>
   );

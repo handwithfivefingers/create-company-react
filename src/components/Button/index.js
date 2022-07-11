@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './Button.module.scss';
 import { makeid } from 'src/helper/Common';
 const CCButton = (props) => {
+  const { fill, outline, ...rest } = props;
   return (
     <button
       key={makeid(8)}
@@ -15,7 +16,7 @@ const CCButton = (props) => {
           [styles.fill]: props?.fill,
         },
       ])}
-      {...props}
+      {...rest}
     >
       <span>{props.children}</span>
     </button>

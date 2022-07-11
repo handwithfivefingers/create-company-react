@@ -8,17 +8,9 @@ const UserDashboard = () => {
     <Suspense
       fallback={
         <div
-          className="container"
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 'calc(100% - 200px)',
-          }}
+          className="container spin-suspense"
         >
           <Space align="center">
-            {/* <Spin spinning={true} /> */}
             <Spin spinning={true} tip="Loading..." delay={500} />
           </Space>
         </div>

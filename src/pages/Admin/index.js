@@ -7,18 +7,9 @@ const Admin = (props) => {
   return (
     <Suspense
       fallback={
-        <div
-          className="container"
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 'calc(100% - 200px)',
-          }}
-        >
+        <div className="container spin-suspense">
           <Space align="center">
-            <Spin spinning={true} tip="Loading..." delay={500}/>
+            <Spin spinning={true} tip="Loading..." delay={500} />
           </Space>
         </div>
       }

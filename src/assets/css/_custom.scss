@@ -98,3 +98,11 @@ $bg: #fff;
 .site-layout-background {
   height: calc(100vh - 74px);
 }
+
+.spin-suspense {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 200px);
+}

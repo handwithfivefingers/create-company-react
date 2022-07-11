@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const { ResponseCode } = require('../common/ResponseCode');
 const { getListFiles } = require('../contants/File');
 const { uniqBy } = require('lodash');
-const { getVpnParams } = require('../common/helper');
+const { getVpnParams, sortObject } = require('../common/helper');
 const PAGE_SIZE = 10;
 
 // Get getOrdersFromUser
@@ -114,7 +114,7 @@ exports.createOrders = async (req, res) => {
     let price = await calcPrice(selectProduct._id);
 
     if (!price) return errHandler('Product not found', res);
-    if (!files) return errHandler(err, res);
+    if (!files) return errHandler('', res);
 
     let newData = {
       track,
@@ -157,7 +157,7 @@ exports.orderWithPayment = async (req, res) => {
     let files = findKeysByObject(data, selectProduct?.type);
 
     if (!price) return errHandler('Product not found', res);
-    if (!files) return errHandler(err, res);
+    if (!files) return errHandler('', res);
 
     var newData = {
       track,
@@ -194,72 +194,77 @@ exports.orderWithPayment = async (req, res) => {
 
 exports.getUrlReturn = async (req, res) => {
   // console.log(req.query, " Get URL Return");
-  var vnp_Params = req.query;
+  try {
+    var vnp_Params = req.query;
 
-  var secureHash = vnp_Params['vnp_SecureHash'];
+    var secureHash = vnp_Params['vnp_SecureHash'];
 
-  delete vnp_Params['vnp_SecureHash'];
+    delete vnp_Params['vnp_SecureHash'];
 
-  delete vnp_Params['vnp_SecureHashType'];
+    delete vnp_Params['vnp_SecureHashType'];
 
-  vnp_Params = sortObject(vnp_Params);
+    vnp_Params = sortObject(vnp_Params);
 
-  var tmnCode = process.env.TMN_CODE_VPN;
+    var tmnCode = process.env.TMN_CODE_VPN;
 
-  var secretKey = process.env.SECRET_KEY_VPN;
+    var secretKey = process.env.SECRET_KEY_VPN;
 
-  var signData = qs.stringify(vnp_Params, { encode: false });
+    var signData = qs.stringify(vnp_Params, { encode: false });
 
-  var hmac = crypto.createHmac('sha512', secretKey);
+    var hmac = crypto.createHmac('sha512', secretKey);
 
-  var signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest('hex');
+    var signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest('hex');
 
-  let url =
-    process.env.NODE_ENV === 'development'
-      ? `http://localhost:3000/user/result?`
-      : `https://app.thanhlapcongtyonline.vn/user/result?`;
+    let url =
+      process.env.NODE_ENV === 'development'
+        ? `http://localhost:3000/user/result?`
+        : `https://app.thanhlapcongtyonline.vn/user/result?`;
 
-  if (secureHash === signed) {
-    //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-    let code = vnp_Params['vnp_ResponseCode'];
-    const query = qs.stringify({
-      code,
-      text: ResponseCode[code],
-    });
+    if (secureHash === signed) {
+      //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
+      let code = vnp_Params['vnp_ResponseCode'];
+      const query = qs.stringify({
+        code,
+        text: ResponseCode[code],
+      });
 
-    if (code === '00') {
-      // Success
-      const _update = {
-        payment: Number(1),
-      };
+      if (code === '00') {
+        // Success
+        const _update = {
+          payment: Number(1),
+        };
 
-      await Order.updateOne({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
+        await Order.updateOne({ _id: req.query.vnp_OrderInfo }, _update, { new: true });
 
-      // console.log("getUrlReturn updated Success");
+        // console.log("getUrlReturn updated Success");
 
-      let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate('orderOwner', '_id name email');
+        let _order = await Order.findOne({ _id: req.query.vnp_OrderInfo }).populate('orderOwner', '_id name email');
 
-      // console.log(_order);
+        // console.log(_order);
 
-      let params = {
-        email: _order.orderOwner.email,
-        subject: 'Thanh toán thành công',
-        content: `Chào ${_order?.orderOwner?.name},<br />
+        let params = {
+          email: _order.orderOwner.email,
+          subject: 'Thanh toán thành công',
+          content: `Chào ${_order?.orderOwner?.name},<br />
         Quý khách đã thanh toán thành công.
         Thông tin giấy tờ sẽ được gửi sớm nhất có thể, quý khách vui lòng đợi trong giây lát.
         <br/> Xin cảm ơn`,
-        type: 'any',
-      };
-      await sendmailWithAttachments(req, res, params);
+          type: 'any',
+        };
+        await sendmailWithAttachments(req, res, params);
 
+        return res.redirect(url + query);
+      }
+      return res.redirect(url + query);
+    } else {
+      const query = qs.stringify({
+        code: ResponseCode[97],
+      });
       return res.redirect(url + query);
     }
-    return res.redirect(url + query);
-  } else {
-    const query = qs.stringify({
-      code: ResponseCode[97],
-    });
-    return res.redirect(url + query);
+  } catch (err) {
+    console.log('getUrlReturn', err);
+    return errHandler(err, res);
   }
 };
 
@@ -311,7 +316,6 @@ const findKeysByObject = (obj, type = null) => {
               let opt = obj[props][key]?.present_person; // get selected item
               files = [...files, ...objProperty(type, props, key, opt)];
             } else {
-
               files = [...files, ...objProperty(type, props, key)];
             }
           }
