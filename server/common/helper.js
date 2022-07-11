@@ -220,13 +220,10 @@ const convertFile = async (file, data) => {
 
 const removeListFiles = (attachments, path = null) => {
   for (let attach of attachments) {
-    if (fs.existsSync(attach.pdfFile)) {
-      // fs.unlinkSync(attach.pdfFile);
-      if (path) {
-        fs.unlinkSync(attach.path);
-      } else {
-        fs.unlinkSync(attach.pdfFile);
-      }
+    if (path) {
+      fs.unlinkSync(attach.path);
+    } else if (fs.existsSync(attach.pdfFile)) {
+      fs.unlinkSync(attach.pdfFile);
     }
   }
 };
