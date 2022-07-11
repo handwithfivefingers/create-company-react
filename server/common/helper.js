@@ -219,12 +219,16 @@ const convertFile = async (file, data) => {
 };
 
 const removeListFiles = (attachments, path = null) => {
-  for (let attach of attachments) {
-    if (path) {
-      fs.unlinkSync(attach.path);
-    } else if (fs.existsSync(attach.pdfFile)) {
-      fs.unlinkSync(attach.pdfFile);
+  try {
+    for (let attach of attachments) {
+      if (path) {
+        fs.unlinkSync(attach.path);
+      } else if (fs.existsSync(attach.pdfFile)) {
+        fs.unlinkSync(attach.pdfFile);
+      }
     }
+  } catch (err) {
+    console.log('removeListFiles error: ' + err);
   }
 };
 const sortObject = (obj) => {

@@ -51,12 +51,12 @@ const handleConvertFile = async (order) => {
     return console.log('Cronjob error');
   } catch (err) {
     console.log('handleConvertFile error', err);
+    
+    await createLog(err);
 
     await Order.updateOne({ _id: order._id }, { send: 1 });
 
     await removeListFiles(attachments);
-    
-    await createLog(err);
 
     throw err;
   }
