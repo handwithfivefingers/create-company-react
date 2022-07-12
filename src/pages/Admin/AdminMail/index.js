@@ -85,11 +85,9 @@ function ListTemplateMail(props) {
       fetchTemplateMail();
     }
   };
-  console.log('render');
 
   return (
     <Card
-      // style={{ marginTop: 10 }}
       className="cc-card"
       title="Template Mail"
       extra={[

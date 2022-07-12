@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import { List, Row, Skeleton, Avatar, Col, Card, message, Button, Tabs } from 'antd';
 import AdminDashboardService from 'src/service/AdminService/AdminDashboardService';
 import { GrStatusWarning } from 'react-icons/gr';
+import VirtualList from 'rc-virtual-list';
 import styles from './styles.module.scss';
 import clsx from 'clsx';
 
@@ -10,25 +11,38 @@ const AdminDashboard = () => {
   const [logs, setLogs] = useState([]);
   const [orderPayment, setOrderPayment] = useState([]);
   const [orderLatest, setOrderLatest] = useState([]);
+
+  const [data, setData] = useState([]);
+  const [output, setOutput] = useState([]);
+  const [containerHeight, setContainerHeight] = useState(100);
+
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     getScreenData();
+    layoutEffection();
   }, []);
+  const layoutEffection = () => {
+    let siteLayout = document.querySelector('.site-layout-background');
 
+    let { height } = siteLayout.getBoundingClientRect();
+
+    setContainerHeight(height - 156);
+  };
   const getScreenData = async () => {
     try {
       setLoading(true);
       let { data } = await AdminDashboardService.getLogs();
-      // console.log(data);
-      // if (data) setLogs(data?.data);
+
       let { _logs, output, error } = data.data;
-      // console.log(_logs, output, error);
+
       setLogs((state) => ({
         ...state,
         _logs,
         output,
         error,
       }));
+      setData(_logs.slice(0, 20));
+      setOutput(output.slice(0, 20));
     } catch (err) {
       let msg = 'Đã có lỗi xảy ra, vui lòng thử lại sau';
       message.error(msg);
@@ -56,26 +70,40 @@ const AdminDashboard = () => {
   //       console.log(err);
   //     });
   // };
-  // const renderTabs = () => {
-  //   let xhtml = null;
-  //   xhtml = (
+  // const ContainerHeight = 400;
 
-  //   );
+  const onScroll = (e, type) => {
+    if (e.currentTarget.scrollHeight - e.currentTarget.scrollTop === containerHeight) {
+      if (type === 1) appendData();
+      else if (type === 2) appendOutputData();
+    }
+  };
+  const appendData = () => {
+    let length = data.length;
+    let newData = data;
+    newData = [...newData, ...logs._logs?.slice(length, length + 20)];
+    setData(newData);
+  };
 
-  //   return xhtml;
-  // };
+  const appendOutputData = () => {
+    let length = output.length;
+    let newData = output;
+    newData = [...newData, ...logs.output?.slice(length, length + 20)];
+    setOutput(newData);
+  };
   return (
     <Row gutter={[16, 12]}>
       <Col span={16}>
         <Card title="Logs hệ thống">
           <Tabs
+            // onTabClick={onTabClick}
             defaultActiveKey="1"
             destroyInactiveTabPane
-            className={[styles.tabs, 'cc-card'].join(',')}
+            className={clsx([styles.tabs, 'cc-card'])}
             animated={{ inkBar: true, tabPane: true }}
           >
             <TabPane tab="Truy cập" key="1">
-              <List
+              {/* <List
                 className={clsx([styles.list, 'demo-loadmore-list'])}
                 loading={loading}
                 itemLayout="horizontal"
@@ -94,16 +122,46 @@ const AdminDashboard = () => {
                         title={new Date(item?.createdAt).toString('dd/MM/yyyy HH:mm')}
                         description={<span style={{ wordBreak: 'break-word' }}>{JSON.stringify(item.error)}</span>}
                       />
-                      {/* <div>Status: {item.error?.status} </div> */}
                     </Skeleton>
                   </List.Item>
                 )}
-              />
+              /> */}
+              <List loading={loading}>
+                <VirtualList
+                  data={data}
+                  height={containerHeight}
+                  itemHeight={50}
+                  itemKey="Truy cập"
+                  onScroll={(e) => onScroll(e, 1)}
+                >
+                  {(item, i) => (
+                    <List.Item key={`Truy cập ${i}`}>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar
+                            className={clsx([styles.ava])}
+                            size={{ xs: 12, sm: 18, md: 24, lg: 30, xl: 36, xxl: 42 }}
+                            icon={<GrStatusWarning />}
+                          />
+                        }
+                        title={new Date(item?.createdAt).toString('dd/MM/yyyy HH:mm')}
+                        description={
+                          <span style={{ wordBreak: 'break-word' }}>
+                            <pre style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+                              {JSON.stringify(item.error, undefined, 1)}
+                            </pre>
+                          </span>
+                        }
+                      />
+                    </List.Item>
+                  )}
+                </VirtualList>
+              </List>
             </TabPane>
             <TabPane tab="Hệ thống" key="2">
-              <List
+              {/* <List
                 className={clsx([styles.list, 'demo-loadmore-list'])}
-                loading={loading}
+                // loading={loading}
                 itemLayout="horizontal"
                 dataSource={logs.output}
                 renderItem={(item) => (
@@ -118,58 +176,93 @@ const AdminDashboard = () => {
                           />
                         }
                         title={item.slice(0, 28)}
-                        description={<span style={{ wordBreak: 'break-word' }}>{ item.slice(29) }</span>}
+                        description={<span style={{ wordBreak: 'break-word' }}>{item.slice(29)}</span>}
                       />
-                      {/* <div>Status: {item.error?.status} </div> */}
                     </Skeleton>
                   </List.Item>
                 )}
-              />
+              /> */}
+              <List loading={loading}>
+                <VirtualList
+                  data={output}
+                  height={containerHeight}
+                  itemHeight={50}
+                  itemKey="Hệ thống"
+                  onScroll={(e) => onScroll(e, 2)}
+                >
+                  {(item, i) => (
+                    <List.Item key={`Hệ thống ${item.slice(0, 28)} ${i}`}>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar
+                            className={clsx([styles.ava])}
+                            size={{ xs: 12, sm: 18, md: 24, lg: 30, xl: 36, xxl: 42 }}
+                            icon={<GrStatusWarning />}
+                          />
+                        }
+                        title={item?.slice(0, 28)}
+                        description={
+                          <span style={{ wordBreak: 'break-word' }}>
+                            {/* {item?.slice(29)} */}
+                            <pre style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>{item?.slice(29)}</pre>
+                          </span>
+                        }
+                      />
+                    </List.Item>
+                  )}
+                </VirtualList>
+              </List>
             </TabPane>
           </Tabs>
         </Card>
       </Col>
       <Col span={8}>
-        <Card title="Đơn hàng đã thanh toán">
-          <List
-            className="demo-loadmore-list"
-            // loading={loading}
-            itemLayout="horizontal"
-            dataSource={orderPayment}
-            renderItem={(item) => (
-              <List.Item actions={[]}>
-                <Skeleton avatar title={false} loading={item.loading} active>
-                  <List.Item.Meta
-                    avatar={<Avatar src={item.picture.large} />}
-                    title={item.name?.last}
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                  />
-                  <div>content</div>
-                </Skeleton>
-              </List.Item>
-            )}
-          />
-        </Card>
-        <Card title="Đơn hàng vừa tạo">
-          <List
-            className="demo-loadmore-list"
-            // loading={loading}
-            itemLayout="horizontal"
-            dataSource={orderLatest}
-            renderItem={(item) => (
-              <List.Item actions={[]}>
-                <Skeleton avatar title={false} loading={item.loading} active>
-                  <List.Item.Meta
-                    avatar={<Avatar src={item.picture.large} />}
-                    title={item.name?.last}
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                  />
-                  <div>content</div>
-                </Skeleton>
-              </List.Item>
-            )}
-          />
-        </Card>
+        <Row gutter={[16, 12]}>
+          <Col span={24}>
+            <Card title="Đơn hàng đã thanh toán">
+              <List
+                className="demo-loadmore-list"
+                // loading={loading}
+                itemLayout="horizontal"
+                dataSource={orderPayment}
+                renderItem={(item) => (
+                  <List.Item actions={[]}>
+                    <Skeleton avatar title={false} loading={item.loading} active>
+                      <List.Item.Meta
+                        avatar={<Avatar src={item.picture.large} />}
+                        title={item.name?.last}
+                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                      />
+                      <div>content</div>
+                    </Skeleton>
+                  </List.Item>
+                )}
+              />
+            </Card>
+          </Col>
+          <Col span={24}>
+            <Card title="Đơn hàng vừa tạo">
+              <List
+                className="demo-loadmore-list"
+                // loading={loading}
+                itemLayout="horizontal"
+                dataSource={orderLatest}
+                renderItem={(item) => (
+                  <List.Item actions={[]}>
+                    <Skeleton avatar title={false} loading={item.loading} active>
+                      <List.Item.Meta
+                        avatar={<Avatar src={item.picture.large} />}
+                        title={item.name?.last}
+                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                      />
+                      <div>content</div>
+                    </Skeleton>
+                  </List.Item>
+                )}
+              />
+            </Card>
+          </Col>
+        </Row>
       </Col>
     </Row>
   );

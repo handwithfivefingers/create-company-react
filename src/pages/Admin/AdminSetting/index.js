@@ -1,7 +1,7 @@
-import React, { forwardRef, useEffect, useState, useRef } from "react";
-import { Card, Row, Col, Form, Input, Button, Tabs, Select, message } from "antd";
-import AdminMailService from "src/service/AdminService/AdminMailService";
-import AdminSettingService from "src/service/AdminService/AdminSettingService";
+import React, { forwardRef, useEffect, useState, useRef } from 'react';
+import { Card, Row, Col, Form, Input, Button, Tabs, Select, message } from 'antd';
+import AdminMailService from 'src/service/AdminService/AdminMailService';
+import AdminSettingService from 'src/service/AdminService/AdminSettingService';
 
 const { TabPane } = Tabs;
 
@@ -29,7 +29,6 @@ const ChangePassword = forwardRef((props, ref) => {
 });
 
 const SettingMail = forwardRef((props, ref) => {
-  
   useEffect(() => {
     let { mailRegister, mailPayment } = props?.settingMail;
     if (mailRegister) {
@@ -45,7 +44,7 @@ const SettingMail = forwardRef((props, ref) => {
   }, [props]);
   return (
     <Form ref={ref} onFinish={props.mailSubmit} layout="vertical">
-      <Form.Item label={"Mail đăng kí"} name="mailRegister">
+      <Form.Item label={'Mail đăng kí'} name="mailRegister">
         <Select>
           {props.options?.map((item) => (
             <Select.Option key={item._id} value={item._id}>
@@ -54,7 +53,7 @@ const SettingMail = forwardRef((props, ref) => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label={"Mail Thanh Toán"} name="mailPayment">
+      <Form.Item label={'Mail Thanh Toán'} name="mailPayment">
         <Select>
           {props.options?.map((item) => (
             <Select.Option key={item._id} value={item._id}>
@@ -131,11 +130,11 @@ const AdminSetting = () => {
   };
   const tabList = [
     {
-      name: "Đổi mật khẩu",
+      name: 'Đổi mật khẩu',
       content: <ChangePassword passwordSubmit={passwordSubmit} ref={formRef} loading={loading} />,
     },
     {
-      name: "Mail",
+      name: 'Mail',
       content: (
         <SettingMail
           mailSubmit={mailSubmit}
@@ -153,8 +152,8 @@ const AdminSetting = () => {
       <Row gutter={[16, 12]}>
         <Col span={24}>
           <Tabs defaultActiveKey="1">
-            {tabList.map((tab) => (
-              <TabPane tab={tab.name} key={tab.name}>
+            {tabList.map((tab, i) => (
+              <TabPane tab={tab.name} key={[tab.name, i]}>
                 {tab.content}
               </TabPane>
             ))}

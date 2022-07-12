@@ -27,9 +27,11 @@ const RouterComponent = (props) => {
   const routeDetect = useDetectLocation(location);
 
   const { route, setRoute } = useContext(RouterContext);
+
   const [displayLocation, setDisplayLocation] = useState(location);
 
   const [transitionStage, setTransistionStage] = useState('fadeIn');
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -68,11 +70,13 @@ function App() {
 
   const authReducer = useSelector((state) => state.authReducer);
 
+  if (authReducer.authenticating && !authReducer.status) {
+    return <LoadingScreen />;
+  }
   return (
     <div className="App">
       <ConfigProvider>
         <RouterProvider value={{ route, setRoute: (val) => setRoute(val) }}>
-          {authReducer.authenticating && <LoadingScreen />}
           <BrowserRouter>
             <RouterComponent auth={auth} />
           </BrowserRouter>

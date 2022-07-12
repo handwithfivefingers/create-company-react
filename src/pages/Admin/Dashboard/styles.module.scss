@@ -14,8 +14,14 @@
   height: calc(100vh - 235px);
   overflow: auto;
   @include scroll(6px, 6px, transparent);
+
 }
 
+
 .tabs {
-  padding: 0 12px;
+  :global {
+    .ant-list-item {
+      padding: 0 12px;
+    }
+  }
 }

@@ -10,7 +10,7 @@ const { Content, Footer } = Layout;
 
 export default function WithAuth(Component, role) {
   return function Authenticated(props) {
-    console.log('trigger render');
+
     if (!props.status) {
       return <Navigate to="/" />;
     }

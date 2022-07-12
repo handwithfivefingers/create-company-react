@@ -1,9 +1,9 @@
 import { AUTH, AUTH_LOGIN, AUTH_LOGOUT, AUTH_REGISTER } from "src/store/type/auth.type";
 
 const initState = {
-  status: "",
+  status: false,
   role: "",
-  authenticating: false,
+  authenticating: true,
 };
 
 const AuthReducer = (state = initState, action) => {
