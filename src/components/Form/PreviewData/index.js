@@ -1,13 +1,14 @@
-import React from "react";
-import moment from "moment";
-import { LABEL } from "src/contants/FormConstant";
-import CCDescription from "src/components/CCDescription";
+import React from 'react';
+import moment from 'moment';
+import { LABEL } from 'src/contants/FormConstant';
+import CCDescription from 'src/components/CCDescription';
+import { checkVariable } from 'src/helper/Common';
 
-const listOfFields = ["company_opt_career", "include", "exclude", "detail_after", "company_main_career"];
+const listOfFields = ['company_opt_career', 'include', 'exclude', 'detail_after', 'company_main_career'];
 
 const PreviewData = ({ data }) => {
   const renderTitle = (newData, label) => {
-    let xhtml = "";
+    let xhtml = '';
     for (let property in label) {
       xhtml = [newData && label?.title];
     }
@@ -22,51 +23,50 @@ const PreviewData = ({ data }) => {
     return xhtml;
   };
 
-  const checkVariable = (val) => {
-    // console.log("checkVariable", val, Array.isArray(val));
-    if (typeof val === "string" || typeof val === "number") {
-      return "String";
-    } else if (Array.isArray(val)) {
-      return "Array";
-    } else if (moment.isMoment(val)) {
-      return "Moment";
-    } else if (typeof val === "object" && Object.keys(val).length > 0) {
-      return "Object";
-    } else return typeof val;
-  };
+  // const checkVariable = (val) => {
+  //   if (typeof val === "string" || typeof val === "number") {
+  //     return "String";
+  //   } else if (Array.isArray(val)) {
+  //     return "Array";
+  //   } else if (moment.isMoment(val)) {
+  //     return "Moment";
+  //   } else if (typeof val === "object" && Object.keys(val).length > 0) {
+  //     return "Object";
+  //   } else return typeof val;
+  // };
 
   const getDataFromObj = (objData, label) => {
     let xhtml = [];
-    // console.log("getDataFromObj", objData, label);
     xhtml.push(
-      Object.keys(objData).map((key, index) => {
-        let currentPath = objData[key];
-        // console.log(4);
-        if (currentPath) {
-          // console.log(5);
-          return renderDescription(currentPath, label?.[key], key, index);
-        }
-      })
+      Object.keys(objData)
+        .map((key, index) => {
+          let currentPath = objData[key];
+          if (currentPath) {
+            return renderDescription(currentPath, label?.[key], key, index);
+          }
+          return null;
+        })
+        .filter((item) => item)
     );
     return xhtml;
   };
 
   const checkTitle = (keys, index = null) => {
     switch (keys) {
-      case "legal_respon":
+      case 'legal_respon':
         return `Người Đại Diện Pháp Luật ${index + 1}`;
-      case "company_opt_career":
+      case 'company_opt_career':
         return `Ngành nghề phụ ${index + 1}`;
-      case "company_main_career":
+      case 'company_main_career':
         return `Ngành nghề chính`;
-      case "detail_after":
+      case 'detail_after':
         return `Sửa đổi chi tiết ngành, nghề ${index + 1}`;
-      case "exclude":
+      case 'exclude':
         return `Bỏ ngành, nghề ${index + 1}`;
-      case "include":
+      case 'include':
         return `Ngành nghề bổ sung ${index + 1}`;
       default:
-        return "";
+        return '';
     }
     // return "";
   };
@@ -86,16 +86,16 @@ const PreviewData = ({ data }) => {
 
     let isSpecial = handleSpecialFields(keys);
 
-    if (itemVariable === "String") {
+    if (itemVariable === 'String') {
       return (
         <CCDescription.DescItem
-          key={[label, index2 > 0 ? [" - ", index2 + 1] : ""]}
-          label={[label, index2 > 0 ? [" - ", index2 + 1] : ""]}
+          key={[label, index2 > 0 ? [' - ', index2 + 1] : '']}
+          label={[label, index2 > 0 ? [' - ', index2 + 1] : '']}
         >
           {[item]}
         </CCDescription.DescItem>
       );
-    } else if (itemVariable === "Array") {
+    } else if (itemVariable === 'Array') {
       return item.map((arrayItem, arrayIndex) => {
         // Special Fields ....
 
@@ -113,18 +113,18 @@ const PreviewData = ({ data }) => {
             </CCDescription.DescListItem>
           );
       });
-    } else if (itemVariable === "Moment") {
+    } else if (itemVariable === 'Moment') {
       return (
-        <CCDescription.DescItem key={[label, index1]} label={[label, index2 > 0 ? [" - ", index2 + 1] : ""]}>
-          {moment(item).format("DD/MM/YYY")}
+        <CCDescription.DescItem key={[label, index1]} label={[label, index2 > 0 ? [' - ', index2 + 1] : '']}>
+          {moment(item).format('DD/MM/YYY')}
         </CCDescription.DescItem>
       );
-    } else if (itemVariable === "Object") {
+    } else if (itemVariable === 'Object') {
       if (isSpecial) {
         return (
           <CCDescription.DescItem
-            key={[label, index2 > 0 ? [" - ", index2 + 1] : ""]}
-            label={[label, index2 > 0 ? [" - ", index2 + 1] : ""]}
+            key={[label, index2 > 0 ? [' - ', index2 + 1] : '']}
+            label={[label, index2 > 0 ? [' - ', index2 + 1] : '']}
           >
             {[item.name]}
           </CCDescription.DescItem>
@@ -132,7 +132,7 @@ const PreviewData = ({ data }) => {
       }
       return getDataFromObj(item, label);
     } else {
-      console.log("item", item);
+      console.log('item', item);
       return null;
     }
   };

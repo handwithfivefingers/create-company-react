@@ -9,6 +9,7 @@ const { ResponseCode } = require('../common/ResponseCode');
 const { getListFiles } = require('../contants/File');
 const { uniqBy } = require('lodash');
 const { getVpnParams, sortObject } = require('../common/helper');
+const fs = require('fs');
 const PAGE_SIZE = 10;
 
 // Get getOrdersFromUser
@@ -268,6 +269,20 @@ exports.getUrlReturn = async (req, res) => {
   }
 };
 
+// exports.getFilefromPath = async (req, res) => {
+//   let { filePath, fileName } = req.body;
+//   if (!filePath) return;
+//   if (!fileName) return;
+//   try {
+//     var data = fs.readFileSync('filePath');
+//     res.contentType('application/pdf');
+//     res.send(data);
+//   } catch (err) {
+//     console.log('getUrlReturn', err);
+//     return errHandler(err, res);
+//   }
+// };
+
 const paymentOrder = (req, res, params) => {
   let vnp_Params = getVpnParams(req, params);
 
@@ -291,10 +306,10 @@ const calcPrice = async (productId) => {
 };
 
 const findKeysByObject = (obj, type = null) => {
-  try {
-    if (!type) return;
-    if (!obj) return;
+  if (!type) return;
+  if (!obj) return;
 
+  try {
     let files = [];
 
     for (let props in obj) {
@@ -302,9 +317,8 @@ const findKeysByObject = (obj, type = null) => {
 
       let keys = Object.keys(obj?.[props]).map((key) => key);
 
-      let len = keys.length;
       if (keys && list) {
-        for (let i = 0; i < len; i++) {
+        for (let i = 0, len = keys.length; i < len; i++) {
           let key = keys[i];
 
           let objProperty = list?.[key];
@@ -329,3 +343,42 @@ const findKeysByObject = (obj, type = null) => {
     console.log('findKeysByObject', err);
   }
 };
+
+// const findKeysByObject = (obj, listfiles) => {
+
+//   if (!obj) return;
+
+//   let files;
+//   // console.log("findKeysByObject", files, obj);
+
+//   for (let prop in obj) {
+//     // prop => create_company || change_info || pending || disolution
+
+//     if (listfiles[prop]) {
+
+//       files = Object.keys(obj[prop]).map((key) => {
+
+//         if (obj[prop][key]) {
+
+//           if (typeof listfiles[prop][key] === 'object' && !Array.isArray(listfiles[prop][key])) {
+
+//             // Check listfiles must be a Object
+//             if (obj[prop][key].present_person) {
+
+//               let person = obj[prop][key].present_person;
+
+//               return listfiles[prop][key][person];
+
+//             } else {
+
+//               return listfiles[prop][key].personal;
+
+//             }
+
+//           } else return listfiles[prop][key];
+//         }
+//       });
+//     }
+//   }
+//   return files;
+// };

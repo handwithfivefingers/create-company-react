@@ -1,7 +1,7 @@
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import { Button, Card, Divider, Form, message, Modal, Space, Table, Tag, Tooltip, Input, Pagination } from 'antd';
 import { Link } from 'react-router-dom';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Tracking from 'src/components/Tracking';
 import axios from 'src/config/axios';
 import { number_format } from 'src/helper/Common';
@@ -144,12 +144,12 @@ const AdminOrder = () => {
     }
   };
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setChildModal({
       ...childModal,
       visible: false,
     });
-  };
+  }, [childModal]);
 
   const renderAction = (record) => {
     let xhtml = null;
@@ -168,12 +168,21 @@ const AdminOrder = () => {
   };
 
   const renderDate = (record) => {
-    return Date.parse(record?.createdAt).toLocaleDateString('vi-Vi', {
+    // console.log(
+    //   Date.parse(record?.createdAt).toLocaleDateString('ja-JA', {
+    //     weekday: 'narrow',
+    //     year: 'numeric',
+    //     month: 'long',
+    //     day: 'numeric',
+    //   })
+    // );
+    let result = Date.parse(record?.createdAt).toLocaleDateString('vi-Vi', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
+    return result;
   };
 
   const renderTag = (record) => {
@@ -210,7 +219,7 @@ const AdminOrder = () => {
       </div>
     );
   };
-
+  console.log('renderProduct');
   return (
     <>
       <Card

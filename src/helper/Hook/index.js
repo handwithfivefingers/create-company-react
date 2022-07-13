@@ -1,33 +1,32 @@
-import axios from "src/config/axios";
-import React, { useState, useEffect } from "react";
-import { AuthAction, RouteAction } from "src/store/actions";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import axios from 'src/config/axios';
+import React, { useState, useEffect } from 'react';
+import { AuthAction, RouteAction } from 'src/store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
-export const useAuth = () => {
-
+const useAuth = () => {
   const authReducer = useSelector((state) => state.authReducer);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-
     dispatch(AuthAction.AuthUser());
-
   }, []);
 
   return authReducer; // status:true false, role: admin user
 };
 
-export const useDetectLocation = (location) => {
+const useDetectLocation = (location) => {
   const [route, setRoute] = useState({
-    to: "",
-    from: "", //--> previous pathname
+    to: '',
+    from: '', //--> previous pathname
   });
-//   const dispatch = useDispatch();
+  //   const dispatch = useDispatch();
   useEffect(() => {
     setRoute((prev) => ({ to: location.pathname, from: prev.to }));
   }, [location]);
 
   return route;
 };
+
+export { useAuth, useDetectLocation };
