@@ -9,22 +9,22 @@ const Dissolution = forwardRef((props, ref) => {
 
   const [selectType, setSelectType] = useState();
 
-  const renderFormByType = (type) => {
-    let xhtml = null;
-    if (type === '1') {
-      xhtml = <GiaiThe current={props.current} index={1} />;
-    }
-    if (type === '2') xhtml = <HuyBoGiaiThe current={props.current} index={1} />;
+  // const renderFormByType = (type) => {
+  //   let xhtml = null;
+  //   if (type === '1') {
+  //     xhtml = <GiaiThe current={props.current} index={1} />;
+  //   }
+  //   if (type === '2') xhtml = <HuyBoGiaiThe current={props.current} index={1} />;
 
-    return xhtml;
-  };
+  //   return xhtml;
+  // };
 
-  const handleOnChange = (val, opt) => {
-    setSelectType(opt);
-    if (props.onFinishScreen) {
-      props.onFinishScreen(opt);
-    }
-  };
+  // const handleOnChange = (val, opt) => {
+  //   setSelectType(opt);
+  //   if (props.onFinishScreen) {
+  //     props.onFinishScreen(opt);
+  //   }
+  // };
 
   // console.log(props);
   return (
@@ -58,7 +58,7 @@ const Dissolution = forwardRef((props, ref) => {
           })}
         </Select>
       </Form.Item>
-      <Form.Item
+      {/* <Form.Item
         name="selectChildProduct"
         label="Chọn thông tin thay đổi"
         required
@@ -80,7 +80,8 @@ const Dissolution = forwardRef((props, ref) => {
             })}
         </Select>
       </Form.Item>
-      {selectType?.type && renderFormByType(selectType?.type)}
+      {selectType?.type && renderFormByType(selectType?.type)} */}
+      <GiaiThe current={props.current} index={1} ref={ref} data={selectType} />
     </Form>
   );
 });

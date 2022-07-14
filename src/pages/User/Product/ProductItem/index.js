@@ -62,7 +62,10 @@ const UserProductItem = (props) => {
       title: 'Bước 1',
       desc: 'Chọn loại hình',
     },
-
+    {
+      title: `Bước 2`,
+      desc: 'Giải thể',
+    },
     {
       title: `Bước 2`,
       desc: 'Xem lại',
@@ -85,12 +88,6 @@ const UserProductItem = (props) => {
     try {
       let res = await ProductService.getDataBySlug(params);
       if (res) {
-        // let { state } = location;
-
-        // if (state) {
-        //   let type = parseInt(state?.products[0]?.type);
-        //   setData({ ...res.data, type });
-        // } else
         setData(res.data);
       }
     } catch (err) {
@@ -238,7 +235,7 @@ const UserProductItem = (props) => {
               data={data.data}
               ref={formRef}
               current={current}
-              onFinishScreen={(val) => handleSetDissolutionStep(val)}
+              // onFinishScreen={(val) => handleSetDissolutionStep(val)}
             />
 
             {current === 2 ? renderPrewviewForm(formRef) : ''}
@@ -326,25 +323,25 @@ const UserProductItem = (props) => {
     setPendingStep(data);
   };
 
-  const handleSetDissolutionStep = (val) => {
-    let data = [
-      {
-        title: 'Bước 1',
-        desc: 'Chọn loại hình',
-      },
-    ];
-    data.push(
-      {
-        title: `Bước 2`,
-        desc: `${val.children}`,
-      },
-      {
-        title: `Bước 3`,
-        desc: 'Xem lại',
-      }
-    );
-    setDissolutionStep(data);
-  };
+  // const handleSetDissolutionStep = (val) => {
+  //   let data = [
+  //     {
+  //       title: 'Bước 1',
+  //       desc: 'Chọn loại hình',
+  //     },
+  //   ];
+  //   data.push(
+  //     {
+  //       title: `Bước 2`,
+  //       desc: `${val.children}`,
+  //     },
+  //     {
+  //       title: `Bước 3`,
+  //       desc: 'Xem lại',
+  //     }
+  //   );
+  //   setDissolutionStep(data);
+  // };
 
   const closeModal = () => {
     setChildModal({
@@ -472,7 +469,7 @@ const UserProductItem = (props) => {
 
   const handleSavePending = () => {
     let val = formRef.current.getFieldsValue();
- 
+
     let params = {
       track: {
         step: 1,
@@ -541,25 +538,23 @@ const UserProductItem = (props) => {
   };
 
   return (
-    <>
-      <div className={styles.mainContent}>
-        {data && renderHeaderStep(data?.type)}
+    <div className={styles.mainContent}>
+      {data && renderHeaderStep(data?.type)}
 
-        {data && renderFormByType(data?.type)}
+      <div className={styles.formContent}>{data && renderFormByType(data?.type)}</div>
 
-        <Modal
-          visible={childModal.visible}
-          width={childModal.width}
-          footer={null}
-          bodyStyle={{
-            background: '#eee',
-          }}
-          onCancel={closeModal}
-        >
-          {childModal.component}
-        </Modal>
-      </div>
-    </>
+      <Modal
+        visible={childModal.visible}
+        width={childModal.width}
+        footer={null}
+        bodyStyle={{
+          background: '#eee',
+        }}
+        onCancel={closeModal}
+      >
+        {childModal.component}
+      </Modal>
+    </div>
   );
 };
 

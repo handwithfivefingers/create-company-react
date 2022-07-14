@@ -1,4 +1,4 @@
-@import "../../assets/css/custom";
+@import '../../assets/css/custom';
 .adminLayout {
   gap: 12px;
   padding: 12px;
@@ -36,16 +36,13 @@
 
 .siteLayout {
   width: calc(100vw - 236px);
-  // display: grid !important;
-  // grid-template-rows: 65px calc(100vh - 139px) 50px;
   height: calc(100vh - 24px);
-
   .mainContent {
-    overflow-x: hidden;
     position: relative;
-    // display: grid;
-    // grid-template-rows: 65px 1fr;
-    gap: 12px;
+    display: grid;
+    row-gap: 12px;
+    overflow: hidden;
+    grid-template-rows: 62px 1fr;
     @include scroll(6px, 6px, transparent);
   }
 }
@@ -61,7 +58,7 @@
   justify-content: space-between;
   align-items: center;
   .footerRight {
-    display:flex;
+    display: flex;
     font-size: 24px !important;
   }
 }

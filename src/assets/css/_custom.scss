@@ -106,3 +106,8 @@ $bg: #fff;
   justify-content: center;
   height: calc(100% - 200px);
 }
+
+.cc-scroll {
+  overflow: overlay;
+  @include scroll(6px, 6px, transparent);
+}
