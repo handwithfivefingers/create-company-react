@@ -42,7 +42,10 @@ const RouterComponent = (props) => {
   }, [location]);
 
   const changeTitle = (pathname) => {
-    let item = UserRouter.find((item) => item.path.includes(pathname));
+    let item = UserRouter.find(
+      (item) =>
+        item.path.includes(pathname) || (pathname.includes('/user/san-pham/') && item.path === '/user/san-pham/')
+    );
     item && dispatch(CommonAction.titleChange(item.title));
   };
 

@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/766.7eee2faf.chunk.css","mappings":"AAAA,oBACE,cACA","sources":["components/CCPagination/styles.module.scss"],"sourcesContent":[".pagi {\n  display: block;\n  float: right;\n}\n"],"names":[],"sourceRoot":""}

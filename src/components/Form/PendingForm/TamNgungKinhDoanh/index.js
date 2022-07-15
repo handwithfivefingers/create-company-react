@@ -22,24 +22,16 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
     ]);
   };
 
-  // useEffect(() => {
-  //   if (props.data) {
-  //     setType(props.data.type);
-  //   }
-  // }, [props.data]);
-
   const renderFormByType = (type) => {
-
     let xhtml = null;
 
     if (type === '3') {
       let listForm = [
         {
-          label: PENDING_FORM.approve.fields.list_president.president,
+          label: 'Tên Chủ tịch HĐQT',
           placeholder: 'NGUYỄN VĂN A',
           name: 'president',
           onChange: true,
-
           options: {
             toUpperCase: true,
             compare: {
@@ -137,7 +129,7 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         </>
       );
     }
-    console.log('trigger render', xhtml)
+    console.log('trigger render', xhtml);
     return xhtml;
   };
 

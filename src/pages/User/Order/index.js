@@ -101,7 +101,7 @@ const UserOrder = () => {
   };
 
   return (
-    <div>
+    <div className={'cc-scroll'}>
       <Table
         size="small"
         bordered

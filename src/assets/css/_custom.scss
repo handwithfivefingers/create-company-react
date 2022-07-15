@@ -118,3 +118,7 @@ $bg: #fff;
   text-shadow: none;
   text-transform: capitalize;
 }
+.cc-scroll {
+  overflow: overlay;
+  @include scroll(6px, 6px, transparent);
+}
