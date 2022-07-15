@@ -34,7 +34,7 @@ const UserProductItem = (props) => {
   const [changeInforStep, setChangeInforStep] = useState([
     {
       title: 'Bước 1',
-      desc: 'Chọn loại hình',
+      desc: 'Chọn loại hình doanh nghiệp',
     },
     {
       title: `Bước 2`,
@@ -60,7 +60,7 @@ const UserProductItem = (props) => {
   const [dissolutionStep, setDissolutionStep] = useState([
     {
       title: 'Bước 1',
-      desc: 'Chọn loại hình',
+      desc: 'Chọn loại hình doanh nghiệp',
     },
     {
       title: `Bước 2`,

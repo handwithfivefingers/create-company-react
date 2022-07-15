@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Row, Space } from 'antd';
+import { Button, Col, Form, Row, Space, InputNumber } from 'antd';
 import { SELECT } from 'src/contants/Common';
 import { PENDING_FORM } from 'src/contants/FormConstant';
 import CCInput from 'src/components/CCInput';
@@ -62,6 +62,14 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
             listName="list_president"
             ref={ref}
           />
+          <Form.Item label="Tổng số vốn điều lệ" name={[...BASE_FORM, 'total_capital']}>
+            <InputNumber
+              placeholder="100,000,000"
+              // stringMode
+              formatter={(v) => `${new Intl.NumberFormat('en-US').format(v.replace(/,/g, ''))}`}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
         </>
       );
     } else if (type === '2') {

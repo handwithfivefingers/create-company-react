@@ -52,6 +52,8 @@ const GiaiThe = forwardRef((props, ref) => {
         label="Nhập tên doanh nghiệp"
         name={[...BASE_FORM, 'company_name']}
         placeholder="CÔNG TY TNHH DỊCH VỤ TƯ VẤN WARREN B"
+        onChange={(e) => setFields(e, [...BASE_FORM, 'company_name'])}
+
       />
 
       <CCInput label="Nhập mã số doanh nghiệp hoặc Mã số thuế" name={[...BASE_FORM, 'mst']} placeholder="0316184427" />
@@ -62,6 +64,7 @@ const GiaiThe = forwardRef((props, ref) => {
         }
         name={[...BASE_FORM, 'org_person']}
         placeholder="NGUYỄN VĂN A"
+        onChange={(e) => setFields(e, [...BASE_FORM, 'org_person'])}
       />
 
       <CCInput label="Địa chỉ trụ sở chính" name={[...BASE_FORM, 'location']} placeholder="Nhập địa chỉ trụ sở chính" />
