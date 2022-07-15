@@ -106,3 +106,15 @@ $bg: #fff;
   justify-content: center;
   height: calc(100% - 200px);
 }
+
+.inline {
+  overflow: hidden;
+  white-space: normal;
+  //   letter-spacing: 0.5px;
+  // display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  color: #000;
+  text-shadow: none;
+  text-transform: capitalize;
+}
