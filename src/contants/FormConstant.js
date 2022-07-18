@@ -405,7 +405,6 @@ const PENDING_FORM = {
         end: 'Thời gian đăng ký tạm ngưng đến',
       },
       reason: 'Lý do tạm ngưng',
-      // org_person: 'Tên người đại diện pháp luật/người đứng đầu chi nhánh',
       org_person: 'Người đại diện pháp luật (nhập đầy đủ họ và tên)',
     },
   },
@@ -415,18 +414,18 @@ const DISSOLUTION_FORM = {
   approve: {
     title: 'Giải thể',
     fields: {
-      // company_name: 'Tên doanh nghiệp (ghi bằng chữ in hoa)',
-      // mst: 'Mã số doanh nghiệp/Mã số thuế',
-      // company_address: 'Địa chỉ trụ sở chính',
-      // time_provide: 'Ngày cấp',
-      // place_provide: 'Nơi cấp',
-      // opt_code: 'Số Giấy chứng nhận đăng ký kinh doanh (chỉ kê khai nếu không có mã số doanh nghiệp/mã số thuế)',
-      // reason: 'Lý do giải thể',
-      // representative: 'Ông (bà) Chủ sở hữu/đại diện chủ sở hữu',
       company_name: 'Tên doanh nghiệp',
       mst: 'Mã số doanh nghiệp/Mã số thuế',
       org_person: 'Người đại diện pháp luật',
       location: 'Địa chỉ trụ sở chính',
+      list_president: {
+        president: 'Tên thành viên',
+      },
+      contribute_members: {
+        name: 'Nhập tên Chủ tịch HĐTV',
+        capital: 'Vốn góp',
+        capital_percent: 'chiếm % vốn điều lệ',
+      },
     },
     // Giải thể
   },

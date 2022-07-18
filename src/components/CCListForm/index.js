@@ -1,13 +1,24 @@
 import React, { forwardRef, useEffect, useState, useRef } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Form, InputNumber, Row, Space } from 'antd';
+import { Button, Col, Form, InputNumber, Row, Space, Spin } from 'antd';
 import CCInput from 'src/components/CCInput';
-import { debounce } from 'lodash';
 
 const CCListForm = forwardRef((props, ref) => {
   const { BASE_FORM, listForm, listName, btnText, formLength, defaultLength } = props;
 
   let obj = [{}, {}, {}, {}, {}]; // defaultObj
+
+  const [list, setList] = useState();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    ref.current.setFields([
+      {
+        name: [...BASE_FORM, listName],
+        value: obj.slice(0, defaultLength || 1),
+      },
+    ]);
+  }, [props]);
 
   const handleChange = (e, formItem, fieldIndex) => {
     let val = e.target.value;
@@ -76,12 +87,12 @@ const CCListForm = forwardRef((props, ref) => {
     });
     return xhtml;
   };
-
+  console.log('getlist', list);
   return (
     <Form.Item label={<h4>{props?.label}</h4>}>
       <Row gutter={[16, 12]}>
         {listForm && (
-          <Form.List name={[...BASE_FORM, listName]} initialValue={obj.slice(0, defaultLength || 1)}>
+          <Form.List name={[...BASE_FORM, listName]}>
             {(fields, { add, remove }) => (
               <>
                 {fields?.map((field, i) => (

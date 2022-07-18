@@ -137,7 +137,6 @@ const TamNgungKinhDoanh = forwardRef((props, ref) => {
         </>
       );
     }
-    console.log('trigger render', xhtml);
     return xhtml;
   };
 

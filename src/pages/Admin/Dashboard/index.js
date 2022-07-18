@@ -5,6 +5,7 @@ import { GrStatusWarning } from 'react-icons/gr';
 import VirtualList from 'rc-virtual-list';
 import styles from './styles.module.scss';
 import clsx from 'clsx';
+import VirtualScroll from 'src/components/VirtualScroll';
 
 const { TabPane } = Tabs;
 const AdminDashboard = () => {
@@ -21,6 +22,7 @@ const AdminDashboard = () => {
     getScreenData();
     layoutEffection();
   }, []);
+
   const layoutEffection = () => {
     let siteLayout = document.querySelector('.site-layout-background');
 
@@ -41,7 +43,8 @@ const AdminDashboard = () => {
         output,
         error,
       }));
-      setData(_logs.slice(0, 20));
+      // setData(_logs.slice(0, 20));
+      setData(_logs);
       setOutput(output.slice(0, 20));
     } catch (err) {
       let msg = 'Đã có lỗi xảy ra, vui lòng thử lại sau';
@@ -91,6 +94,7 @@ const AdminDashboard = () => {
     newData = [...newData, ...logs.output?.slice(length, length + 20)];
     setOutput(newData);
   };
+  // console.log(data);
   return (
     <Row gutter={[16, 12]}>
       <Col span={16}>
@@ -126,7 +130,7 @@ const AdminDashboard = () => {
                   </List.Item>
                 )}
               /> */}
-              <List loading={loading}>
+              {/* <List loading={loading}>
                 <VirtualList
                   data={data}
                   height={containerHeight}
@@ -156,32 +160,10 @@ const AdminDashboard = () => {
                     </List.Item>
                   )}
                 </VirtualList>
-              </List>
+              </List> */}
+              <VirtualScroll data={data}/>
             </TabPane>
             <TabPane tab="Hệ thống" key="2">
-              {/* <List
-                className={clsx([styles.list, 'demo-loadmore-list'])}
-                // loading={loading}
-                itemLayout="horizontal"
-                dataSource={logs.output}
-                renderItem={(item) => (
-                  <List.Item actions={[]} className={clsx([styles.listItem])}>
-                    <Skeleton avatar title={false} loading={loading} active>
-                      <List.Item.Meta
-                        avatar={
-                          <Avatar
-                            className={clsx([styles.ava])}
-                            size={{ xs: 12, sm: 18, md: 24, lg: 30, xl: 36, xxl: 42 }}
-                            icon={<GrStatusWarning />}
-                          />
-                        }
-                        title={item.slice(0, 28)}
-                        description={<span style={{ wordBreak: 'break-word' }}>{item.slice(29)}</span>}
-                      />
-                    </Skeleton>
-                  </List.Item>
-                )}
-              /> */}
               <List loading={loading}>
                 <VirtualList
                   data={output}

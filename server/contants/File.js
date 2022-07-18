@@ -21,22 +21,24 @@ const getFileByPathName = (type, pathName, key, opt) =>
     dissolution: getDissolutionFiles(type, key),
   }?.[pathName]);
 
-const a = (pathName) => ((type, key, opt) => {
-  return {
-    // create_company
-    create_company: getCreateCompanyFiles(type, key, opt),
+const a = (pathName) => (
+  (type, key, opt) => {
+    return {
+      // create_company
+      create_company: getCreateCompanyFiles(type, key, opt),
 
-    // change_info
-    change_info: getChangeInfoFiles(type, key, opt),
+      // change_info
+      change_info: getChangeInfoFiles(type, key, opt),
 
-    // pending
-    pending: getPendingFiles(type, key),
+      // pending
+      pending: getPendingFiles(type, key),
 
-    // dissolution
-    dissolution: getDissolutionFiles(type, key),
-  };
-}, [pathName]);
-
+      // dissolution
+      dissolution: getDissolutionFiles(type, key),
+    };
+  },
+  [pathName]
+);
 
 /**
  *
@@ -65,7 +67,7 @@ const getPendingFiles = (type, key) => {
       name: 'QUYẾT ĐỊNH TẠM NGỪNG KINH DOANH CỦA HỘI ĐỒNG THÀNH VIÊN',
       path: '/files/pending/2tv/pending_quyet_dinh_tam_ngung_kinh_doanh.docx',
     },
-    
+
     pending_bienban_twoPerson: {
       name: 'BIÊN BẢN HỌP TẠM NGỪNG KINH DOANH CỦA HỘI ĐỒNG THÀNH VIÊN',
       path: '/files/pending/2tv/pending_bien_ban_hop_tam_ngung_kinh_doanh.docx',
@@ -400,21 +402,39 @@ const getChangeInfoFiles = (type, key) => {
  */
 const getDissolutionFiles = (type, key) => {
   const allFiles = {
-    giai_the_1: {
+    dissolution_1: {
       name: 'Quyết định',
       path: '/files/dissolution/dissolution_File_1_Quyetdinh.docx',
     },
-    giai_the_A: {
+    dissolution_Phuluc: {
       name: 'A - Phụ lục - 22',
       path: '/files/dissolution/dissolution_File_A_Phuluc_22.docx',
     },
-    giai_the_B: {
+    dissolution_B: {
       name: 'A - Phụ lục - 23',
       path: '/files/dissolution/dissolution_File_B_Phuluc_23.docx',
     },
-    giai_the_uy_quyen: {
+    dissolution_uy_quyen: {
       name: 'Ủy quyền',
       path: '/files/dissolution/dissolution_uyquyen.docx',
+    },
+    // TwoPerson
+    dissolution_bienban_twoPerson: {
+      name: 'Biên bản họp của HĐTV',
+      path: '',
+    },
+    dissolution_quyetdinh_twoPerson: {
+      name: 'Quyết định họp của HĐTV',
+      path: '',
+    },
+    // Cooperation
+    dissolution_bienban_cp: {
+      name: 'Biên bản họp của HĐQT',
+      path: '',
+    },
+    dissolution_quyetdinh_cp: {
+      name: 'Quyết định họp của HĐQT',
+      path: '',
     },
   };
 
@@ -423,17 +443,27 @@ const getDissolutionFiles = (type, key) => {
   switch (type) {
     case '1':
       return {
-        approve: [allFiles.giai_the_1, allFiles.giai_the_A, allFiles.giai_the_uy_quyen],
-        cancel: [allFiles.giai_the_B, allFiles.giai_the_uy_quyen],
+        approve: [allFiles.dissolution_1, allFiles.dissolution_Phuluc, allFiles.dissolution_uy_quyen],
+        cancel: [allFiles.dissolution_B, allFiles.dissolution_uy_quyen],
       }?.[key];
     case '2':
       return {
-        approve: null,
+        approve: [
+          allFiles.dissolution_Phuluc,
+          allFiles.dissolution_uy_quyen,
+          allFiles.dissolution_bienban_twoPerson,
+          allFiles.dissolution_quyetdinh_twoPerson,
+        ],
         cancel: null,
       }?.[key];
     case '3':
       return {
-        approve: null,
+        approve: [
+          allFiles.dissolution_Phuluc,
+          allFiles.dissolution_uy_quyen,
+          allFiles.dissolution_bienban_cp,
+          allFiles.dissolution_quyetdinh_cp,
+        ],
         cancel: null,
       }?.[key];
     default:

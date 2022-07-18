@@ -48,29 +48,7 @@ const TamHoanForm = forwardRef((props, ref) => {
           })}
         </Select>
       </Form.Item>
-      {/* <Form.Item
-        name="selectChildProduct"
-        label="Chọn thông tin thay đổi"
-        required
-        className={clsx(styles.current, {
-          [styles.active]: props.current === 0,
-        })}
-      >
-        <Select allowClear style={{ width: "100%" }} placeholder="Please select" onChange={handleOnChange}>
-          {productSelect &&
-            props.data?.map((item) => {
-              return (
-                item._id.includes(productSelect) &&
-                item.children.map((child) => (
-                  <Select.Option key={child._id} value={child._id} type={child.type}>
-                    {child.name}
-                  </Select.Option>
-                ))
-              );
-            })}
-        </Select>
-      </Form.Item> */}
-      {/* {selectType?.type && renderFormByType(selectType?.type)} */}
+
       <TamNgungKinhDoanh ref={ref} current={props.current} index={1} data={selectType} />
     </Form>
   );

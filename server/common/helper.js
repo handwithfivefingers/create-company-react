@@ -29,6 +29,11 @@ expressions.filters.upper = function (input) {
   return input.toUpperCase();
 };
 
+expressions.filters.divideBy = function (input, num) {
+  if (!input) return input;
+  return input / num;
+};
+
 function nullGetter(tag, props) {
   if (props.tag === 'simple') {
     return 'undefined';
@@ -38,6 +43,7 @@ function nullGetter(tag, props) {
   }
   return '';
 }
+
 function angularParser(tag) {
   tag = tag.replace(/^\.$/, 'this').replace(/(’|‘)/g, "'").replace(/(“|”)/g, '"');
   const expr = expressions.compile(tag);
